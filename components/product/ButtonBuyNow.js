@@ -1,4 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { colors } from "../../theme";
 export const ButtonBuy = () => {
   return (
     <>
@@ -6,7 +7,9 @@ export const ButtonBuy = () => {
         style={[stylesBuy.button, stylesBuy.buttonBuy]}
         onPress={() => handleButtonPress("Mua")}
       >
-        <Text style={[stylesBuy.buttonText, { color: "blue" }]}>Mua ngay</Text>
+        <Text style={[stylesBuy.buttonText, { color: colors.blueRoot }]}>
+          Mua ngay
+        </Text>
       </TouchableOpacity>
     </>
   );
@@ -24,8 +27,7 @@ const stylesBuy = StyleSheet.create({
     fontWeight: "bold", // Màu chữ của nút (thay đổi theo yêu cầu của bạn)
   },
   buttonBuy: {
-    color: "blue", // Setting text color
-    borderColor: "blue", // Màu viền của nút "Buy"
+    borderColor: colors.blueRoot, // Màu viền của nút "Buy"
     borderWidth: 1,
     backgroundColor: "white",
   },

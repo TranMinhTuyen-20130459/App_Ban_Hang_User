@@ -1,42 +1,31 @@
 import { useState } from "react";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
+import { colors } from "../../theme";
 import Ionicons from "react-native-vector-icons/Ionicons";
-export const HeaderProductDetail = (prop) => {
-  const [isScrollTop, setIsScrollTop] = useState(true);
-  const handleCart = () => {
-    alert("Cart");
-  };
-  const handleBack = () => {
-    alert("Back to home");
-  };
+export const HeaderProductDetail = ({ navigation }) => {
   const handleViewOver = () => {
-    alert("Optional");
+    alert("Chia sẻ");
   };
 
   return (
     <>
-      <View
-        style={[
-          styles.headerContainer,
-          isScrollTop ? { backgroundColor: "transparent" } : null,
-        ]}
-      >
+      <View style={[styles.headerContainer]}>
         <TouchableOpacity
-          onPress={handleBack}
+          onPress={() => navigation.goBack()}
           style={[styles.exit, styles.backgroundRadiusIcon]}
         >
           <Ionicons
             name="chevron-back-outline"
             size={26}
-            color={"#FFF"}
+            color={colors.white}
           ></Ionicons>
         </TouchableOpacity>
         <View style={styles.iconCart}>
           <TouchableOpacity
-            onPress={handleCart}
+            onPress={() => navigation.navigate("Cart")}
             style={styles.backgroundRadiusIcon}
           >
-            <Ionicons name="cart-outline" size={26} color={"#FFF"} />
+            <Ionicons name="cart-outline" size={26} color={colors.white} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleViewOver}
@@ -45,7 +34,7 @@ export const HeaderProductDetail = (prop) => {
             <Ionicons
               name="ellipsis-horizontal-outline"
               size={26}
-              color={"#FFF"}
+              color={colors.white}
             ></Ionicons>
           </TouchableOpacity>
         </View>
@@ -75,7 +64,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
 
     backgroundColor: "gray",
-    color: "white",
+    color: colors.white,
 
     justifyContent: "center",
     alignItems: "center",

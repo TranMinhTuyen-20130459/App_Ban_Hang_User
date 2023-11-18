@@ -1,15 +1,30 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  TextInput,
+} from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-export const ItemEvaluate = (prop) => {
-  prop = {
+import { colors } from "../../../theme";
+
+export const ItemEvaluate = ({ navigation }) => {
+  const prop = {
     quantity_star: 5,
     rank: "Cực kỳ hài lòng",
     content: "Sản phẩm này ok phết",
     fullname: "Nguyễn Văn Lênh",
   };
 
+  const [showCommentInput, setShowCommentInput] = useState(false);
+  const [commentText, setCommentText] = useState("");
+
   const handleLike = () => {};
-  const handleComment = () => {};
+  const handleComment = () => {
+    // Show or hide the comment input
+    setShowCommentInput(!showCommentInput);
+  };
   const handleShare = () => {};
 
   return (
@@ -26,10 +41,12 @@ export const ItemEvaluate = (prop) => {
         <Text>{prop.content}</Text>
       </View>
       <View style={styles.horizontal}>
-        <Text style={{ marginRight: 5, fontSize: 15 }}>{prop.fullname}</Text>
+        <Text style={{ marginRight: 5, fontSize: 15, color: colors.grayLight }}>
+          {prop.fullname}
+        </Text>
         <Text
           style={{
-            backgroundColor: "rgb(209 209 219)",
+            backgroundColor: colors.borderGray,
             paddingHorizontal: 3,
             borderRadius: 6,
           }}
@@ -45,7 +62,7 @@ export const ItemEvaluate = (prop) => {
       <View style={[styles.actionEvalu, styles.horizontal]}>
         <View style={{ fontSize: 50 }}>
           <TouchableOpacity style={{ fontSize: 30 }} onPress={handleLike}>
-            <Ionicons name="thumbs-up-outline" size={18} color={"gray"}>
+            <Ionicons name="heart-outline" size={18} color={"gray"}>
               {" "}
               <Text>Hữu ích</Text>
             </Ionicons>
@@ -68,6 +85,26 @@ export const ItemEvaluate = (prop) => {
           </TouchableOpacity>
         </View>
       </View>
+      {/* Conditionally render the comment input */}
+      {showCommentInput && (
+        <View style={styles.commentInputContainer}>
+          <TextInput
+            style={styles.commentInput}
+            placeholder="Nhập bình luận của bạn..."
+            onChangeText={(text) => setCommentText(text)}
+          />
+          <TouchableOpacity
+            style={styles.commentButton}
+            onPress={() => setShowCommentInput(false)}
+          >
+            <Ionicons
+              name="send-sharp"
+              size={18}
+              color={colors.white}
+            ></Ionicons>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -84,5 +121,24 @@ const styles = StyleSheet.create({
   actionEvalu: {
     justifyContent: "space-between",
     paddingVertical: 10,
+  },
+  commentInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  commentInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.borderGray,
+    borderRadius: 5,
+    marginRight: 10,
+    padding: 8,
+  },
+  commentButton: {
+    backgroundColor: colors.blueRoot,
+    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
 });

@@ -9,13 +9,15 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 import { Modal } from "react-native";
-const images = [
-  "https://salt.tikicdn.com/cache/368x368/ts/product/f5/09/03/d4de9f3e1445d76780a47f6f233037a8.png.webp",
-  "https://salt.tikicdn.com/cache/368x368/ts/product/f5/09/03/d4de9f3e1445d76780a47f6f233037a8.png.webp",
-  "https://salt.tikicdn.com/cache/368x368/ts/product/f5/09/03/d4de9f3e1445d76780a47f6f233037a8.png.webp",
-  "https://salt.tikicdn.com/cache/368x368/ts/product/f5/09/03/d4de9f3e1445d76780a47f6f233037a8.png.webp",
-];
+// const images = [
+//   "https://salt.tikicdn.com/cache/368x368/ts/product/f5/09/03/d4de9f3e1445d76780a47f6f233037a8.png.webp",
+//   "https://salt.tikicdn.com/cache/368x368/ts/product/f5/09/03/d4de9f3e1445d76780a47f6f233037a8.png.webp",
+//   "https://salt.tikicdn.com/cache/368x368/ts/product/f5/09/03/d4de9f3e1445d76780a47f6f233037a8.png.webp",
+//   "https://salt.tikicdn.com/cache/368x368/ts/product/f5/09/03/d4de9f3e1445d76780a47f6f233037a8.png.webp",
+// ];
 
 const styles = StyleSheet.create({
   container: {
@@ -28,15 +30,19 @@ const styles = StyleSheet.create({
   },
 });
 
-export const ProductImage = () => {
+export const ProductImage = (props) => {
+  const images = props.list.map((image) => {
+    return image.path_image;
+  });
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
   return (
     <>
       <ScrollView>
         <FlatList
-          data={images}
+          data={props.list.map((image) => {
+            return image.path_image;
+          })}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
@@ -77,7 +83,7 @@ export const ProductImage = () => {
               zIndex: 1,
             }}
           >
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>X</Text>
+            <Ionicons name="close-outline" size={60}></Ionicons>
           </TouchableOpacity>
 
           <View
