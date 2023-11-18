@@ -1,30 +1,38 @@
-import React, { useState } from 'react';
-import { Text, TextInput, View } from 'react-native'
+import React, {useState} from 'react';
+import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import CartIcon from '../../components/CartIcon';
-import { colors } from '../../theme';
+import {colors} from '../../theme';
+import Header from "../../components/Header";
 import CheckBox from 'react-native-check-box';
 
 function HomeScreen() {
-  const [isChecked, setIsChecked] = useState(false)
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-      <CartIcon
-        sizeIcon={26}
-        colorIcon="#000"
-        activeBGColor={true}
-        bGQuantity={colors.redHeart}
-        colorQuantity='#fff'
-      />
-      <Text>Input</Text>
-      {/* <TextInput textContentType='addressCity' style={{width: 100, height: 40, backgroundColor: 'red'}}  /> */}
-      {/* <CheckBox
-        isChecked={isChecked}
-        onClick={() => setIsChecked(!isChecked)}
-        rightText='Dancing'
-      /> */}
-    </View>
-  )
+    const [isChecked, setIsChecked] = useState(false)
+    return (
+
+        <View style={{flex: 1}}>
+            <Header></Header>
+            <ScrollView>
+                <View style= {styles.main}>
+                    <View>
+
+                    </View>
+                </View>
+            </ScrollView>
+        </View>
+    )
 }
 
+const styles = StyleSheet.create({
+    main:{
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
+    },
+    mainFormat: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        backgroundColor: "#F5F5FA",
+    }
+})
 export default HomeScreen
