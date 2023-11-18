@@ -14,6 +14,7 @@ import { ItemEvaluate } from "../components/product/evaluation/ItemEvaluate";
 import { ButtonAction } from "../components/product/ButtonAction";
 import { Policy } from "../components/product/Policy";
 import { colors } from "../theme";
+import { globalStyles } from "../styles";
 
 export const ProducDetail = ({ navigation, id }) => {
   const quantity_sold = 500;
@@ -94,7 +95,7 @@ export const ProducDetail = ({ navigation, id }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={(styles.container, globalStyles.text)}>
       <Animated.View
         style={[
           styles.fixedHeaderProductDetail,
@@ -226,6 +227,17 @@ export const ProducDetail = ({ navigation, id }) => {
               </Text>
             </Text>
           </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ProductReview")}
+            style={{
+              borderWidth: 1,
+              borderColor: colors.borderGray,
+              padding: 10,
+              color: colors.white,
+            }}
+          >
+            <Text>Đánh giá</Text>
+          </TouchableOpacity>
           <View>
             <ItemEvaluate navigation={navigation} />
             <ItemEvaluate navigation={navigation} />

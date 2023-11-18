@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { colors } from "../theme";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { globalStyles } from "../styles";
 
 const ProductReview = () => {
   const [rating, setRating] = useState(5);
@@ -43,7 +44,7 @@ const ProductReview = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={(styles.container, globalStyles.text)}>
       {/* Star Rating */}
       <View style={styles.starContainer}>
         {[1, 2, 3, 4, 5].map((i) => (
