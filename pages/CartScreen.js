@@ -6,10 +6,13 @@ import { WINDOW_WIDTH, formatMoney } from '../assets/utils';
 import CheckBox from 'react-native-check-box';
 import { colors } from '../theme';
 import CartItemsList from '../components/CartItemsList';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeAllCart, removeCart } from '../redux/slices/CartsSlice';
 
 export default function CartScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (isFocused) {
       StatusBar.setBarStyle('light-content');
@@ -18,58 +21,32 @@ export default function CartScreen() {
     }
   }, [isFocused]);
 
-  const [cartItems, setCartItems] = useState([
-    {
-      id: '1',
-      title: 'Apple iPhone 14 Pro 128BG Bạc',
-      price: 10000000,
-      discountPrice: 9000000,
-      quantity: 2,
-      isChecked: false,
-    },
-    {
-      id: '2',
-      title: 'Áp Polo nam KokaFaschion vải Contton cá sấu cao cấp xuất xịn xuất khẩu',
-      price: 25000,
-      discountPrice: 200000,
-      quantity: 1,
-      isChecked: false,
-    },
-    {
-      id: '3',
-      title: 'Sản phẩm 3',
-      price: 50,
-      discountPrice: 45,
-      quantity: 1,
-      isChecked: false,
-    },
-    {
-      id: '4',
-      title: 'Sản phẩm 4',
-      price: 50,
-      discountPrice: 45,
-      quantity: 1,
-      isChecked: false,
-    },
-    {
-      id: '5',
-      title: 'Sản phẩm 5',
-      price: 50,
-      discountPrice: 45,
-      quantity: 1,
-      isChecked: false,
-    }
-    // Thêm các sản phẩm khác vào đây
-  ]);
+  // Đọc carts từ Redux store
+  const carts = useSelector((state) => state.carts);
+
+  // danh sách sản phẩm trong giỏ hàng
+  const [cartItems, setCartItems] = useState(carts);
+  // theo dõi carts trong redux nếu nó thay đổi sẽ set lại cartItems
+  useEffect(() => {
+    setCartItems(carts)
+  }, [carts]);
   const [checkAll, setCheckAll] = useState(false)
+
+  // xử lý modal
+  // isDeleteModalVisible dùng để ẩn hiện modal
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [itemToDeleteId, setItemToDeleteId] = useState(null);
-  const [titleModel, setTitleModel] = useState("");
-  const [itemToDeleteAll, setItemToDeleteAll] = useState(null);
+  // title của modal
+  const [titleModal, setTitleModal] = useState("");
+  // id product muốn xóa
+  const [idDelete, setIdDelete] = useState(null);
+  const [deleteAll, setDeleteAll] = useState(null);
+  // -------------------------------------
+
 
   const [totalPrice, setTotalPrice] = useState(calculateTotalPrice());
   const [totalSelectedQuantity, setTotalSelectedQuantity] = useState(calculateTotalQuantity());
 
+  // theo dõi cartItems khi nó có thay đổi sẽ set lại tính tổng tiền
   useEffect(() => {
     setTotalPrice(calculateTotalPrice());
     setTotalSelectedQuantity(calculateTotalQuantity());
@@ -91,11 +68,15 @@ export default function CartScreen() {
     setCheckAll(isAllItemsChecked);
   };
 
-  const deleteAllItems = () => {
-    setTitleModel("Bạn có muốn xóa toàn bộ sản phẩm")
-    setItemToDeleteAll(1)
+  // hàm modal xóa tất cả
+  const showDeleteAllModal = () => {
+    // setTitle của modal
+    setTitleModal("Bạn có muốn xóa toàn bộ sản phẩm")
+    setDeleteAll(1)
+    // hiện modal
     setDeleteModalVisible(true);
   }
+
   const toggleCheckAll = () => {
     const newCheckAllState = !checkAll;
     setCheckAll(newCheckAllState);
@@ -107,68 +88,38 @@ export default function CartScreen() {
     setCartItems(updatedCartItems);
   };
 
-  const increaseItemQuantity = (itemId) => {
-    const updatedCartItems = cartItems.map((item) => {
-      if (item.id === itemId) {
-        return {
-          ...item,
-          quantity: item.quantity + 1,
-        };
-      }
-      return item;
-    });
-    setCartItems(updatedCartItems);
-  };
-
-  const decreaseItemQuantity = (itemId) => {
-    const updatedCartItems = cartItems.map((item) => {
-      if (item.id === itemId && item.quantity > 1) {
-        return {
-          ...item,
-          quantity: item.quantity - 1,
-        };
-      }
-      return item;
-    });
-    setCartItems(updatedCartItems);
-  };
-
-  const deleteItem = (itemId) => {
-    const updatedCartItems = cartItems.filter((item) => item.id !== itemId);
-    setCartItems(updatedCartItems);
-    setItemToDeleteId(null)
-  };
-  const deleteAllItem = () => {
-    setCartItems([])
-    setItemToDeleteAll(null)
-  }
-
   // Hàm hiển thị modal xác nhận xóa
   const showDeleteModal = (itemId) => {
-    setTitleModel("Bạn có muốn xóa sản phẩm đang chọn")
-    setItemToDeleteId(itemId);
+    // setTitle của modal
+    setTitleModal("Bạn có muốn xóa sản phẩm đang chọn")
+    // set id muốn xóa
+    setIdDelete(itemId);
+    // hiện modal
     setDeleteModalVisible(true);
   };
 
-  // Hàm ẩn modal xác nhận xóa
+  // Hàm ẩn modal khi bấm không
   const hideDeleteModal = () => {
+    // setDeleteModalVisible= false để ẩn modal
     setDeleteModalVisible(false);
-    setItemToDeleteId(null)
-    setItemToDeleteAll(null)
+    setIdDelete(null)
+    setDeleteAll(null)
   };
 
   // Hàm xác nhận xóa mặt hàng
   const confirmDeleteItem = () => {
-    if (itemToDeleteAll) {
-      deleteAllItem()
-      hideDeleteModal();
+    if (deleteAll) {
+      // gọi xuống redux để xóa product
+      dispatch(removeAllCart())
     }
-    if (itemToDeleteId) {
-      deleteItem(itemToDeleteId);
-      hideDeleteModal();
+    if (idDelete) {
+      // gọi xuống redux để xóa product
+      dispatch(removeCart(idDelete))
     }
+    // ẩn modal
+    hideDeleteModal();
   };
-
+  // tính tổng tiền
   function calculateTotalPrice() {
     let totalPrice = 0;
     for (const item of cartItems) {
@@ -180,6 +131,7 @@ export default function CartScreen() {
     return totalPrice;
   };
 
+  // tổng số lượng sản phẩm trong giỏ hàng
   function calculateTotalQuantity() {
     let totalQuantity = 0;
     for (const item of cartItems) {
@@ -189,6 +141,15 @@ export default function CartScreen() {
     }
     return totalQuantity;
   }
+
+  // xử lý để qua trang mua hàng
+  const handleBuy = () => {
+    const cartsBuy = cartItems.filter(item => item.isChecked === true);
+    if (cartsBuy.length > 0) {
+      console.log("Mua")
+      console.log(cartsBuy)
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -213,20 +174,22 @@ export default function CartScreen() {
           </View>
 
           <TouchableOpacity
-            onPress={() => deleteAllItems()}
+            onPress={() => showDeleteAllModal()}
           >
             <Ionicons name="trash-outline" size={22} color={colors.grey}></Ionicons>
           </TouchableOpacity>
         </View>
       </View>
       <CartItemsList
+        // truyền data cho cartItemsList
         data={cartItems}
+        // hiện checkbox của từng product
         showCheckBox={true}
-        showQuantity={true}
+        // truyền hàm chọn checkbox cho CartItemsList
         toggleItemSelection={toggleItemSelection}
-        deleteAllItems={deleteAllItems}
-        increaseItemQuantity={increaseItemQuantity}
-        decreaseItemQuantity={decreaseItemQuantity}
+        // hiện số lượng của từng product
+        showQuantity={true}
+        //truyền hàm hiện modal cho cartItemsList
         showDeleteModal={showDeleteModal}
       />
       <View style={styles.footer}>
@@ -241,12 +204,14 @@ export default function CartScreen() {
         </View>
         <View style={{ padding: 16 }}>
           <TouchableOpacity
+            onPress={handleBuy}
             style={{ backgroundColor: colors.bgButtonRed, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 4 }}
           >
             <Text style={{ color: "#fff", fontSize: 18 }}>Mua hàng ({totalSelectedQuantity})</Text>
           </TouchableOpacity>
         </View>
       </View>
+      {/* Modal xác nhận xóa hay không */}
       <Modal
         visible={isDeleteModalVisible}
         transparent={true}
@@ -255,7 +220,7 @@ export default function CartScreen() {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>
-              {titleModel}
+              {titleModal}
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', textAlign: 'center', justifyContent: 'space-between' }}>
               <TouchableOpacity
@@ -315,9 +280,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     width: '90%'
   },
-  container: {
-    flex: 1,
-  },
+  // container: {
+  //   flex: 1,
+  // },
   checkAll: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -346,7 +311,6 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 20,
     textAlign: 'center',
-    fontSize: 18
   },
   modalButton: {
     padding: 12,

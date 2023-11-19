@@ -10,7 +10,7 @@ import { colors } from './theme';
 import { getCartFromAsyncStorage } from './utils/localStorage';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addCart } from './redux/slices/CartsSlice';
+import { addAll, addCart } from './redux/slices/CartsSlice';
 function App() {
   const Stack = createNativeStackNavigator()
 
@@ -32,6 +32,7 @@ function App() {
     };
 
     fetchData();
+
   }, []);
   return (
     <Provider store={store}>

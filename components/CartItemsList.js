@@ -4,10 +4,34 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import CheckBox from 'react-native-check-box';
 import { WINDOW_HEIGHT, WINDOW_WIDTH, formatMoney } from '../assets/utils';
 import { colors } from '../theme';
+import { useDispatch } from 'react-redux';
+import { updateCart } from '../redux/slices/CartsSlice';
 
 const CartItemsList = (props) => {
     const { data, toggleItemSelection, showCheckBox, showQuantity,
-        increaseItemQuantity, decreaseItemQuantity, showDeleteModal } = props
+        showDeleteModal } = props
+    const dispatch = useDispatch();
+    // hàm tăng số lượng sản phẩm
+    const increaseItemQuantity = (itemId, quantity) => {
+        // update số lượng sản phẩm ở redux
+        const cartUpdate = {
+            id: itemId,
+            quantity: quantity + 1,
+        }
+        dispatch(updateCart(cartUpdate))
+    };
+    // hàm giảm số lượng sản phẩm
+    const decreaseItemQuantity = (itemId, quantity) => {
+        if (quantity != 1) {
+            // update số lượng sản phẩm ở redux
+            const cartUpdate = {
+                id: itemId,
+                quantity: quantity - 1,
+            }
+            dispatch(updateCart(cartUpdate))
+        }
+    };
+
     const renderItem = ({ item }) => (
         <View style={styles.cartItem}>
             <View style={styles.itemInfo}>
@@ -32,8 +56,8 @@ const CartItemsList = (props) => {
                         <Text style={styles.desRight}>GIAO TIẾT KIỆM</Text>
                     </View>
                     <View style={styles.itemPrice}>
-                        <Text style={styles.itemPriceLeft}>{formatMoney(item.discountPrice)}</Text>
-                        <Text style={styles.itemPriceRight}>{formatMoney(item.price)}</Text>
+                        <Text style={styles.itemPriceLeft}>{formatMoney(item.discountPrice * item.quantity)}</Text>
+                        <Text style={styles.itemPriceRight}>{formatMoney(item.price * item.quantity)}</Text>
                     </View>
                     {
                         showQuantity && (
@@ -42,7 +66,7 @@ const CartItemsList = (props) => {
                                     style={styles.decrease}
                                     onPress={() => {
                                         if (item.quantity > 0) {
-                                            decreaseItemQuantity(item.id);
+                                            decreaseItemQuantity(item.id, item.quantity);
                                         }
                                     }}
                                     disabled={item.quantity === 1}
@@ -50,7 +74,7 @@ const CartItemsList = (props) => {
                                     <Ionicons name="remove-outline" size={18} color={colors.grey}></Ionicons>
                                 </TouchableOpacity>
                                 <Text style={styles.itemQuantity}>{item.quantity}</Text>
-                                <TouchableOpacity style={styles.increase} onPress={() => increaseItemQuantity(item.id)}>
+                                <TouchableOpacity style={styles.increase} onPress={() => increaseItemQuantity(item.id, item.quantity)}>
                                     <Ionicons name="add-outline" size={18} color={colors.grey}></Ionicons>
                                 </TouchableOpacity>
 
