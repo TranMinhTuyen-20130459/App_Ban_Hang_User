@@ -77,3 +77,31 @@ export const clearCart = async () => {
         console.error('Lỗi khi xóa giỏ hàng:', error);
     }
 };
+
+// Cập nhật số lượng của sản phẩm trong giỏ hàng và lưu vào AsyncStorage
+export const updateCartItemQuantity = async (productId, newQuantity) => {
+    try {
+        // Đọc thông tin giỏ hàng từ AsyncStorage
+        const existingCart = await getCartFromAsyncStorage();
+
+        // Nếu giỏ hàng không tồn tại, không cần thực hiện gì cả
+        if (!existingCart) {
+            console.log('Giỏ hàng không tồn tại');
+            return;
+        }
+
+        // Cập nhật số lượng cho sản phẩm cụ thể
+        const updatedCart = existingCart.map(product => {
+            if (product.id === productId) {
+                return { ...product, quantity: newQuantity };
+            }
+            return product;
+        });
+
+        // Lưu giỏ hàng mới vào AsyncStorage
+        await saveCartToAsyncStorage(updatedCart);
+        console.log('Số lượng sản phẩm đã được cập nhật trong giỏ hàng');
+    } catch (error) {
+        console.error('Lỗi khi cập nhật số lượng sản phẩm trong giỏ hàng:', error);
+    }
+};
