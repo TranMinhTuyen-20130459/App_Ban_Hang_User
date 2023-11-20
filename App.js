@@ -2,7 +2,6 @@ import * as React from 'react';
 import {useEffect} from 'react';
 import {Provider} from 'react-redux';
 import store from './redux/store';
-import Maincontainer from './navigation/MainContainer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SettingScreen from './pages/SettingScreen';
@@ -11,12 +10,8 @@ import {colors} from './theme';
 import {getCartFromAsyncStorage} from './utils/localStorage';
 import {addCart} from './redux/slices/CartsSlice';
 import OrderConfirmScreen from "./pages/Order/OrderConfirmScreen";
+import MainContainer from "./navigation/MainContainer";
 
-import { colors } from './theme';
-import { getCartFromAsyncStorage } from './utils/localStorage';
-import { useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addAll, addCart } from './redux/slices/CartsSlice';
 function App() {
     const Stack = createNativeStackNavigator()
 
@@ -45,7 +40,7 @@ function App() {
                 <Stack.Navigator>
                     <Stack.Screen
                         name="Main"
-                        component={Maincontainer}
+                        component={MainContainer}
                         options={{headerShown: false}}
                     />
                     {/* cấu hình các đường dẫn qua các trang khác */}
@@ -69,38 +64,11 @@ function App() {
                                       },
                                       headerTintColor: 'white',
                                   }}/>
+
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>
     );
-    fetchData();
-
-  }, []);
-  return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Main"
-            component={Maincontainer}
-            options={{ headerShown: false }}
-          />
-          {/* cấu hình các đường dẫn qua các trang khác */}
-          <Stack.Screen name="Setting" component={SettingScreen} />
-          <Stack.Screen name="Cart" component={CartScreen}
-            options={{
-              title: 'Giỏ hàng',
-              headerTitleAlign: 'center',
-              headerStyle: {
-                backgroundColor: colors.blueRoot,
-              },
-              headerTintColor: 'white',
-            }} />
-
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Provider>
-  );
 }
 
 export default App;
