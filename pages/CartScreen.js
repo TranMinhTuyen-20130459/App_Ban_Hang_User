@@ -310,7 +310,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         zIndex: 10,
         flex: 1,
-
     },
     containerAddress: {
         flex: 1,
