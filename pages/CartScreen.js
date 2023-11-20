@@ -315,9 +315,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     width: '90%'
   },
-  container: {
-    flex: 1,
-  },
   checkAll: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -345,8 +342,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 10,
     paddingHorizontal: 20,
-    textAlign: 'center',
-    fontSize: 18
+    textAlign: 'center'
   },
   modalButton: {
     padding: 12,
