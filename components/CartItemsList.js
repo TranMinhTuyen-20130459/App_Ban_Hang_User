@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CheckBox from 'react-native-check-box';
-import { WINDOW_HEIGHT, WINDOW_WIDTH, formatMoney } from '../assets/utils';
+import { WINDOW_HEIGHT, WINDOW_WIDTH, formatMoney } from '../utils/Utils';
 import { colors } from '../theme';
 import { useDispatch } from 'react-redux';
 import { updateCart } from '../redux/slices/CartsSlice';

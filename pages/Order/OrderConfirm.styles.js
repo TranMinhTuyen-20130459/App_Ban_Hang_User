@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native'
 import {colors} from "../../theme";
-import {WINDOW_WIDTH} from "../../assets/utils";
+import {WINDOW_WIDTH} from "../../utils/Utils";
 
 export const styles = StyleSheet.create({
         container: {
@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
             marginRight: 15,
             fontSize: 16
         },
-        separator: {
+        separatorVertical: {
             height: '80%',
             width: 1,
             backgroundColor: 'gray',
@@ -84,6 +84,60 @@ export const styles = StyleSheet.create({
             paddingVertical: 5,
             paddingHorizontal: 10,
             marginRight: -10
+        },
+        orderValue: {
+            backgroundColor: 'white',
+            padding: 20,
+            marginTop: 8,
+            flexDirection: "column"
+        },
+        infoOrderValue: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginBottom: 8
+        },
+        separatorHorizontal: {
+            width: '100%',
+            height: 1,
+            backgroundColor: 'gray',
+            marginVertical: 5
+        },
+        footerOrderValue: {
+            backgroundColor: 'rgba(217, 217, 217, 1)',
+            paddingHorizontal: 20,
+            paddingVertical: 10
+        },
+        orderItems: {
+
+            backgroundColor: 'white',
+            padding: 15,
+            marginTop: 8,
+            flexDirection: 'column',
+            justifyContent: 'space-between'
+
+        },
+        orderItem: {
+
+            backgroundColor: 'rgba(230, 236, 243, 1)',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            borderRadius: 10,
+            padding: 15,
+            marginBottom: 20
+
+        },
+        imgProduct: {
+            backgroundColor: 'white',
+            width: 65,
+            height: 65,
+            marginRight: 5,
+            borderRadius: 5
+        },
+        infoOrderItem: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            padding: 8
         }
     }
 )

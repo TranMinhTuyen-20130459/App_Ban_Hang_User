@@ -2,7 +2,7 @@ import {View, Text, TouchableOpacity, StatusBar, StyleSheet, Modal} from 'react-
 import React, {useEffect, useState} from 'react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {WINDOW_WIDTH, formatMoney} from '../assets/utils';
+import {WINDOW_WIDTH, formatMoney} from '../utils/Utils';
 import CheckBox from 'react-native-check-box';
 import {colors} from '../theme';
 import CartItemsList from '../components/CartItemsList';
