@@ -11,6 +11,7 @@ import {getCartFromAsyncStorage} from './utils/localStorage';
 import {addCart} from './redux/slices/CartsSlice';
 import OrderConfirmScreen from "./pages/Order/OrderConfirmScreen";
 import MainContainer from "./navigation/MainContainer";
+import OrderAddressScreen from "./pages/Order/OrderAddressScreen";
 
 function App() {
     const Stack = createNativeStackNavigator()
@@ -45,6 +46,7 @@ function App() {
                     />
                     {/* cấu hình các đường dẫn qua các trang khác */}
                     <Stack.Screen name="Setting" component={SettingScreen}/>
+
                     <Stack.Screen name="Cart" component={CartScreen}
                                   options={{
                                       title: 'Giỏ hàng',
@@ -65,6 +67,15 @@ function App() {
                                       headerTintColor: 'white',
                                   }}/>
 
+                    <Stack.Screen name="OrderAddress" component={OrderAddressScreen}
+                                  options={{
+                                      title: 'Địa chỉ giao hàng',
+                                      headerTitleAlign: 'center',
+                                      headerStyle: {
+                                          backgroundColor: colors.blueRoot,
+                                      },
+                                      headerTintColor: 'white',
+                                  }}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>

@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from "react";
 import {colors} from "../../theme";
 import {formatMoney} from "../../utils/Utils";
+import {useNavigation} from "@react-navigation/native";
 
 
 const orderItems = [
@@ -69,7 +70,9 @@ const orderItems = [
     }
 ]
 
+
 export default function OrderConfirmScreen() {
+
 
     return (
         <View style={styles.container}>
@@ -88,9 +91,14 @@ export default function OrderConfirmScreen() {
 
 function AddressInfo() {
 
+    const navigation = useNavigation();
+
     return (
         <View>
-            <TouchableOpacity style={styles.header}>
+            <TouchableOpacity
+                style={styles.header}
+                onPress={() => navigation.navigate('OrderAddress')}
+            >
                 <View style={styles.textInfo}>
                     <View style={styles.textNameAndPhoneCustomer}>
                         <Ionicons name="location" size={25} color='#0a74e4' style={styles.iconLocation}></Ionicons>
