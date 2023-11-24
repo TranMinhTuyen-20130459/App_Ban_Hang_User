@@ -1,5 +1,6 @@
 import {View, Text, TouchableOpacity, TextInput, StyleSheet, Image} from "react-native";
 import React from "react";
+import {Dimensions} from "react-native-web";
 
 export default function Header() {
     return (
@@ -35,6 +36,7 @@ export default function Header() {
         </View>
     );
 }
+const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
     header: {
         width: "100%",
@@ -85,7 +87,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         gap: 8,
-        width: '89%',
+        width: width - 75,
         paddingVertical: 0,
         paddingHorizontal: 12,
         lineHeight: 36,
