@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
     fontSizeText: {
         fontSize: 15
     },
-    btOrder: {
+    btConfirm: {
         backgroundColor: colors.bgButtonRed,
         paddingVertical: 15,
         paddingHorizontal: 15,
