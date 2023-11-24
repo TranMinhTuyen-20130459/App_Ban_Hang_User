@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import CartIcon from '../../components/CartIcon';
 import {colors} from '../../theme';
-import Header from "../../components/Header";
+import Header from "../../components/home/Header";
 import CheckBox from 'react-native-check-box';
 
 function HomeScreen() {
