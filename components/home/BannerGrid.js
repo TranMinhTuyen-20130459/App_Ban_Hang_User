@@ -1,6 +1,6 @@
 import React from "react";
 import {Image, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
-import {Dimensions} from "react-native-web";
+import {Dimensions} from "react-native";
 export default function BannerGrid(){
     return(
         <View style={styles.container}>

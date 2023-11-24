@@ -1,6 +1,6 @@
 import {View, Text, TouchableOpacity, TextInput, StyleSheet, Image} from "react-native";
 import React from "react";
-import {Dimensions} from "react-native-web";
+import {Dimensions} from "react-native";
 
 export default function Header() {
     return (
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         gap: 8,
-        width: width - 75,
+        width: width - 70,
         paddingVertical: 0,
         paddingHorizontal: 12,
         lineHeight: 36,
