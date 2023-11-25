@@ -1,10 +1,10 @@
 import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
-export default function TopSeller() {
+export default function HotProduct() {
     const navigation = useNavigation();
 
-    const [activeButton, setActiveButton] = useState(null);
+    const [activeButton, setActiveButton] = useState(1);
     const buttons = [
         { id: 1, label: 'Button 1' },
         { id: 2, label: 'Button 2' },
