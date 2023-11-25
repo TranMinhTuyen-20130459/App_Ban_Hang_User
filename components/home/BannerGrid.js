@@ -18,7 +18,7 @@ export default function BannerGrid(){
     return(
         <View style={styles.container}>
             {randomImages.map((image, index) =>(
-                <View>
+                <View key={index}>
                     <TouchableOpacity style={styles.element}>
                         <Image
                             source={image}
