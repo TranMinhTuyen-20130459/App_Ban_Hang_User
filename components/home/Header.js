@@ -1,6 +1,7 @@
-import {View, Text, TouchableOpacity, TextInput, StyleSheet, Image} from "react-native";
+
 import React from "react";
 import {Dimensions} from "react-native";
+import {View, Text, TouchableOpacity, TextInput, StyleSheet, Image} from "react-native";
 
 export default function Header() {
     return (
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgb(255, 255, 255)',
         gap: 8,
         flexDirection: 'column',
-        position: 'sticky',
+        // position: 'sticky',
         top: 0,
         zIndex: 99,
     },
@@ -71,11 +72,11 @@ const styles = StyleSheet.create({
         flex: 1,
         overflow: 'hidden',
         color: '#003ea1', // Tương đương với var(--global-ultramarine-90,#003ea1)
-        textOverflow: 'ellipsis',
+        // textOverflow: 'ellipsis',
         fontSize: 14,
         fontStyle: 'normal',
         fontWeight: '600',
-        lineHeight: "150%" // Tương đương với 150%
+        // lineHeight: "150%" // Tương đương với 150%
     },
     headerInfo: {
         display: 'flex',
@@ -90,14 +91,14 @@ const styles = StyleSheet.create({
         width: width - 70,
         paddingVertical: 0,
         paddingHorizontal: 12,
-        lineHeight: 36,
+        // lineHeight: 36,
         backgroundColor: 'white',
         borderWidth: 1,
         borderColor: 'rgb(221, 221, 227)',
         borderRadius: 8,
         alignItems: 'center',
         zIndex: 1,
-        transitionDuration: 0.3,
+        // transitionDuration: 0.3,
     },
     searchIcon: {
         width: 24,
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
         height: 36,
         margin: 0,
         marginLeft: 8,
-        outlineWidth: 0, // Tương đương với outline: 0px;
+        // outlineWidth: 0, // Tương đương với outline: 0px;
         width: '100%',
         padding: 0,
         fontWeight: '400', // Tương đương với font-weight: 400;
