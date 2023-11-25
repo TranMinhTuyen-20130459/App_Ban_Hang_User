@@ -1,11 +1,14 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
-export const ButtonAdd = () => {
+export const ButtonAdd = ({ handleAddToCart }) => {
+  const handleAdd = () => {
+    handleAddToCart();
+  };
   return (
     <>
       <TouchableOpacity
         style={[stylesAdd.button, stylesAdd.buttonAdd]}
-        onPress={() => handleButtonPress("Thêm")}
+        onPress={() => handleAdd()}
       >
         <Text style={[stylesAdd.buttonText, { color: "white" }]}>
           Thêm vào giỏ

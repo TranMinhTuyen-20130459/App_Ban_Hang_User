@@ -1,11 +1,14 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { colors } from "../../theme";
-export const ButtonBuy = () => {
+export const ButtonBuy = ({ handleByNow }) => {
+  const handleBy = () => {
+    handleByNow();
+  };
   return (
     <>
       <TouchableOpacity
         style={[stylesBuy.button, stylesBuy.buttonBuy]}
-        onPress={() => handleButtonPress("Mua")}
+        onPress={() => handleBy()}
       >
         <Text style={[stylesBuy.buttonText, { color: colors.blueRoot }]}>
           Mua ngay

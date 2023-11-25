@@ -15,12 +15,31 @@ import { ItemEvaluate } from "../components/product/evaluation/ItemEvaluate";
 import { ButtonAction } from "../components/product/ButtonAction";
 import { Policy } from "../components/product/Policy";
 import { colors } from "../theme";
+import { addCart, updateCart } from "../redux/slices/CartsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export const ProducDetail = ({ navigation, id }) => {
   const quantity_sold = 500;
   const quantity_rating = 500;
   const [selectSize, setSelectSize] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(false);
+  const [size, setSize] = useState();
+  const [color, setColor] = useState();
+  const [productData, setProductData] = useState();
+  const [quantity, setQuantity] = useState(1);
+
   id = 1;
+
+  // redux
+  const dispatch = useDispatch();
+  const carts = useSelector((state) => state.carts);
+
+  // theo dõi giỏ hàng
+  useEffect(() => {
+    const existingCartItem = carts.find((item) => item.id === id);
+    setQuantity(existingCartItem ? existingCartItem.quantity + 1 : 1);
+  }, [carts]);
+
   const link =
     "http://tmt020202ccna-001-site1.atempurl.com/api/products/infor-product?id=" +
     id;
@@ -51,8 +70,6 @@ export const ProducDetail = ({ navigation, id }) => {
     return roundedPercentage + "%";
   };
 
-  // Sử dụng hàm
-
   // xử lý thay đổi màu trên header
   const [scrollY] = useState(new Animated.Value(0));
 
@@ -65,8 +82,7 @@ export const ProducDetail = ({ navigation, id }) => {
     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
     { useNativeDriver: false } // Make sure to set useNativeDriver to false
   );
-  // fetch data
-  const [productData, setProductData] = useState(null);
+  // fetch data product
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -85,10 +101,47 @@ export const ProducDetail = ({ navigation, id }) => {
 
     fetchData();
   }, []);
+
+  const handleAddToCart = () => {
+    const newCartItem = {
+      id: productData.id_product,
+      title: productData.name_product,
+      price: productData.listed_price,
+      discountPrice: productData.listed_price - productData.promotional_price,
+      size: size ? productData.list_size[0].name_size : size,
+      color: color ? "Trắng" : "Xanh",
+      quantity: 1,
+    };
+    console.log("số lượng" + quantity);
+    if (quantity > 1) {
+      setQuantity(quantity + 1);
+      // Nếu sản phẩm đã tồn tại trong giỏ hàng, thì cập nhật
+      dispatch(
+        updateCart({
+          id: id,
+          quantity: quantity,
+        })
+      );
+      alert("Cập nhật giỏ hàng thành công");
+    } else {
+      // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thì thêm mới
+      dispatch(addCart(newCartItem));
+      alert("Thêm vào giỏ hàng thành công");
+    }
+  };
+  const handleByNow = () => {
+    alert("Hello");
+  };
+
   // nếu fecth chưa hết thì hiển thị loading..
   if (!productData) {
     return (
-      <View>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <ActivityIndicator
           size="large"
           color="#0000ff"
@@ -128,7 +181,7 @@ export const ProducDetail = ({ navigation, id }) => {
               <View>
                 <Text style={{ fontSize: 30 }}>{productData.name_product}</Text>
                 <Text>
-                  {productData.star_review}{" "}
+                  {/* {productData.star_review}{" "} */}
                   <View style={styles.starContainer}>
                     {Array.from({ length: 5 }, (v, i) => (
                       <Ionicons
@@ -265,7 +318,10 @@ export const ProducDetail = ({ navigation, id }) => {
           backgroundColor: "white",
         }}
       >
-        <ButtonAction />
+        <ButtonAction
+          handleAddToCart={handleAddToCart}
+          handleByNow={handleByNow}
+        />
       </View>
     </View>
   );
