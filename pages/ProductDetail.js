@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useEffect, useState } from "react";
@@ -88,7 +89,11 @@ export const ProducDetail = ({ navigation, id }) => {
   if (!productData) {
     return (
       <View>
-        <Text>Loading...</Text>
+        <ActivityIndicator
+          size="large"
+          color="#0000ff"
+          hidesWhenStopped={true}
+        />
       </View>
     );
   }
