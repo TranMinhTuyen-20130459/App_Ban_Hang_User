@@ -14,7 +14,6 @@ import { ItemEvaluate } from "../components/product/evaluation/ItemEvaluate";
 import { ButtonAction } from "../components/product/ButtonAction";
 import { Policy } from "../components/product/Policy";
 import { colors } from "../theme";
-import { globalStyles } from "../styles";
 
 export const ProducDetail = ({ navigation, id }) => {
   const quantity_sold = 500;
@@ -95,7 +94,7 @@ export const ProducDetail = ({ navigation, id }) => {
   }
 
   return (
-    <View style={(styles.container, globalStyles.text)}>
+    <View style={styles.container}>
       <Animated.View
         style={[
           styles.fixedHeaderProductDetail,

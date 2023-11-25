@@ -5,7 +5,6 @@ import { ButtonAdd } from "../components/product/ButtonAddCart";
 import { useRoute } from "@react-navigation/native";
 import { useState } from "react";
 import { useEffect } from "react";
-import { globalStyles } from "../styles";
 
 export const SelectSize = (prop) => {
   /**
@@ -60,7 +59,7 @@ export const SelectSize = (prop) => {
     );
   }
   return (
-    <View style={[styles.container, globalStyles.text]}>
+    <View style={[styles.container]}>
       <ScrollView>
         <View
           style={{
