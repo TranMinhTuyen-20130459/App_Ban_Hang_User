@@ -11,8 +11,10 @@ import { colors } from "../../theme";
 import Header from "../../components/home/Header";
 import BannerGrid from "../../components/home/BannerGrid";
 import CheckBox from "react-native-check-box";
-import TopSeller from "../../components/home/TopSeller";
-
+import HotProduct from "../../components/home/HotProduct";
+import NewProduct from "../../components/home/NewProduct";
+import PromotionProduct from "../../components/home/PromotionProduct";
+import SuggestedProduct from "../../components/home/SuggestedProduct";
 function HomeScreen() {
   const [isChecked, setIsChecked] = useState(false);
   return (
@@ -22,7 +24,10 @@ function HomeScreen() {
         <View style={styles.main}>
           <View style={styles.mainFormat}>
             <BannerGrid></BannerGrid>
-            <TopSeller></TopSeller>
+            <HotProduct></HotProduct>
+            <NewProduct></NewProduct>
+            <PromotionProduct></PromotionProduct>
+            <SuggestedProduct></SuggestedProduct>
           </View>
         </View>
       </ScrollView>
