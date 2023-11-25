@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { clearCart, removeFromCart, updateCartItemQuantity } from "../../utils/localStorage";
 const cartSlice = createSlice({
     name: "carts",
     initialState: [],
@@ -18,13 +19,17 @@ const cartSlice = createSlice({
                 discountPrice: discountPrice,
                 size: size,
                 color: color,
-                quantity: quantity
+                quantity: quantity,
+                isChecked: false
             }
+
             state.push(newCartItem);
         },
         removeCart: (state, action) => {
-            const itemId = action.payload;
-            return state.filter((item) => item.id !== itemId);
+            const id = action.payload;
+            // gọi xuống storage xóa sản phẩm
+            removeFromCart(id)
+            return state.filter((item) => item.id !== id);
         },
         updateCart: (state, action) => {
             const { id, quantity } = action.payload;
@@ -34,11 +39,18 @@ const cartSlice = createSlice({
                 }
                 return item;
             });
+            // Gọi hàm cập nhật số lượng sản phẩm trong giỏ hàng và lưu vào AsyncStorage
+            updateCartItemQuantity(id, quantity);
             return updatedState;
         },
+        removeAllCart: () => {
+            // gọi xuống storage xóa hết sản phẩm
+            clearCart()
+            return [];
+        }
 
     },
 });
 
-export const { addCart, removeCart, updateCart } = cartSlice.actions;
+export const { addCart, addAll, removeCart, updateCart, removeAllCart } = cartSlice.actions;
 export default cartSlice.reducer;

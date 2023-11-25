@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Dimensions, Text, View } from 'react-native';
-import { WINDOW_WIDTH } from '../assets/utils';
+import { WINDOW_WIDTH } from '../utils/Utils';
 import Carousel from 'react-native-reanimated-carousel';
 
 function CarouselImage() {
