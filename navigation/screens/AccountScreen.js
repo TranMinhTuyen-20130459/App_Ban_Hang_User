@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'; // Import useEffect tá»« react thay vÃ
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { colors } from '../../theme';
-import { WINDOW_HEIGHT } from '../../assets/utils';
+import { WINDOW_HEIGHT } from '../../utils/Utils';
 import CartIcon from '../../components/CartIcon';
 
 function AccountScreen() {

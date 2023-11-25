@@ -3,9 +3,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { colors } from '../theme';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 function CartIcon({ bGQuantity, activeBGColor, colorQuantity, sizeIcon, colorIcon }) {
   const navigation = useNavigation();
+  const carts = useSelector((state) => state.carts)
   const styles = StyleSheet.create({
     iconContainer: {
       marginLeft: 16,
@@ -34,7 +36,7 @@ function CartIcon({ bGQuantity, activeBGColor, colorQuantity, sizeIcon, colorIco
       style={styles.iconContainer}
     >
       <Ionicons name="cart-outline" size={sizeIcon || 26} color={colorIcon || '#000'} />
-      <Text style={styles.quantityCart}>2</Text>
+      <Text style={styles.quantityCart}>{carts.length}</Text>
     </TouchableOpacity>
   )
 }

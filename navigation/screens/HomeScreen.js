@@ -1,34 +1,46 @@
 import React, { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import CartIcon from "../../components/CartIcon";
 import { colors } from "../../theme";
+import Header from "../../components/home/Header";
+import BannerGrid from "../../components/home/BannerGrid";
 import CheckBox from "react-native-check-box";
+import TopSeller from "../../components/home/TopSeller";
 
-function HomeScreen({ navigation }) {
+function HomeScreen() {
   const [isChecked, setIsChecked] = useState(false);
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
-      <CartIcon
-        sizeIcon={26}
-        colorIcon="#000"
-        activeBGColor={true}
-        bGQuantity={colors.redHeart}
-        colorQuantity="#fff"
-      />
-
-      <TouchableOpacity onPress={() => navigation.navigate("ProductDetail")}>
-        <Text>Go to product detail</Text>
-      </TouchableOpacity>
-      <Text>Input</Text>
-      {/* <TextInput textContentType='addressCity' style={{width: 100, height: 40, backgroundColor: 'red'}}  /> */}
-      {/* <CheckBox
-        isChecked={isChecked}
-        onClick={() => setIsChecked(!isChecked)}
-        rightText='Dancing'
-      /> */}
+    <View style={{ flex: 1 }}>
+      <Header></Header>
+      <ScrollView>
+        <View style={styles.main}>
+          <View style={styles.mainFormat}>
+            <BannerGrid></BannerGrid>
+            <TopSeller></TopSeller>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 }
 
+const styles = StyleSheet.create({
+  main: {
+    position: "sticky",
+    top: 0,
+    zIndex: 10,
+  },
+  mainFormat: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 8,
+    backgroundColor: "#F5F5FA",
+  },
+});
 export default HomeScreen;
