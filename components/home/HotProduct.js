@@ -1,9 +1,10 @@
 import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {useState} from "react";
+import {useNavigation} from "@react-navigation/native";
+export default function HotProduct() {
+    const navigation = useNavigation();
 
-
-export default function TopSeller() {
-    const [activeButton, setActiveButton] = useState(null);
+    const [activeButton, setActiveButton] = useState(1);
     const buttons = [
         { id: 1, label: 'Button 1' },
         { id: 2, label: 'Button 2' },
@@ -41,7 +42,8 @@ export default function TopSeller() {
             </ScrollView>
             <ScrollView horizontal showsHorizontalScrollIndicator={true}>
                 <View style={styles.listProduct}>
-                    <TouchableOpacity style={styles.productItem}>
+                    <TouchableOpacity style={styles.productItem}
+                                      onPress={() => navigation.navigate('ProductDetail')}>
                         <View style={styles.imageProductWrap}>
                             <Image
                                 source={{
