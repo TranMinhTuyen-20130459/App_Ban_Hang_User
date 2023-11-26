@@ -3,8 +3,9 @@ import {View, Text, TouchableOpacity, Image, ScrollView} from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from "react";
 import {colors} from "../../theme";
-import {formatMoney} from "../../utils/Utils";
+import {formatMoney, WINDOW_WIDTH} from "../../utils/Utils";
 import {useNavigation} from "@react-navigation/native";
+import {useSelector} from "react-redux";
 
 
 const orderItems = [
@@ -93,29 +94,61 @@ function AddressInfo() {
 
     const navigation = useNavigation();
 
-    return (
-        <View>
-            <TouchableOpacity
-                style={styles.header}
-                onPress={() => navigation.navigate('OrderAddress')}
-            >
-                <View style={styles.textInfo}>
+    // Sử dụng useSelector để lấy trạng thái của thông tin địa chỉ giao hàng
+    const orderAddress = useSelector(state => state.address_order);
+
+    const Information = () => (
+        orderAddress && orderAddress.to_address && (
+            <View style={styles.textInfo}>
+                <View style={{
+                    minWidth: 0.88 * WINDOW_WIDTH
+                }}>
                     <View style={styles.textNameAndPhoneCustomer}>
                         <Ionicons name="location" size={25} color='#0a74e4' style={styles.iconLocation}></Ionicons>
-                        <Text style={styles.textName}>Trần Minh Tuyên</Text>
+                        <Text numberOfLines={1} style={styles.textName}>
+                            {orderAddress.name_customer}
+                        </Text>
                         <View style={styles.separatorVertical}></View>
-                        <Text style={styles.textPhone}>0927042108</Text>
+                        <Text numberOfLines={1} style={styles.textPhone}>
+                            {orderAddress.phone_number}
+                        </Text>
                     </View>
-                    <Text style={styles.textAddress}>Cư xá A, đại học Nông Lâm, Phường Linh Trung, Quận Thủ Đức, Hồ Chí
-                        Minh</Text>
+                    <View>
+                        <Text numberOfLines={2} style={styles.textAddress}>
+                            {orderAddress.to_address.address},
+                            {orderAddress.to_address.ward_name},
+                            {orderAddress.to_address.district_name},
+                            {orderAddress.to_address.province_name}
+                        </Text>
+                    </View>
                 </View>
-                <Ionicons name="chevron-forward" size={25}
-                          color={colors.grey}>
-                </Ionicons>
-            </TouchableOpacity>
-        </View>
+                <View style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingHorizontal: 0.001 * WINDOW_WIDTH
+                }}>
+                    <Ionicons name="chevron-forward" size={25} color={colors.grey}></Ionicons>
+                </View>
+            </View>
+        )
     );
+
+
+    const Notification = (<Text>Không có địa chỉ đặt hàng</Text>)
+
+    return (
+        <>
+            <View>
+                <TouchableOpacity
+                    style={styles.header}
+                    onPress={() => navigation.navigate('OrderAddress')}>
+                    {orderAddress ? <Information/> : <Notification/>}
+                </TouchableOpacity>
+            </View>
+        </>
+    )
 }
+
 
 function OrderItems() {
 

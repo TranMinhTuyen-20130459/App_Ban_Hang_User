@@ -6,6 +6,7 @@ import {useDispatch} from "react-redux";
 import {setAddress} from "../../redux/slices/OrderAddressSlice"
 import {colors} from "../../theme";
 import {getLabelFromValue} from "./util/Utils";
+import {useNavigation} from "@react-navigation/native";
 
 export default function OrderAddressScreen() {
 
@@ -264,10 +265,12 @@ function TextInputComponent({setNameCustomer, setPhoneNumber}) {
 function Footer({data}) {
 
     const dispatch = useDispatch();
+    const navigation = useNavigation();
 
     const handleClickBtConfirm = () => {
         console.log('click button xác nhận');
         dispatch(setAddress(data))
+        navigation.navigate('OrderConfirm')
     }
 
     return (
