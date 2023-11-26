@@ -74,7 +74,6 @@ const orderItems = [
 
 export default function OrderConfirmScreen() {
 
-
     return (
         <View style={styles.container}>
             <ScrollView>
@@ -97,7 +96,7 @@ function AddressInfo() {
     // Sử dụng useSelector để lấy trạng thái của thông tin địa chỉ giao hàng
     const orderAddress = useSelector(state => state.address_order);
 
-    const Information = () => (
+    const InformationComponent = () => (
         orderAddress && orderAddress.to_address && (
             <View style={styles.textInfo}>
                 <View style={{
@@ -131,10 +130,23 @@ function AddressInfo() {
                 </View>
             </View>
         )
-    );
+    )
 
 
-    const Notification = (<Text>Không có địa chỉ đặt hàng</Text>)
+    const NotificationComponent = () => (
+        <View style={
+            {
+                flexDirection: 'row',
+                flex: 1,
+                paddingVertical: 15,
+                paddingHorizontal: 10,
+            }
+        }>
+            <Text style={{fontSize: 16}}>Bạn hãy chọn địa chỉ giao hàng</Text>
+            <View style={{flex: 5}}/>
+            <Ionicons name="chevron-forward" size={25} color={colors.grey}></Ionicons>
+        </View>
+    )
 
     return (
         <>
@@ -142,11 +154,13 @@ function AddressInfo() {
                 <TouchableOpacity
                     style={styles.header}
                     onPress={() => navigation.navigate('OrderAddress')}>
-                    {orderAddress ? <Information/> : <Notification/>}
+
+                    {orderAddress ? <InformationComponent/> : <NotificationComponent/>}
+
                 </TouchableOpacity>
             </View>
         </>
-    )
+    );
 }
 
 

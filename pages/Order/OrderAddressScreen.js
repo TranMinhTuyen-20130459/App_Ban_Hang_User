@@ -7,8 +7,12 @@ import {setAddress} from "../../redux/slices/OrderAddressSlice"
 import {colors} from "../../theme";
 import {getLabelFromValue} from "./util/Utils";
 import {useNavigation} from "@react-navigation/native";
+import {returnValueErrorOfNameCustomer, returnValueErrorOfPhoneNumber} from "./util/CheckValid"
 
 export default function OrderAddressScreen() {
+
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
 
     const [name_customer, setNameCustomer] = useState('');
     const [phone_number, setPhoneNumber] = useState('');
@@ -21,6 +25,34 @@ export default function OrderAddressScreen() {
     const [province_id, setProvinceId] = useState('');
     const [district_id, setDistrictId] = useState('');
     const [ward_id, setWardId] = useState('');
+
+    const [isOpenDropDownCity, setIsOpenDropDownCity] = useState(false);
+    const [isOpenDropDownDistrict, setIsOpenDropDownDistrict] = useState(false);
+    const [isOpenDropDownWard, setIsOpenDropDownWard] = useState(false);
+
+    const [errorNameCustomer, setErrorNameCustomer] = useState(null)
+    const [errorPhoneNumber, setErrorPhoneNumber] = useState(null)
+    const handleClickBtConfirm = () => {
+
+        // Nếu Họ Tên hợp lệ thì errorNameCustomer được cập nhật giá trị null
+        const valueErrorOfNameCustomer = returnValueErrorOfNameCustomer(name_customer);
+        setErrorNameCustomer(valueErrorOfNameCustomer);
+
+        // Nếu Số Điện Thoại hợp lệ thì errorPhoneNumber được cập nhật giá trị null
+        const valueErrorOfPhoneNumber = returnValueErrorOfPhoneNumber(phone_number);
+        setErrorPhoneNumber(valueErrorOfPhoneNumber)
+
+        // TH: User nhập vào dữ liệu không hợp lệ
+        if (valueErrorOfNameCustomer != null
+            || valueErrorOfPhoneNumber != null) return
+
+        // Cập nhật địa chỉ giao hàng mới
+        dispatch(setAddress(orderAddress))
+
+        // Chuyển hướng đến trang 'Xác nhận đơn hàng'
+        navigation.navigate('OrderConfirm')
+
+    };
 
     const orderAddress = {
         name_customer: name_customer,
@@ -71,9 +103,23 @@ export default function OrderAddressScreen() {
                         setWardName={setWardName}
                         setWardId={setWardId}
                         ward_id={ward_id}
+
+                        isOpenDropDownCity={isOpenDropDownCity}
+                        isOpenDropDownDistrict={isOpenDropDownDistrict}
+                        isOpenDropDownWard={isOpenDropDownWard}
+
+                        setIsOpenDropDownCity={setIsOpenDropDownCity}
+                        setIsOpenDropDownDistrict={setIsOpenDropDownDistrict}
+                        setIsOpenDropDownWard={setIsOpenDropDownWard}
+
+                        errorNameCustomer={errorNameCustomer}
+                        errorPhoneNumber={errorPhoneNumber}
+
+                        setErrorNameCustomer={setErrorNameCustomer}
+                        setErrorPhoneNumber={setErrorPhoneNumber}
                     />
                 </View>
-                <Footer data={orderAddress}/>
+                <Footer handleClickBtConfirm={handleClickBtConfirm}/>
             </View>
         </KeyboardAvoidingView>
     );
@@ -95,12 +141,22 @@ function MainComponent(
 
         setWardName,
         setWardId,
-        ward_id
-    }) {
+        ward_id,
 
-    const [isOpenDropDownCity, setIsOpenDropDownCity] = useState(false);
-    const [isOpenDropDownDistrict, setIsOpenDropDownDistrict] = useState(false);
-    const [isOpenDropDownWard, setIsOpenDropDownWard] = useState(false);
+        isOpenDropDownCity,
+        isOpenDropDownDistrict,
+        isOpenDropDownWard,
+
+        setIsOpenDropDownCity,
+        setIsOpenDropDownDistrict,
+        setIsOpenDropDownWard,
+
+        errorNameCustomer,
+        errorPhoneNumber,
+
+        setErrorNameCustomer,
+        setErrorPhoneNumber
+    }) {
 
     const cityData = [
         {label: 'Hà Nội', value: '1'},
@@ -126,6 +182,12 @@ function MainComponent(
             <TextInputComponent
                 setNameCustomer={setNameCustomer}
                 setPhoneNumber={setPhoneNumber}
+
+                errorNameCustomer={errorNameCustomer}
+                errorPhoneNumber={errorPhoneNumber}
+
+                setErrorNameCustomer={setErrorNameCustomer}
+                setErrorPhoneNumber={setErrorPhoneNumber}
             />
 
             <View style={styles.view_contain_text}>
@@ -236,7 +298,17 @@ function MainComponent(
     );
 }
 
-function TextInputComponent({setNameCustomer, setPhoneNumber}) {
+function TextInputComponent(
+    {
+        setNameCustomer,
+        setPhoneNumber,
+
+        errorNameCustomer,
+        errorPhoneNumber,
+
+        setErrorNameCustomer,
+        setErrorPhoneNumber
+    }) {
 
     return (
         <View>
@@ -246,32 +318,35 @@ function TextInputComponent({setNameCustomer, setPhoneNumber}) {
             </View>
             <View style={styles.view_contain_text_input}>
                 <TextInput placeholder="Nhập Họ Tên"
-                           onChangeText={(text) => setNameCustomer(text)}
+                           onChangeText={
+                               (text) => {
+                                   setNameCustomer(text)
+                                   setErrorNameCustomer(null)
+                               }
+                           }
                 />
             </View>
+            {errorNameCustomer && <Text style={{color: 'red'}}>{errorNameCustomer}</Text>}
             <View style={styles.view_contain_text}>
                 <Text style={styles.fontSizeText}>Số điện thoại</Text>
             </View>
             <View style={styles.view_contain_text_input}>
                 <TextInput keyboardType="numeric"
                            placeholder="Nhập Số điện thoại"
-                           onChangeText={(text) => setPhoneNumber(text)}
+                           onChangeText={
+                               (text) => {
+                                   setPhoneNumber(text)
+                                   setErrorPhoneNumber(null)
+                               }
+                           }
                 />
             </View>
+            {errorPhoneNumber && <Text style={{color: 'red'}}>{errorPhoneNumber}</Text>}
         </View>
     );
 }
 
-function Footer({data}) {
-
-    const dispatch = useDispatch();
-    const navigation = useNavigation();
-
-    const handleClickBtConfirm = () => {
-        console.log('click button xác nhận');
-        dispatch(setAddress(data))
-        navigation.navigate('OrderConfirm')
-    }
+function Footer({handleClickBtConfirm}) {
 
     return (
         <View style={styles.footer}>

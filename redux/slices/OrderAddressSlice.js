@@ -34,7 +34,7 @@ const orderAddressSlice = createSlice({
 
     name: 'order_address',
 
-    initialState: orderAddress,
+    initialState: null,
 
     reducers: {
 
