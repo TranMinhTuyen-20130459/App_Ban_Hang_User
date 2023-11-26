@@ -7,7 +7,11 @@ import {setAddress} from "../../redux/slices/OrderAddressSlice"
 import {colors} from "../../theme";
 import {getLabelFromValue} from "./util/Utils";
 import {useNavigation} from "@react-navigation/native";
-import {returnValueErrorOfNameCustomer, returnValueErrorOfPhoneNumber} from "./util/CheckValid"
+import {
+    returnValueErrorOfNameCustomer,
+    returnValueErrorOfPhoneNumber,
+    returnValueErrorAddressDetail
+} from "./util/CheckValid"
 
 export default function OrderAddressScreen() {
 
@@ -32,6 +36,8 @@ export default function OrderAddressScreen() {
 
     const [errorNameCustomer, setErrorNameCustomer] = useState(null)
     const [errorPhoneNumber, setErrorPhoneNumber] = useState(null)
+    const [errorAddressDetail, setErrorAddressDetail] = useState(null);
+
     const handleClickBtConfirm = () => {
 
         // Nếu Họ Tên hợp lệ thì errorNameCustomer được cập nhật giá trị null
@@ -42,14 +48,18 @@ export default function OrderAddressScreen() {
         const valueErrorOfPhoneNumber = returnValueErrorOfPhoneNumber(phone_number);
         setErrorPhoneNumber(valueErrorOfPhoneNumber)
 
-        // TH: User nhập vào dữ liệu không hợp lệ
+        // Nếu Địa chỉ nhận hàng hợp lệ thì errorAddressDetail được cập nhật giá trị null
+        const valueErrorAddressDetail = returnValueErrorAddressDetail(address_detail);
+        setErrorAddressDetail(valueErrorAddressDetail)
+
+        // TH: Form không hợp lệ
         if (valueErrorOfNameCustomer != null
-            || valueErrorOfPhoneNumber != null) return
+            || valueErrorOfPhoneNumber != null
+            || valueErrorAddressDetail != null) return;
 
         // Cập nhật địa chỉ giao hàng mới
         dispatch(setAddress(orderAddress))
 
-        // Chuyển hướng đến trang 'Xác nhận đơn hàng'
         navigation.navigate('OrderConfirm')
 
     };
@@ -117,6 +127,9 @@ export default function OrderAddressScreen() {
 
                         setErrorNameCustomer={setErrorNameCustomer}
                         setErrorPhoneNumber={setErrorPhoneNumber}
+
+                        errorAddressDetail={errorAddressDetail}
+                        setErrorAddressDetail={setErrorAddressDetail}
                     />
                 </View>
                 <Footer handleClickBtConfirm={handleClickBtConfirm}/>
@@ -155,7 +168,10 @@ function MainComponent(
         errorPhoneNumber,
 
         setErrorNameCustomer,
-        setErrorPhoneNumber
+        setErrorPhoneNumber,
+
+        errorAddressDetail,
+        setErrorAddressDetail
     }) {
 
     const cityData = [
@@ -291,8 +307,12 @@ function MainComponent(
             <View style={styles.view_contain_text_input}>
                 <TextInput
                     placeholder="Tòa nhà, số nhà, tên đường"
-                    onChangeText={(text) => setAddressDetail(text)}
+                    onChangeText={(text) => {
+                        setAddressDetail(text)
+                        setErrorAddressDetail(null)
+                    }}
                 />
+                {errorAddressDetail && <Text style={{color: 'red'}}>{errorAddressDetail}</Text>}
             </View>
         </View>
     );

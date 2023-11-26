@@ -114,10 +114,8 @@ function AddressInfo() {
                     </View>
                     <View>
                         <Text numberOfLines={2} style={styles.textAddress}>
-                            {orderAddress.to_address.address},
-                            {orderAddress.to_address.ward_name},
-                            {orderAddress.to_address.district_name},
-                            {orderAddress.to_address.province_name}
+                            {orderAddress.to_address.address}, {orderAddress.to_address.ward_name}
+                            , {orderAddress.to_address.district_name}, {orderAddress.to_address.province_name}
                         </Text>
                     </View>
                 </View>
