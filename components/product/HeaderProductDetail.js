@@ -1,11 +1,18 @@
-import { useState } from "react";
-import { TouchableOpacity, StyleSheet, View } from "react-native";
+import { useEffect, useState } from "react";
+import { TouchableOpacity, StyleSheet, View, Text } from "react-native";
 import { colors } from "../../theme";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useSelector } from "react-redux";
 export const HeaderProductDetail = ({ navigation }) => {
   const handleViewOver = () => {
     alert("Chia sẻ");
   };
+
+  const carts = useSelector((state) => state.carts);
+  const [cartsCount, setCartsCount] = useState(carts.length);
+  useEffect(() => {
+    setCartsCount(carts.length);
+  }, [carts]); // Gọi useEffect khi cartItems thay đổi
 
   return (
     <>
@@ -26,6 +33,23 @@ export const HeaderProductDetail = ({ navigation }) => {
             style={styles.backgroundRadiusIcon}
           >
             <Ionicons name="cart-outline" size={26} color={colors.white} />
+            {cartsCount > 0 && (
+              <View
+                style={{
+                  backgroundColor: "red",
+                  borderRadius: 7.5,
+                  position: "absolute",
+                  top: -5,
+                  right: -5,
+                  minWidth: 15,
+                  minHeight: 15,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: colors.white }}>{cartsCount}</Text>
+              </View>
+            )}
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleViewOver}

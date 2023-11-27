@@ -19,6 +19,77 @@ import { addCart, updateCart } from "../redux/slices/CartsSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export const ProducDetail = ({ navigation, id }) => {
+  const fakeData = [
+    {
+      quantity_star: 5,
+      rank: "Cực kỳ hài lòng",
+      content: "Sản phẩm này rất tốt, tôi rất hài lòng!",
+      fullname: "Nguyễn Văn Lênh",
+    },
+    {
+      quantity_star: 4,
+      rank: "Hài lòng",
+      content: "Sản phẩm tốt, nhưng có vài điểm cần cải thiện.",
+      fullname: "Trần Thị Hương",
+    },
+    {
+      quantity_star: 3,
+      rank: "Bình thường",
+      content: "Sản phẩm ổn, không có gì nổi bật.",
+      fullname: "Lê Minh Hiếu",
+    },
+    {
+      quantity_star: 5,
+      rank: "Cực kỳ hài lòng",
+      content: "Sản phẩm chất lượng, đúng như mô tả.",
+      fullname: "Phạm Thị An",
+    },
+    {
+      quantity_star: 2,
+      rank: "Không hài lòng",
+      content: "Sản phẩm không đáp ứng mong đợi của tôi.",
+      fullname: "Nguyễn Văn Đông",
+    },
+    {
+      quantity_star: 4,
+      rank: "Hài lòng",
+      content: "Sản phẩm chất lượng, giá thành hợp lý.",
+      fullname: "Trần Văn Bình",
+    },
+    {
+      quantity_star: 1,
+      rank: "Rất không hài lòng",
+      content: "Sản phẩm gặp nhiều vấn đề kỹ thuật.",
+      fullname: "Lê Thị Thanh Hằng",
+    },
+    {
+      quantity_star: 3,
+      rank: "Bình thường",
+      content: "Sản phẩm tạm ổn, có thể cải thiện.",
+      fullname: "Nguyễn Văn Phương",
+    },
+    {
+      quantity_star: 5,
+      rank: "Cực kỳ hài lòng",
+      content: "Sản phẩm đẹp, giao hàng nhanh chóng.",
+      fullname: "Trần Đình Quang",
+    },
+    {
+      quantity_star: 4,
+      rank: "Hài lòng",
+      content: "Sản phẩm tốt, đáp ứng đúng mong đợi.",
+      fullname: "Phạm Thị Trang",
+    },
+  ];
+  // xử lý hiển thị đánh giá
+  const [visibleComments, setVisibleComments] = useState(3);
+
+  const handleSeeMoreComments = () => {
+    setVisibleComments(
+      visibleComments === fakeData.length ? 3 : fakeData.length
+    );
+  };
+
   const quantity_sold = 500;
   const quantity_rating = 500;
   const [selectSize, setSelectSize] = useState(false);
@@ -112,7 +183,6 @@ export const ProducDetail = ({ navigation, id }) => {
       color: color ? "Trắng" : "Xanh",
       quantity: 1,
     };
-    console.log("số lượng" + quantity);
     if (quantity > 1) {
       setQuantity(quantity + 1);
       // Nếu sản phẩm đã tồn tại trong giỏ hàng, thì cập nhật
@@ -140,6 +210,7 @@ export const ProducDetail = ({ navigation, id }) => {
         style={{
           justifyContent: "center",
           alignItems: "center",
+          flex: 1,
         }}
       >
         <ActivityIndicator
@@ -164,24 +235,115 @@ export const ProducDetail = ({ navigation, id }) => {
       <ScrollView
         onScroll={handleScroll}
         scrollEventThrottle={16}
-        style={
-          {
-            // top: 0,
-            // left: 0,
-            // right: 0,
-            // zIndex: 1000,
-          }
-        }
         contentContainerStyle={{ paddingBottom: 70 }} // Để có không gian cuối ScrollView để hiển thị ButtonAction
       >
-        <View>
-          <ProductImage list={productData.list_image} />
-          <View style={styles.margin10}>
+        {productData ? (
+          <>
             <View>
-              <View>
-                <Text style={{ fontSize: 30 }}>{productData.name_product}</Text>
-                <Text>
-                  {/* {productData.star_review}{" "} */}
+              <ProductImage list={productData.list_image} />
+              <View style={styles.margin10}>
+                <View>
+                  <View>
+                    <Text style={{ fontSize: 30 }}>
+                      {productData.name_product}
+                    </Text>
+                    <Text>
+                      <View style={styles.starContainer}>
+                        {Array.from({ length: 5 }, (v, i) => (
+                          <Ionicons
+                            key={i}
+                            name={
+                              i < productData.star_review
+                                ? "star"
+                                : "star-outline"
+                            }
+                            color={
+                              i < productData.star_review ? "gold" : "gray"
+                            }
+                          />
+                        ))}
+                      </View>
+                      {" ("}
+                      {quantity_rating}
+                      {") "}| Đã bán {quantity_sold}+
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+                        {formatCurrency(productData.listed_price)}
+                      </Text>
+                      <Text
+                        style={{
+                          marginLeft: 3,
+                          backgroundColor: colors.borderGray,
+                          borderRadius: 5,
+                        }}
+                      >
+                        {calculateDiscountPercentage(100, 25)}
+                      </Text>
+                    </View>
+
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("SelectSize", {
+                          data: productData,
+                        })
+                      }
+                      style={styles.btnSelect}
+                    >
+                      <View>
+                        <Text>
+                          Size{" "}
+                          {selectSize ? "" : productData.list_size[0].name_size}{" "}
+                          | Trắng
+                        </Text>
+                      </View>
+                      <Text
+                        style={{ color: colors.blueRoot, fontWeight: "bold" }}
+                      >
+                        Chọn
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View style={{ marginVertical: 8, backgroundColor: "white" }}>
+              <Policy />
+            </View>
+
+            <View style={styles.margin10}>
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                Thông tin sản phẩm
+              </Text>
+              <Text>
+                Nike Air Force 1 Ra mắt vào năm 1982 bởi nhà thiết kế Bruce
+                Kilgore, ngay lập tức mẫu giày Nike Air Force 1 (AF1) đã trở
+                thành một ‘hit’ mạnh trên khắp thế giới khi ‘sold out’ ngay
+                trong ngày đầu trình làng. Thiết kế mẫu giày Nike Air Force 1
+                được xem là đôi giày mang tính cách mạng trong thế giới sneaker,
+                khi mà các nhà thiết kế kết hợp với các nhà khoa học cho ra mẫu
+                giày có công nghệ ‘Air’ – một túi khí ở gót chân để đệm hỗ trợ.
+              </Text>
+            </View>
+
+            <View style={styles.margin10}>
+              <Text style={{ fontSize: 20 }}>ĐÁNH GIÁ KHÁCH HÀNG</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 30, alignContent: "center" }}>
+                  {productData.star_review}
+                </Text>
+
+                <Text style={{ fontSize: 20, marginTop: 2 }}>
                   <View style={styles.starContainer}>
                     {Array.from({ length: 5 }, (v, i) => (
                       <Ionicons
@@ -189,122 +351,53 @@ export const ProducDetail = ({ navigation, id }) => {
                         name={
                           i < productData.star_review ? "star" : "star-outline"
                         }
+                        size={20}
                         color={i < productData.star_review ? "gold" : "gray"}
                       />
                     ))}
                   </View>
-                  {" ("}
-                  {quantity_rating}
-                  {") "}| Đã bán {quantity_sold}+
+                  <Text style={{ color: colors.grayLight }}>
+                    {" "}
+                    {quantity_rating} Đánh giá
+                  </Text>
                 </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-                    {formatCurrency(productData.listed_price)}
-                  </Text>
-                  <Text
-                    style={{
-                      marginLeft: 3,
-                      backgroundColor: colors.borderGray,
-                      borderRadius: 5,
-                    }}
-                  >
-                    {calculateDiscountPercentage(100, 25)}
-                  </Text>
-                </View>
-
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("SelectSize", {
-                      id: productData.id_product,
+              </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("ProductReview")}
+                style={{
+                  borderWidth: 1,
+                  borderColor: colors.borderGray,
+                  padding: 10,
+                  color: colors.white,
+                }}
+              >
+                <Text>Đánh giá</Text>
+              </TouchableOpacity>
+              <View>
+                {fakeData
+                  ? fakeData.slice(0, visibleComments).map((e, i) => {
+                      return <ItemEvaluate key={i} data={e} />;
                     })
-                  }
-                  style={styles.btnSelect}
-                >
-                  <View>
+                  : "Không có bình luận nào"}
+
+                {fakeData.length > 3 && (
+                  <TouchableOpacity
+                    style={styles.btnMore}
+                    onPress={handleSeeMoreComments}
+                  >
                     <Text>
-                      Size{" "}
-                      {selectSize ? "" : productData.list_size[0].name_size} |
-                      Trắng
+                      {visibleComments === fakeData.length
+                        ? "Thu nhỏ"
+                        : "Xem thêm"}
                     </Text>
-                  </View>
-                  <Text style={{ color: colors.blueRoot, fontWeight: "bold" }}>
-                    Chọn
-                  </Text>
-                </TouchableOpacity>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
-          </View>
-        </View>
-        <View style={{ marginVertical: 8, backgroundColor: "white" }}>
-          <Policy />
-        </View>
-
-        <View style={styles.margin10}>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-            Thông tin sản phẩm
-          </Text>
-          <Text>
-            development, the easiest way to get started is with Expo Go. Expo is
-            a set of tools and services built around React Native and, while it
-            has many features, the most relevant feature for us right now is
-          </Text>
-        </View>
-
-        <View style={styles.margin10}>
-          <Text style={{ fontSize: 20 }}>ĐÁNH GIÁ KHÁCH HÀNG</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ fontSize: 30, alignContent: "center" }}>
-              {productData.star_review}
-            </Text>
-
-            <Text style={{ fontSize: 20, marginTop: 2 }}>
-              <View style={styles.starContainer}>
-                {Array.from({ length: 5 }, (v, i) => (
-                  <Ionicons
-                    key={i}
-                    name={i < productData.star_review ? "star" : "star-outline"}
-                    size={20}
-                    color={i < productData.star_review ? "gold" : "gray"}
-                  />
-                ))}
-              </View>
-              <Text style={{ color: colors.grayLight }}>
-                {" "}
-                {quantity_rating} Đánh giá
-              </Text>
-            </Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ProductReview")}
-            style={{
-              borderWidth: 1,
-              borderColor: colors.borderGray,
-              padding: 10,
-              color: colors.white,
-            }}
-          >
-            <Text>Đánh giá</Text>
-          </TouchableOpacity>
-          <View>
-            <ItemEvaluate navigation={navigation} />
-            <ItemEvaluate navigation={navigation} />
-            <ItemEvaluate navigation={navigation} />
-            <ItemEvaluate navigation={navigation} />
-            <TouchableOpacity style={styles.btnMore}>
-              <Text>Xem thêm</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+          </>
+        ) : (
+          ""
+        )}
       </ScrollView>
 
       <View
