@@ -1,7 +1,7 @@
 import {styles} from "./OrderConfirm.styles";
 import {View, Text, TouchableOpacity, Image, ScrollView} from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React from "react";
+import React, {useState} from "react";
 import {colors} from "../../theme";
 import {formatMoney, WINDOW_WIDTH} from "../../utils/Utils";
 import {useNavigation} from "@react-navigation/native";
@@ -71,6 +71,10 @@ const orderItems = [
     }
 ]
 
+const method_payments = {
+    CASH: 'CASH',
+    ZaloPay: 'ZaloPay'
+}
 
 export default function OrderConfirmScreen() {
 
@@ -78,18 +82,18 @@ export default function OrderConfirmScreen() {
         <View style={styles.container}>
             <ScrollView>
                 <View style={styles.content}>
-                    <AddressInfo></AddressInfo>
-                    <OrderItems></OrderItems>
-                    <Payments></Payments>
-                    <OrderValue></OrderValue>
+                    <AddressInfoComponent></AddressInfoComponent>
+                    <OrderItemsComponent></OrderItemsComponent>
+                    <PaymentsComponent></PaymentsComponent>
+                    <OrderValueComponent></OrderValueComponent>
                 </View>
             </ScrollView>
-            <Footer></Footer>
+            <FooterComponent></FooterComponent>
         </View>
     );
 }
 
-function AddressInfo() {
+function AddressInfoComponent() {
 
     const navigation = useNavigation();
 
@@ -162,7 +166,7 @@ function AddressInfo() {
 }
 
 
-function OrderItems() {
+function OrderItemsComponent() {
 
     return (
         <View style={styles.orderItems}>
@@ -195,25 +199,72 @@ function OrderItem({data}) {
     )
 }
 
-function Payments() {
+function PaymentsComponent() {
+
+    const [selectedPayment, setSelectedPayment] = useState(method_payments.CASH)
+
+    const handlePaymentClick = (payment_method) => {
+        setSelectedPayment(payment_method)
+    }
+
     return (
         <View style={styles.payments}>
             <Text style={{fontSize: 16}}>Phương thức thanh toán</Text>
-            <View style={styles.methodPayment}>
-                <Ionicons name="stop-circle-outline" size={30} color='#0a74e4'></Ionicons>
-                <Image source={require('./images/money.png')} style={styles.img}></Image>
-                <Text style={styles.nameMethodPayment}>Thanh toán tiền mặt</Text>
-            </View>
-            <View style={styles.methodPayment}>
-                <Ionicons name="stop-circle-outline" size={30} color='#0a74e4'></Ionicons>
-                <Image source={require('./images/ZaloPay.png')} style={styles.img}></Image>
-                <Text style={styles.nameMethodPayment}>Ví ZaloPay</Text>
-            </View>
+
+            <CashPaymentComponent
+                selectedPayment={selectedPayment}
+                handlePaymentClick={handlePaymentClick}
+            />
+
+            <ZaloPayComponent
+                selectedPayment={selectedPayment}
+                handlePaymentClick={handlePaymentClick}
+            />
         </View>
     );
 }
 
-function OrderValue() {
+function CashPaymentComponent({selectedPayment, handlePaymentClick}) {
+
+    return (
+        <TouchableOpacity
+            style={[styles.methodPayment,
+                selectedPayment === method_payments.CASH && {backgroundColor: 'rgba(5, 0, 245, 0.1)'}]}
+            onPress={() => handlePaymentClick(method_payments.CASH)}>
+            <Ionicons
+                name="stop-circle-outline"
+                size={30}
+                color='#0a74e4'
+                style={{opacity: selectedPayment === method_payments.CASH ? 1 : 0}}
+            >
+            </Ionicons>
+            <Image source={require('./images/money.png')} style={styles.img}></Image>
+            <Text style={styles.nameMethodPayment}>Thanh toán tiền mặt</Text>
+        </TouchableOpacity>
+    )
+}
+
+function ZaloPayComponent({selectedPayment, handlePaymentClick}) {
+
+    return (
+        <TouchableOpacity
+            style={[styles.methodPayment,
+                selectedPayment === method_payments.ZaloPay && {backgroundColor: 'rgba(5, 0, 245, 0.1)'}]}
+            onPress={() => handlePaymentClick(method_payments.ZaloPay)}>
+            <Ionicons
+                name="stop-circle-outline"
+                size={30}
+                color='#0a74e4'
+                style={{opacity: selectedPayment === method_payments.ZaloPay ? 1 : 0}}
+            >
+            </Ionicons>
+            <Image source={require('./images/ZaloPay.png')} style={styles.img}></Image>
+            <Text style={styles.nameMethodPayment}>Ví ZaloPay</Text>
+        </TouchableOpacity>
+    )
+}
+
+function OrderValueComponent() {
 
     return (
         <View>
@@ -242,7 +293,7 @@ function OrderValue() {
     );
 }
 
-function Footer() {
+function FooterComponent() {
 
     return (
         <View style={styles.footer}>
