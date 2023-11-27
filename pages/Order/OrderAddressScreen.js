@@ -334,13 +334,11 @@ function MainComponent(
 
                     setValue={(value) => {
                         setProvinceId(value)
-                        setDistrictId('')
-                        setWardId('')
+
                     }}
 
                     onChangeValue={() => {
                         const provinceName = getLabelFromValue(provinceData, province_id);
-
                         setProvinceName(provinceName);
                         // console.log(provinceName);
 
@@ -369,10 +367,7 @@ function MainComponent(
 
                     value={district_id}
 
-                    setValue={(value) => {
-                        setDistrictId(value)
-                        setWardId('')
-                    }}
+                    setValue={(value) => setDistrictId(value)}
 
                     onChangeValue={
                         () => {
