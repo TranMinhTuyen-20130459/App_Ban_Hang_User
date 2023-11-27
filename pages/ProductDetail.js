@@ -17,8 +17,9 @@ import { Policy } from "../components/product/Policy";
 import { colors } from "../theme";
 import { addCart, updateCart } from "../redux/slices/CartsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useRoute } from "@react-navigation/native";
 
-export const ProducDetail = ({ navigation, id }) => {
+export const ProducDetail = ({ navigation }) => {
   const fakeData = [
     {
       quantity_star: 5,
@@ -81,6 +82,7 @@ export const ProducDetail = ({ navigation, id }) => {
       fullname: "Phạm Thị Trang",
     },
   ];
+
   // xử lý hiển thị đánh giá
   const [visibleComments, setVisibleComments] = useState(3);
 
@@ -98,8 +100,14 @@ export const ProducDetail = ({ navigation, id }) => {
   const [color, setColor] = useState();
   const [productData, setProductData] = useState();
   const [quantity, setQuantity] = useState(1);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  id = 1;
+  const handleViewOver = () => {
+    // Show the modal
+    setIsModalVisible(true);
+  };
+  const route = useRoute();
+  const { productId } = route.params;
 
   // redux
   const dispatch = useDispatch();
@@ -107,13 +115,13 @@ export const ProducDetail = ({ navigation, id }) => {
 
   // theo dõi giỏ hàng
   useEffect(() => {
-    const existingCartItem = carts.find((item) => item.id === id);
+    const existingCartItem = carts.find((item) => item.id === productId);
     setQuantity(existingCartItem ? existingCartItem.quantity + 1 : 1);
   }, [carts]);
 
   const link =
     "http://tmt020202ccna-001-site1.atempurl.com/api/products/infor-product?id=" +
-    id;
+    productId;
   // formart Tiền tệ
   const formatCurrency = (value) => {
     // Kiểm tra nếu giá trị không phải là số
@@ -178,7 +186,7 @@ export const ProducDetail = ({ navigation, id }) => {
       id: productData.id_product,
       title: productData.name_product,
       price: productData.listed_price,
-      discountPrice: productData.listed_price - productData.promotional_price,
+      discountPrice: productData.promotional_price,
       size: size ? productData.list_size[0].name_size : size,
       color: color ? "Trắng" : "Xanh",
       quantity: 1,
@@ -188,7 +196,7 @@ export const ProducDetail = ({ navigation, id }) => {
       // Nếu sản phẩm đã tồn tại trong giỏ hàng, thì cập nhật
       dispatch(
         updateCart({
-          id: id,
+          id: productId,
           quantity: quantity,
         })
       );
