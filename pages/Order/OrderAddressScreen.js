@@ -10,7 +10,10 @@ import {useNavigation} from "@react-navigation/native";
 import {
     returnValueErrorOfNameCustomer,
     returnValueErrorOfPhoneNumber,
-    returnValueErrorAddressDetail
+    returnValueErrorAddressDetail,
+    returnValueErrorProvince,
+    returnValueErrorDistrict,
+    returnValueErrorWard
 } from "./util/CheckValid"
 import {fetchDataMethodGET} from "./util/CallApi";
 
@@ -37,7 +40,10 @@ export default function OrderAddressScreen() {
 
     const [errorNameCustomer, setErrorNameCustomer] = useState(null)
     const [errorPhoneNumber, setErrorPhoneNumber] = useState(null)
-    const [errorAddressDetail, setErrorAddressDetail] = useState(null);
+    const [errorAddressDetail, setErrorAddressDetail] = useState(null)
+    const [errorProvince, setErrorProvince] = useState(null)
+    const [errorDistrict, setErrorDistrict] = useState(null)
+    const [errorWard, setErrorWard] = useState(null)
 
     const handleClickBtConfirm = () => {
 
@@ -53,10 +59,27 @@ export default function OrderAddressScreen() {
         const valueErrorAddressDetail = returnValueErrorAddressDetail(address_detail);
         setErrorAddressDetail(valueErrorAddressDetail)
 
+        // Nếu Tỉnh/Thành hợp lệ thì errorProvince được cập nhật giá trị null
+        const valueErrorProvince = returnValueErrorProvince(province_id);
+        setErrorProvince(valueErrorProvince)
+
+        // Nếu Quận/Huyện hợp lệ thì errorDistrict được cập nhật giá trị null
+        const valueErrorDistrict = returnValueErrorDistrict(district_id);
+        setErrorDistrict(valueErrorDistrict)
+
+        // Nếu Phường/Xã hợp lệ thì Ward được cập nhật giá trị null
+        const valueErrorWard = returnValueErrorWard(ward_id);
+        setErrorWard(valueErrorWard)
+
         // TH: Form không hợp lệ
-        if (valueErrorOfNameCustomer != null
+        if (
+            valueErrorOfNameCustomer != null
             || valueErrorOfPhoneNumber != null
-            || valueErrorAddressDetail != null) return;
+            || valueErrorAddressDetail != null
+            || valueErrorProvince != null
+            || valueErrorDistrict != null
+            || valueErrorWard != null
+        ) return;
 
         // Cập nhật địa chỉ giao hàng mới
         dispatch(setAddress(orderAddress))
@@ -125,12 +148,17 @@ export default function OrderAddressScreen() {
 
                         errorNameCustomer={errorNameCustomer}
                         errorPhoneNumber={errorPhoneNumber}
+                        errorAddressDetail={errorAddressDetail}
+                        errorProvince={errorProvince}
+                        errorDistrict={errorDistrict}
+                        errorWard={errorWard}
 
                         setErrorNameCustomer={setErrorNameCustomer}
                         setErrorPhoneNumber={setErrorPhoneNumber}
-
-                        errorAddressDetail={errorAddressDetail}
                         setErrorAddressDetail={setErrorAddressDetail}
+                        setErrorProvince={setErrorProvince}
+                        setErrorDistrict={setErrorDistrict}
+                        setErrorWard={setErrorWard}
                     />
                 </View>
                 <Footer handleClickBtConfirm={handleClickBtConfirm}/>
@@ -167,12 +195,17 @@ function MainComponent(
 
         errorNameCustomer,
         errorPhoneNumber,
+        errorAddressDetail,
+        errorProvince,
+        errorDistrict,
+        errorWard,
 
         setErrorNameCustomer,
         setErrorPhoneNumber,
-
-        errorAddressDetail,
-        setErrorAddressDetail
+        setErrorAddressDetail,
+        setErrorProvince,
+        setErrorDistrict,
+        setErrorWard,
     }) {
 
     const [provinceData, setProvinceData] = useState([])
@@ -299,20 +332,24 @@ function MainComponent(
 
                     value={province_id}
 
-                    setValue={(value) => setProvinceId(value)}
+                    setValue={(value) => {
+                        setProvinceId(value)
+                        setDistrictId('')
+                        setWardId('')
+                    }}
 
                     onChangeValue={() => {
                         const provinceName = getLabelFromValue(provinceData, province_id);
+
                         setProvinceName(provinceName);
                         // console.log(provinceName);
+
+                        setErrorProvince(null)
                     }}
 
                     style={styles.drop_down}
                 />
-
-                {/*<Text style={{color: colors.redHeart, fontSize: 20}}>Giá trị đã*/}
-                {/*    chọn: {province_id === '' ? 'null' : province_id}</Text>*/}
-
+                {errorProvince && <Text style={{color: 'red'}}>{errorProvince}</Text>}
             </View>
             <View style={styles.view_contain_text}>
                 <Text style={styles.fontSizeText}>Quận/ Huyện</Text>
@@ -332,19 +369,25 @@ function MainComponent(
 
                     value={district_id}
 
-                    setValue={(value) => setDistrictId(value)}
+                    setValue={(value) => {
+                        setDistrictId(value)
+                        setWardId('')
+                    }}
 
                     onChangeValue={
                         () => {
                             const districtName = getLabelFromValue(districtData, district_id)
                             setDistrictName(districtName)
                             // console.log(districtName)
+
+                            setErrorDistrict(null)
                         }
                     }
 
                     style={styles.drop_down}
                 />
                 }
+                {errorDistrict && <Text style={{color: 'red'}}>{errorDistrict}</Text>}
             </View>
             <View style={styles.view_contain_text}>
                 <Text style={styles.fontSizeText}>Phường/ Xã</Text>
@@ -370,11 +413,13 @@ function MainComponent(
                         setWardName(wardName)
                         // console.log(wardName)
 
+                        setErrorWard(null)
                     }}
 
                     style={styles.drop_down}
                 />
                 }
+                {errorWard && <Text style={{color: 'red'}}>{errorWard}</Text>}
             </View>
             <View style={styles.view_contain_text}>
                 <Text style={styles.fontSizeText}>Địa chỉ nhận hàng</Text>
