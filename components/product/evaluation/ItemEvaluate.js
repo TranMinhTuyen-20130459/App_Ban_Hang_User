@@ -9,14 +9,7 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { colors } from "../../../theme";
 
-export const ItemEvaluate = ({ navigation }) => {
-  const prop = {
-    quantity_star: 5,
-    rank: "Cực kỳ hài lòng",
-    content: "Sản phẩm này ok phết",
-    fullname: "Nguyễn Văn Lênh",
-  };
-
+export const ItemEvaluate = ({ data }) => {
   const [showCommentInput, setShowCommentInput] = useState(false);
   const [commentText, setCommentText] = useState("");
 
@@ -31,18 +24,18 @@ export const ItemEvaluate = ({ navigation }) => {
     <View styles={styles.container}>
       <View style={styles.horizontal}>
         <Text style={{ marginRight: 5 }}>
-          {Array.from({ length: prop.quantity_star }, (v, i) => (
+          {Array.from({ length: data.quantity_star }, (v, i) => (
             <Ionicons key={i} name="star" color={"gold"}></Ionicons>
           ))}
         </Text>
-        <Text style={{ fontWeight: "bold" }}>{prop.rank}</Text>
+        <Text style={{ fontWeight: "bold" }}>{data.rank}</Text>
       </View>
       <View style={{}}>
-        <Text>{prop.content}</Text>
+        <Text>{data.content}</Text>
       </View>
       <View style={styles.horizontal}>
         <Text style={{ marginRight: 5, fontSize: 15, color: colors.grayLight }}>
-          {prop.fullname}
+          {data.fullname}
         </Text>
         <Text
           style={{

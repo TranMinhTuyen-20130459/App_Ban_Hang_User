@@ -7,6 +7,7 @@ export const ItemColorClothes = (props) => {
     <TouchableOpacity
       style={{
         flexDirection: "row",
+        // nếu được chọn thì viền màu xanh
         borderColor: props.selected ? colors.blueRoot : colors.borderGray,
         borderWidth: 1,
         width: "50%", // Two products in a row
@@ -25,7 +26,7 @@ export const ItemColorClothes = (props) => {
       <View
         style={{ flex: 1.5, alignItems: "center", justifyContent: "center" }}
       >
-        <Text style={{ textAlign: "center" }}>màu đỏ sao vàng</Text>
+        <Text style={{ textAlign: "center" }}>{props.color}</Text>
       </View>
     </TouchableOpacity>
   );

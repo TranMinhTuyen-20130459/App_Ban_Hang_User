@@ -5,6 +5,8 @@ import { ButtonAdd } from "../components/product/ButtonAddCart";
 import { useRoute } from "@react-navigation/native";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addCart } from "../redux/slices/CartsSlice";
 
 export const SelectSize = (prop) => {
   /**
@@ -16,39 +18,60 @@ export const SelectSize = (prop) => {
    * vendor
    *
    */
-  const [productData, setProductData] = useState(null);
   const route = useRoute();
-  const { id } = route.params;
-  const link =
-    "http://tmt020202ccna-001-site1.atempurl.com/api/products/infor-product?id=" +
-    id;
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(link);
+  const { data } = route.params;
+  const listNameColor = ["Trắng", "Xanh", "Vàng", "Đỏ"];
+  const [productData, setProductData] = useState(() => {
+    const updatedListImage = data.list_image.map((image, i) => {
+      return {
+        ...image,
+        name: listNameColor[i], // Assign the color name based on the index.
+      };
+    });
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
-        setProductData(data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+    return {
+      ...data,
+      list_image: updatedListImage,
     };
+  });
 
-    fetchData();
-  }, []);
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [color, setColor] = useState(null);
+  const [size, setSize] = useState(null);
 
+  // xử lý chọn màu
   const handleColorPress = (color) => {
-    setSelectedColor(color);
+    setColor(color);
   };
-
+  // xử lý chọn size
   const handleSizePress = (size) => {
-    setSelectedSize(size);
+    setSize(size);
+  };
+  // redux
+  const dispatch = useDispatch();
+  const carts = useSelector((state) => state.carts);
+  // thêm sp vào giỏ
+  const handleAddToCart = () => {
+    const newCartItem = {
+      id: productData.id_product,
+      title: productData.name_product,
+      price: productData.listed_price,
+      discountPrice: productData.listed_price - productData.promotional_price,
+      size: size ? size : productData.list_size[0].name_size,
+      color: color ? "Trắng" : "Xanh",
+      quantity: 1,
+    };
+    // kiểm tra có sản phẩm này trong carts redux không
+    const existingCartItem = carts.find(
+      (item) => item.id === productData.id_product
+    );
+    // nếu có thì thông báo sản phẩm này đã có
+    if (existingCartItem) {
+      alert("Sản phẩm này đã có trong giỏ hàng");
+    } else {
+      // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thì thêm mới
+      dispatch(addCart(newCartItem));
+      alert("Thêm vào giỏ hàng thành công " + size);
+    }
   };
 
   if (!productData) {
@@ -86,8 +109,10 @@ export const SelectSize = (prop) => {
                 Native app. If you are new to mobile development, the easiest
                 way to get
               </Text>
-              <Text>Size:{selectedSize ? selectedSize : ""}</Text>
-              <Text maxFontSizeMultiplier={20}>150000</Text>
+              <Text>
+                Size:{size ? size : productData.list_size[0].name_size}
+              </Text>
+              <Text>Màu: {color ? color : productData.list_image[0].name}</Text>
             </View>
           </View>
         </View>
@@ -104,26 +129,26 @@ export const SelectSize = (prop) => {
                     return (
                       <ItemColorClothes
                         key={image.id_image}
-                        color={image.path_image}
+                        color={image.name}
                         link={image.path_image}
-                        selected={selectedColor === image.path_image}
-                        onPress={() => handleColorPress(image.path_image)}
+                        selected={color === image.name}
+                        onPress={() => handleColorPress(image.name)}
                       />
                     );
                   })
-                : "không có ảnh!"}
+                : "không có ảnh"}
             </View>
             <View>
               <Text>Size: </Text>
               <View style={styles.flexWrap}>
                 {productData.list_size
-                  ? productData.list_size.map((size, i) => {
+                  ? productData.list_size.map((s, i) => {
                       return (
                         <ItemSize
                           key={i}
-                          name={size.name_size}
-                          selected={selectedSize === size.name_size}
-                          onPress={() => handleSizePress(size.name_size)}
+                          name={s.name_size}
+                          selected={size === s.name_size}
+                          onPress={() => handleSizePress(s.name_size)}
                         />
                       );
                     })
@@ -134,7 +159,7 @@ export const SelectSize = (prop) => {
         </View>
       </ScrollView>
       <View style={styles.fixedBottom}>
-        <ButtonAdd />
+        <ButtonAdd handleAddToCart={handleAddToCart} />
       </View>
     </View>
   );
