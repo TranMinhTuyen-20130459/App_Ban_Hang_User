@@ -1,7 +1,7 @@
 import {KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
 import DropDownPicker from 'react-native-dropdown-picker';
 import {styles} from "./OrderAddress.styles";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import {setAddress} from "../../redux/slices/OrderAddressSlice"
 import {colors} from "../../theme";
@@ -12,6 +12,7 @@ import {
     returnValueErrorOfPhoneNumber,
     returnValueErrorAddressDetail
 } from "./util/CheckValid"
+import {fetchDataMethodGET} from "./util/CallApi";
 
 export default function OrderAddressScreen() {
 
@@ -30,7 +31,7 @@ export default function OrderAddressScreen() {
     const [district_id, setDistrictId] = useState('');
     const [ward_id, setWardId] = useState('');
 
-    const [isOpenDropDownCity, setIsOpenDropDownCity] = useState(false);
+    const [isOpenDropDownProvince, setIsOpenDropDownProvince] = useState(false);
     const [isOpenDropDownDistrict, setIsOpenDropDownDistrict] = useState(false);
     const [isOpenDropDownWard, setIsOpenDropDownWard] = useState(false);
 
@@ -114,11 +115,11 @@ export default function OrderAddressScreen() {
                         setWardId={setWardId}
                         ward_id={ward_id}
 
-                        isOpenDropDownCity={isOpenDropDownCity}
+                        isOpenDropDownProvince={isOpenDropDownProvince}
                         isOpenDropDownDistrict={isOpenDropDownDistrict}
                         isOpenDropDownWard={isOpenDropDownWard}
 
-                        setIsOpenDropDownCity={setIsOpenDropDownCity}
+                        setIsOpenDropDownProvince={setIsOpenDropDownProvince}
                         setIsOpenDropDownDistrict={setIsOpenDropDownDistrict}
                         setIsOpenDropDownWard={setIsOpenDropDownWard}
 
@@ -156,11 +157,11 @@ function MainComponent(
         setWardId,
         ward_id,
 
-        isOpenDropDownCity,
+        isOpenDropDownProvince,
         isOpenDropDownDistrict,
         isOpenDropDownWard,
 
-        setIsOpenDropDownCity,
+        setIsOpenDropDownProvince,
         setIsOpenDropDownDistrict,
         setIsOpenDropDownWard,
 
@@ -174,25 +175,99 @@ function MainComponent(
         setErrorAddressDetail
     }) {
 
-    const cityData = [
-        {label: 'Hà Nội', value: '1'},
-        {label: 'Hồ Chí Minh', value: '2'},
-        {label: 'Đà Nẵng', value: '3'},
-        {label: 'Hà Nội', value: '4'},
-        {label: 'Hồ Chí Minh', value: '5'},
-        {label: 'Đà Nẵng', value: '6'},
-        {label: 'Hà Nội', value: '7'},
-        {label: 'Hồ Chí Minh', value: '8'},
-        {label: 'Đà Nẵng', value: '9'},
-        {label: 'Hà Nội', value: '10'}
-    ];
+    const [provinceData, setProvinceData] = useState([])
+    const [districtData, setDistrictData] = useState([])
+    const [wardData, setWardData] = useState([])
+
+    // Gọi API lấy danh sách Tỉnh/Thành Phố
+    useEffect(() => {
+        const apiUrl = 'https://provinces.open-api.vn/api/p';
+        const fetchData = async () => {
+            try {
+
+                const provinceData = await fetchDataMethodGET(apiUrl);
+
+                // Sử dụng Optional chaining và Nullish coalescing để kiểm tra và xử lý dữ liệu provinceData
+                const formattedData = provinceData?.map(item => ({
+                    label: item.name,
+                    value: item.code.toString(),
+                })) ?? [];
+
+                setProvinceData(formattedData);
+                setDistrictData([])
+                setWardData([])
+
+            } catch (error) {
+
+                console.error("Error fetching data:", error);
+                setProvinceData([]);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+
+    // Gọi API lấy danh sách Quận/Huyện thuộc Tỉnh/Thành Phố
+    useEffect(() => {
+
+        const apiUrl = `https://provinces.open-api.vn/api/p/${province_id}?depth=2`;
+
+        const fetchData = async () => {
+            try {
+
+                const data = await fetchDataMethodGET(apiUrl);
+
+                // Sử dụng Optional chaining và Nullish coalescing để kiểm tra và xử lý dữ liệu districts
+                const formattedData = data?.districts?.map(item => ({
+                    label: item.name,
+                    value: item.code.toString(),
+                })) ?? [];
+
+                setDistrictData(formattedData);
+                setWardData([])
+
+            } catch (error) {
+
+                console.error("Error fetching data:", error);
+                setDistrictData([]);
+            }
+        };
+
+        fetchData();
+    }, [province_id]);
+
+    // Gọi API lấy danh sách Phường/Xã thuộc Quận/Huyện
+    useEffect(() => {
+
+        const apiUrl = `https://provinces.open-api.vn/api/d/${district_id}?depth=2`;
+        const fetchData = async () => {
+            try {
+                const data = await fetchDataMethodGET(apiUrl);
+
+                // Sử dụng Optional chaining và Nullish coalescing để kiểm tra và xử lý dữ liệu data
+                const formattedData = data?.wards?.map(item => ({
+                    label: item.name,
+                    value: item.code
+                })) ?? [];
+
+                setWardData(formattedData);
+            } catch (error) {
+
+                console.error("Error fetching data:", error);
+                setWardData([]);
+            }
+        };
+
+        fetchData();
+    }, [district_id]);
 
     return (
         <View style={styles.mainContent}>
 
-            <View style={{marginBottom: 10}}>
-                <Text style={{fontSize: 16}}>Nhập địa chỉ mới</Text>
-            </View>
+            {/*<View style={{marginBottom: 10}}>*/}
+            {/*    <Text style={{fontSize: 16}}>Nhập địa chỉ mới</Text>*/}
+            {/*</View>*/}
 
             {/* Component này chứa các ô text_input để người dùng nhập Họ,tên và Số điện thoại */}
             <TextInputComponent
@@ -213,21 +288,21 @@ function MainComponent(
                 <DropDownPicker
                     placeholder='Chọn Tỉnh/Thành Phố'
 
-                    open={isOpenDropDownCity}
+                    open={isOpenDropDownProvince}
 
                     setOpen={(value) => {
                         console.log('DropDownCity: ' + value)
-                        setIsOpenDropDownCity(value)
+                        setIsOpenDropDownProvince(value)
                     }}
 
-                    items={cityData}
+                    items={provinceData}
 
                     value={province_id}
 
                     setValue={(value) => setProvinceId(value)}
 
                     onChangeValue={() => {
-                        const provinceName = getLabelFromValue(cityData, province_id);
+                        const provinceName = getLabelFromValue(provinceData, province_id);
                         setProvinceName(provinceName);
                         // console.log(provinceName);
                     }}
@@ -243,7 +318,7 @@ function MainComponent(
                 <Text style={styles.fontSizeText}>Quận/ Huyện</Text>
             </View>
             <View>
-                {isOpenDropDownCity === false && <DropDownPicker
+                {isOpenDropDownProvince === false && <DropDownPicker
                     placeholder='Chọn Quận/Huyện'
 
                     open={isOpenDropDownDistrict}
@@ -253,7 +328,7 @@ function MainComponent(
                         setIsOpenDropDownDistrict(value)
                     }}
 
-                    items={cityData}
+                    items={districtData}
 
                     value={district_id}
 
@@ -261,7 +336,7 @@ function MainComponent(
 
                     onChangeValue={
                         () => {
-                            const districtName = getLabelFromValue(cityData, district_id)
+                            const districtName = getLabelFromValue(districtData, district_id)
                             setDistrictName(districtName)
                             // console.log(districtName)
                         }
@@ -275,7 +350,7 @@ function MainComponent(
                 <Text style={styles.fontSizeText}>Phường/ Xã</Text>
             </View>
             <View>
-                {isOpenDropDownCity === false && isOpenDropDownDistrict === false && <DropDownPicker
+                {isOpenDropDownProvince === false && isOpenDropDownDistrict === false && <DropDownPicker
 
                     placeholder='Chọn Phường/Xã'
 
@@ -283,7 +358,7 @@ function MainComponent(
 
                     setOpen={setIsOpenDropDownWard}
 
-                    items={cityData}
+                    items={wardData}
 
                     value={ward_id}
 
@@ -291,7 +366,7 @@ function MainComponent(
 
                     onChangeValue={() => {
 
-                        const wardName = getLabelFromValue(cityData, ward_id)
+                        const wardName = getLabelFromValue(wardData, ward_id)
                         setWardName(wardName)
                         // console.log(wardName)
 
@@ -312,8 +387,8 @@ function MainComponent(
                         setErrorAddressDetail(null)
                     }}
                 />
-                {errorAddressDetail && <Text style={{color: 'red'}}>{errorAddressDetail}</Text>}
             </View>
+            {errorAddressDetail && <Text style={{color: 'red'}}>{errorAddressDetail}</Text>}
         </View>
     );
 }
