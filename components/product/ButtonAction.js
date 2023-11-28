@@ -3,17 +3,20 @@ import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { ButtonAdd } from "./ButtonAddCart";
 import { ButtonBuy } from "./ButtonBuyNow";
 
-export const ButtonAction = () => {
-  const handleButtonPress = (action) => {
-    // Implement your button press logic here
+export const ButtonAction = ({ handleAddToCart, handleByNow }) => {
+  const handleAdd = () => {
+    handleAddToCart();
+  };
+  const handleBuy = () => {
+    handleByNow();
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <ButtonBuy />
+        <ButtonBuy handleByNow={handleBuy} />
         <View style={{ flex: 0.1 }}></View>
-        <ButtonAdd />
+        <ButtonAdd handleAddToCart={handleAdd} />
       </View>
     </View>
   );
