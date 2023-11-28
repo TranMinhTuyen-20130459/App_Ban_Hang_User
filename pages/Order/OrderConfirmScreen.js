@@ -5,8 +5,9 @@ import React, {useState} from "react";
 import {colors} from "../../theme";
 import {formatMoney, WINDOW_WIDTH} from "../../utils/Utils";
 import {useNavigation} from "@react-navigation/native";
-import {useSelector} from "react-redux";
-
+import {useDispatch, useSelector} from "react-redux";
+import {method_payments} from "../../redux/slices/PaymentSlice";
+import {setSelectedPayment} from "../../redux/slices/PaymentSlice";
 
 const orderItems = [
     {
@@ -70,13 +71,11 @@ const orderItems = [
         path_img: 'https://kingshoes.vn/data/upload/media/fn7439-133-giay-nike-air-force-1-07-chinh-hang-gia-tot-den-king-shoes-13.jpeg'
     }
 ]
-
-const method_payments = {
-    CASH: 'CASH',
-    ZaloPay: 'ZaloPay'
-}
-
 export default function OrderConfirmScreen() {
+
+    const handleClickBtOrder = () => {
+
+    }
 
     return (
         <View style={styles.container}>
@@ -88,7 +87,7 @@ export default function OrderConfirmScreen() {
                     <OrderValueComponent></OrderValueComponent>
                 </View>
             </ScrollView>
-            <FooterComponent></FooterComponent>
+            <FooterComponent handleClickBtOrder={handleClickBtOrder}></FooterComponent>
         </View>
     );
 }
@@ -201,10 +200,11 @@ function OrderItem({data}) {
 
 function PaymentsComponent() {
 
-    const [selectedPayment, setSelectedPayment] = useState(method_payments.CASH)
+    const dispatch = useDispatch()
+    const selectedPayment = useSelector(state => state.payment)
 
     const handlePaymentClick = (payment_method) => {
-        setSelectedPayment(payment_method)
+        dispatch(setSelectedPayment(payment_method))
     }
 
     return (
@@ -293,7 +293,7 @@ function OrderValueComponent() {
     );
 }
 
-function FooterComponent() {
+function FooterComponent({handleClickBtOrder}) {
 
     return (
         <View style={styles.footer}>
