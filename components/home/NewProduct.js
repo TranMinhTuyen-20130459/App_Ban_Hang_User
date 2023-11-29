@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-export default function HotProduct() {
+export default function NewProduct() {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
