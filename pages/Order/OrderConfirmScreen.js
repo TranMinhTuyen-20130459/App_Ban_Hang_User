@@ -1,5 +1,5 @@
 import {styles} from "./OrderConfirm.styles";
-import {View, Text, TouchableOpacity, Image, ScrollView} from "react-native";
+import {View, Text, TouchableOpacity, Image, ScrollView, Alert} from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useState} from "react";
 import {colors} from "../../theme";
@@ -8,10 +8,70 @@ import {useNavigation} from "@react-navigation/native";
 import {useDispatch, useSelector} from "react-redux";
 import {method_payments} from "../../redux/slices/PaymentSlice";
 import {setSelectedPayment} from "../../redux/slices/PaymentSlice";
+import {createOrder} from "./util/CallApi";
+import {API_POST_PATHS} from "../../services/PathApi";
+import {removeAllCart} from "../../redux/slices/CartsSlice";
 
 export default function OrderConfirmScreen() {
 
-    const handleClickBtOrder = () => {
+    const dispatch = useDispatch()
+    const navigation = useNavigation()
+
+    const order_address = useSelector(state => state.address_order);
+    const order_items = useSelector(state => state.carts)
+    const selectedPayment = useSelector(state => state.payment)
+
+    const ship_price = 99000; // => đây là phí giao hàng mặc định
+    const value_order = () => {
+        return order_items.reduce((total, item) => total + (item.price * item.quantity), 0)
+    }
+
+    const total_price = ship_price + value_order();
+
+    const order_data = {
+        name_customer: order_address.name_customer,
+        phone: order_address.phone_number,
+        email_customer: 'test@gmail.com', //=> bắt buộc phải có email
+        to_address: order_address.to_address,
+        note: '',
+        ship_price: ship_price,
+        order_value: value_order(),
+        list_order_detail: order_items.map((item) => ({
+            id_product: item.id,
+            name_size: item.size,
+            quantity: item.quantity,
+            price: item.price
+        }))
+    }
+
+
+    const handleClickBtOrder = async () => {
+
+        //TH: Thanh toán bằng tiền mặt
+        if (selectedPayment.toString() === method_payments.CASH) {
+
+            const dataResponse = await createOrder(API_POST_PATHS.tao_don_hang, order_data)
+
+            if (dataResponse) {
+
+                Alert.alert('Thông báo', 'Đặt hàng thành công', [{
+                    text: 'OK',
+                    onPress: () => {
+                        dispatch(removeAllCart()) // => xóa đi sản phẩm trong giỏ hàng
+                        navigation.navigate('Main') //=> chuyển hướng đến Trang Chủ
+                    }
+                }])
+
+            } else {
+                Alert.alert('Thông báo', 'Đặt hàng thất bại')
+            }
+
+        }
+
+        //TH: Thanh toán bằng ZaloPay
+        else if (selectedPayment.toString() === method_payments.ZaloPay) {
+            Alert.alert('', 'Chức năng này đang được phát triển')
+        }
 
     }
 
@@ -19,23 +79,25 @@ export default function OrderConfirmScreen() {
         <View style={styles.container}>
             <ScrollView>
                 <View style={styles.content}>
-                    <AddressInfoComponent></AddressInfoComponent>
-                    <OrderItemsComponent></OrderItemsComponent>
-                    <PaymentsComponent></PaymentsComponent>
-                    <OrderValueComponent></OrderValueComponent>
+                    <AddressInfoComponent orderAddress={order_address}></AddressInfoComponent>
+                    <OrderItemsComponent orderItems={order_items}></OrderItemsComponent>
+                    <PaymentsComponent selectedPayment={selectedPayment}></PaymentsComponent>
+                    <OrderValueComponent order_value={value_order()}
+                                         ship_price={ship_price}
+                                         total_price={total_price}
+                    >
+                    </OrderValueComponent>
                 </View>
             </ScrollView>
-            <FooterComponent handleClickBtOrder={handleClickBtOrder}></FooterComponent>
+            <FooterComponent handleClickBtOrder={handleClickBtOrder} total_price={total_price}></FooterComponent>
         </View>
     );
 }
 
-function AddressInfoComponent() {
+function AddressInfoComponent(props) {
 
+    const {orderAddress} = props
     const navigation = useNavigation();
-
-    // Sử dụng useSelector để lấy trạng thái của thông tin địa chỉ giao hàng
-    const orderAddress = useSelector(state => state.address_order);
 
     const InformationComponent = () => (
         orderAddress && orderAddress.to_address && (
@@ -103,9 +165,9 @@ function AddressInfoComponent() {
 }
 
 
-function OrderItemsComponent() {
+function OrderItemsComponent(props) {
 
-    const orderItems = useSelector(state => state.carts)
+    const {orderItems} = props
 
     return (
         <View style={styles.orderItems}>
@@ -138,10 +200,9 @@ function OrderItem({data}) {
     )
 }
 
-function PaymentsComponent() {
+function PaymentsComponent({selectedPayment}) {
 
     const dispatch = useDispatch()
-    const selectedPayment = useSelector(state => state.payment)
 
     const handlePaymentClick = (payment_method) => {
         dispatch(setSelectedPayment(payment_method))
@@ -204,7 +265,9 @@ function ZaloPayComponent({selectedPayment, handlePaymentClick}) {
     )
 }
 
-function OrderValueComponent() {
+function OrderValueComponent(props) {
+
+    const {order_value, ship_price, total_price} = props
 
     return (
         <View>
@@ -212,16 +275,16 @@ function OrderValueComponent() {
                 <View>
                     <View style={styles.infoOrderValue}>
                         <Text style={{fontSize: 15}}>Tạm tính</Text>
-                        <Text style={{fontSize: 15}}>9.700.000 đ</Text>
+                        <Text style={{fontSize: 15}}>{formatMoney(order_value)}</Text>
                     </View>
                     <View style={styles.infoOrderValue}>
                         <Text style={{fontSize: 15}}>Phí vận chuyển</Text>
-                        <Text style={{fontSize: 15}}>100.000 đ</Text>
+                        <Text style={{fontSize: 15}}>{formatMoney(ship_price)}</Text>
                     </View>
                     <View style={styles.separatorHorizontal}></View>
                     <View style={styles.infoOrderValue}>
                         <Text style={{fontWeight: 'bold', fontSize: 16}}>Tổng tiền</Text>
-                        <Text style={{fontWeight: 'bold', fontSize: 16}}>9.800.000 đ</Text>
+                        <Text style={{fontWeight: 'bold', fontSize: 16}}>{formatMoney(total_price)}</Text>
                     </View>
                 </View>
             </View>
@@ -233,15 +296,19 @@ function OrderValueComponent() {
     );
 }
 
-function FooterComponent({handleClickBtOrder}) {
+function FooterComponent(props) {
+
+    const {handleClickBtOrder, total_price} = props
 
     return (
         <View style={styles.footer}>
             <View>
                 <Text style={{fontSize: 17, marginBottom: 10}}>Tổng tiền</Text>
-                <Text style={{fontSize: 18, color: 'red', fontWeight: 'bold'}}>9.800.000 đ</Text>
+                <Text style={{fontSize: 18, color: 'red', fontWeight: 'bold'}}>{formatMoney(total_price)}</Text>
             </View>
-            <TouchableOpacity style={styles.btOrder}>
+            <TouchableOpacity style={styles.btOrder}
+                              onPress={handleClickBtOrder}
+            >
                 <Text style={{fontSize: 18, color: 'white', padding: 5}}>Đặt Hàng</Text>
             </TouchableOpacity>
         </View>
