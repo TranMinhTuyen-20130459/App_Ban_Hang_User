@@ -23,6 +23,7 @@ import {
 import OrderDetailsScreen from './pages/orderUser/DetailOrder';
 import Search from "./components/Search";
 import ResultSearch from "./components/ResultSearch";
+import ViewedProduct from "./components/ViewedProduct";
 function App() {
     const Stack = createNativeStackNavigator();
 
@@ -146,6 +147,18 @@ function App() {
                         component={ProductReview}
                         options={{
                             title: "Đánh giá sản phẩm",
+                            headerTitleAlign: "center",
+                            headerStyle: {
+                                backgroundColor: colors.blueRoot,
+                            },
+                            headerTintColor: "white",
+                        }}
+                    />
+                    <Stack.Screen
+                        name="ViewedProduct"
+                        component={ViewedProduct}
+                        options={{
+                            title: "Sản phẩm đã xem",
                             headerTitleAlign: "center",
                             headerStyle: {
                                 backgroundColor: colors.blueRoot,

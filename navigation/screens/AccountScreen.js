@@ -99,7 +99,7 @@ function AccountScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.itemIconOrder}
-                onPress={() => navigation.navigate('Setting')}
+                onPress={() => navigation.navigate('ViewedProduct')}
               >
                 <View style={styles.containerIcon}>
                   <Ionicons name="car-outline" size={20} color={colors.blueRoot}></Ionicons>
