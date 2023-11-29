@@ -9,68 +9,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {method_payments} from "../../redux/slices/PaymentSlice";
 import {setSelectedPayment} from "../../redux/slices/PaymentSlice";
 
-const orderItems = [
-    {
-        id_product: 1,
-        name_product: 'Giày Nike Pegasus 40',
-        size: '41',
-        color: '',
-        price: 500000,
-        discountPrice: 390000,
-        quantity: 10,
-        path_img: 'https://kingshoes.vn/data/upload/media/fy5943-giay-adidas-run-falcon-2.0-running-chinh-hang-gia-tot-den-king-shoes-1.jpg'
-    },
-    {
-        id_product: 2,
-        name_product: 'Giày Adidas Runner',
-        size: '44',
-        color: '',
-        price: 100000,
-        discountPrice: 410000,
-        quantity: 1000,
-        path_img: 'https://kingshoes.vn/data/upload/media/SNEAKER-315122-111-AIR-FORCE-1-07-NIKE-KINGSHOES.VN-TPHCM-TANBINH-17-logo-1551924204-.jpg'
-    },
-    {
-        id_product: 3,
-        name_product: 'Giày Jordan CR7',
-        size: '39',
-        color: '',
-        price: 2500000,
-        discountPrice: 999000,
-        quantity: 3,
-        path_img: 'https://kingshoes.vn/data/upload/media/fn7439-133-giay-nike-air-force-1-07-chinh-hang-gia-tot-den-king-shoes-13.jpeg'
-    },
-    {
-        id_product: 1,
-        name_product: 'Giày Nike Pegasus 40',
-        size: '41',
-        color: '',
-        price: 500000,
-        discountPrice: 390000,
-        quantity: 10,
-        path_img: 'https://kingshoes.vn/data/upload/media/fy5943-giay-adidas-run-falcon-2.0-running-chinh-hang-gia-tot-den-king-shoes-1.jpg'
-    },
-    {
-        id_product: 2,
-        name_product: 'Giày Adidas Runner',
-        size: '44',
-        color: '',
-        price: 100000,
-        discountPrice: 410000,
-        quantity: 1000,
-        path_img: 'https://kingshoes.vn/data/upload/media/SNEAKER-315122-111-AIR-FORCE-1-07-NIKE-KINGSHOES.VN-TPHCM-TANBINH-17-logo-1551924204-.jpg'
-    },
-    {
-        id_product: 3,
-        name_product: 'Giày Jordan CR7',
-        size: '39',
-        color: '',
-        price: 2500000,
-        discountPrice: 999000,
-        quantity: 3,
-        path_img: 'https://kingshoes.vn/data/upload/media/fn7439-133-giay-nike-air-force-1-07-chinh-hang-gia-tot-den-king-shoes-13.jpeg'
-    }
-]
 export default function OrderConfirmScreen() {
 
     const handleClickBtOrder = () => {
@@ -167,10 +105,12 @@ function AddressInfoComponent() {
 
 function OrderItemsComponent() {
 
+    const orderItems = useSelector(state => state.carts)
+
     return (
         <View style={styles.orderItems}>
             {
-                orderItems.map((value, index) => (
+                orderItems?.length > 0 && orderItems.map((value, index) => (
                     <OrderItem key={index} data={value}></OrderItem>
                 ))
             }
@@ -182,11 +122,11 @@ function OrderItem({data}) {
     return (
         <View style={styles.orderItem}>
             <View>
-                <Image src={data.path_img} style={styles.imgProduct}></Image>
+                <Image src={data.pathImg} style={styles.imgProduct}></Image>
             </View>
             <View style={{maxHeight: 80}}>
                 <View style={styles.infoOrderItem}>
-                    <Text style={{minWidth: 150}}>{data.name_product}</Text>
+                    <Text style={{minWidth: 150}}>{data.title}</Text>
                     <Text>x {data.quantity}</Text>
                 </View>
                 <View style={styles.infoOrderItem}>

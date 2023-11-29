@@ -149,8 +149,8 @@ export default function CartScreen() {
         if (cartsBuy.length > 0) {
             console.log("Mua")
             console.log(cartsBuy)
+            navigation.navigate('OrderConfirm');
         }
-        navigation.navigate('OrderConfirm');
     };
 
     return (
