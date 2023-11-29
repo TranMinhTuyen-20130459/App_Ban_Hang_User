@@ -21,6 +21,8 @@ import {
     setAddress,
 } from "./redux/slices/OrderAddressSlice";
 import OrderDetailsScreen from './pages/orderUser/DetailOrder';
+import Search from "./components/Search";
+import ResultSearch from "./components/ResultSearch";
 function App() {
     const Stack = createNativeStackNavigator();
 
@@ -111,6 +113,20 @@ function App() {
                             headerStyle: {
                                 backgroundColor: colors.blueRoot,
                             },
+                        }}
+                    />
+                     <Stack.Screen
+                        name="Search"
+                        component={Search}
+                        options={{
+                            headerShown: false,                          
+                        }}
+                    />
+                     <Stack.Screen
+                        name="SearchResult"
+                        component={ResultSearch}
+                        options={{
+                            headerShown: false,                          
                         }}
                     />
                     <Stack.Screen
