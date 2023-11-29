@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.bgButtonRed,
         paddingVertical: 15,
         paddingHorizontal: 15,
-        borderWidth: 0.7,
+        borderWidth: 0.5,
         borderRadius: 5,
         flexDirection: "row",
         justifyContent: 'center'
