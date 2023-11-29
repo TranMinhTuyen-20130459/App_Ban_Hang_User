@@ -1,103 +1,43 @@
 import {styles} from "./OrderConfirm.styles";
 import {View, Text, TouchableOpacity, Image, ScrollView} from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React from "react";
+import React, {useState} from "react";
 import {colors} from "../../theme";
 import {formatMoney, WINDOW_WIDTH} from "../../utils/Utils";
 import {useNavigation} from "@react-navigation/native";
-import {useSelector} from "react-redux";
-
-
-const orderItems = [
-    {
-        id_product: 1,
-        name_product: 'Giày Nike Pegasus 40',
-        size: '41',
-        color: '',
-        price: 500000,
-        discountPrice: 390000,
-        quantity: 10,
-        path_img: 'https://kingshoes.vn/data/upload/media/fy5943-giay-adidas-run-falcon-2.0-running-chinh-hang-gia-tot-den-king-shoes-1.jpg'
-    },
-    {
-        id_product: 2,
-        name_product: 'Giày Adidas Runner',
-        size: '44',
-        color: '',
-        price: 100000,
-        discountPrice: 410000,
-        quantity: 1000,
-        path_img: 'https://kingshoes.vn/data/upload/media/SNEAKER-315122-111-AIR-FORCE-1-07-NIKE-KINGSHOES.VN-TPHCM-TANBINH-17-logo-1551924204-.jpg'
-    },
-    {
-        id_product: 3,
-        name_product: 'Giày Jordan CR7',
-        size: '39',
-        color: '',
-        price: 2500000,
-        discountPrice: 999000,
-        quantity: 3,
-        path_img: 'https://kingshoes.vn/data/upload/media/fn7439-133-giay-nike-air-force-1-07-chinh-hang-gia-tot-den-king-shoes-13.jpeg'
-    },
-    {
-        id_product: 1,
-        name_product: 'Giày Nike Pegasus 40',
-        size: '41',
-        color: '',
-        price: 500000,
-        discountPrice: 390000,
-        quantity: 10,
-        path_img: 'https://kingshoes.vn/data/upload/media/fy5943-giay-adidas-run-falcon-2.0-running-chinh-hang-gia-tot-den-king-shoes-1.jpg'
-    },
-    {
-        id_product: 2,
-        name_product: 'Giày Adidas Runner',
-        size: '44',
-        color: '',
-        price: 100000,
-        discountPrice: 410000,
-        quantity: 1000,
-        path_img: 'https://kingshoes.vn/data/upload/media/SNEAKER-315122-111-AIR-FORCE-1-07-NIKE-KINGSHOES.VN-TPHCM-TANBINH-17-logo-1551924204-.jpg'
-    },
-    {
-        id_product: 3,
-        name_product: 'Giày Jordan CR7',
-        size: '39',
-        color: '',
-        price: 2500000,
-        discountPrice: 999000,
-        quantity: 3,
-        path_img: 'https://kingshoes.vn/data/upload/media/fn7439-133-giay-nike-air-force-1-07-chinh-hang-gia-tot-den-king-shoes-13.jpeg'
-    }
-]
-
+import {useDispatch, useSelector} from "react-redux";
+import {method_payments} from "../../redux/slices/PaymentSlice";
+import {setSelectedPayment} from "../../redux/slices/PaymentSlice";
 
 export default function OrderConfirmScreen() {
 
+    const handleClickBtOrder = () => {
+
+    }
 
     return (
         <View style={styles.container}>
             <ScrollView>
                 <View style={styles.content}>
-                    <AddressInfo></AddressInfo>
-                    <OrderItems></OrderItems>
-                    <Payments></Payments>
-                    <OrderValue></OrderValue>
+                    <AddressInfoComponent></AddressInfoComponent>
+                    <OrderItemsComponent></OrderItemsComponent>
+                    <PaymentsComponent></PaymentsComponent>
+                    <OrderValueComponent></OrderValueComponent>
                 </View>
             </ScrollView>
-            <Footer></Footer>
+            <FooterComponent handleClickBtOrder={handleClickBtOrder}></FooterComponent>
         </View>
     );
 }
 
-function AddressInfo() {
+function AddressInfoComponent() {
 
     const navigation = useNavigation();
 
     // Sử dụng useSelector để lấy trạng thái của thông tin địa chỉ giao hàng
     const orderAddress = useSelector(state => state.address_order);
 
-    const Information = () => (
+    const InformationComponent = () => (
         orderAddress && orderAddress.to_address && (
             <View style={styles.textInfo}>
                 <View style={{
@@ -115,10 +55,8 @@ function AddressInfo() {
                     </View>
                     <View>
                         <Text numberOfLines={2} style={styles.textAddress}>
-                            {orderAddress.to_address.address},
-                            {orderAddress.to_address.ward_name},
-                            {orderAddress.to_address.district_name},
-                            {orderAddress.to_address.province_name}
+                            {orderAddress.to_address.address}, {orderAddress.to_address.ward_name}
+                            , {orderAddress.to_address.district_name}, {orderAddress.to_address.province_name}
                         </Text>
                     </View>
                 </View>
@@ -131,10 +69,23 @@ function AddressInfo() {
                 </View>
             </View>
         )
-    );
+    )
 
 
-    const Notification = (<Text>Không có địa chỉ đặt hàng</Text>)
+    const NotificationComponent = () => (
+        <View style={
+            {
+                flexDirection: 'row',
+                flex: 1,
+                paddingVertical: 15,
+                paddingHorizontal: 10,
+            }
+        }>
+            <Text style={{fontSize: 16}}>Bạn hãy chọn địa chỉ giao hàng</Text>
+            <View style={{flex: 5}}/>
+            <Ionicons name="chevron-forward" size={25} color={colors.grey}></Ionicons>
+        </View>
+    )
 
     return (
         <>
@@ -142,20 +93,24 @@ function AddressInfo() {
                 <TouchableOpacity
                     style={styles.header}
                     onPress={() => navigation.navigate('OrderAddress')}>
-                    {orderAddress ? <Information/> : <Notification/>}
+
+                    {orderAddress ? <InformationComponent/> : <NotificationComponent/>}
+
                 </TouchableOpacity>
             </View>
         </>
-    )
+    );
 }
 
 
-function OrderItems() {
+function OrderItemsComponent() {
+
+    const orderItems = useSelector(state => state.carts)
 
     return (
         <View style={styles.orderItems}>
             {
-                orderItems.map((value, index) => (
+                orderItems?.length > 0 && orderItems.map((value, index) => (
                     <OrderItem key={index} data={value}></OrderItem>
                 ))
             }
@@ -167,11 +122,11 @@ function OrderItem({data}) {
     return (
         <View style={styles.orderItem}>
             <View>
-                <Image src={data.path_img} style={styles.imgProduct}></Image>
+                <Image src={data.pathImg} style={styles.imgProduct}></Image>
             </View>
             <View style={{maxHeight: 80}}>
                 <View style={styles.infoOrderItem}>
-                    <Text style={{minWidth: 150}}>{data.name_product}</Text>
+                    <Text style={{minWidth: 150}}>{data.title}</Text>
                     <Text>x {data.quantity}</Text>
                 </View>
                 <View style={styles.infoOrderItem}>
@@ -183,25 +138,73 @@ function OrderItem({data}) {
     )
 }
 
-function Payments() {
+function PaymentsComponent() {
+
+    const dispatch = useDispatch()
+    const selectedPayment = useSelector(state => state.payment)
+
+    const handlePaymentClick = (payment_method) => {
+        dispatch(setSelectedPayment(payment_method))
+    }
+
     return (
         <View style={styles.payments}>
             <Text style={{fontSize: 16}}>Phương thức thanh toán</Text>
-            <View style={styles.methodPayment}>
-                <Ionicons name="stop-circle-outline" size={30} color='#0a74e4'></Ionicons>
-                <Image source={require('./images/money.png')} style={styles.img}></Image>
-                <Text style={styles.nameMethodPayment}>Thanh toán tiền mặt</Text>
-            </View>
-            <View style={styles.methodPayment}>
-                <Ionicons name="stop-circle-outline" size={30} color='#0a74e4'></Ionicons>
-                <Image source={require('./images/ZaloPay.png')} style={styles.img}></Image>
-                <Text style={styles.nameMethodPayment}>Ví ZaloPay</Text>
-            </View>
+
+            <CashPaymentComponent
+                selectedPayment={selectedPayment}
+                handlePaymentClick={handlePaymentClick}
+            />
+
+            <ZaloPayComponent
+                selectedPayment={selectedPayment}
+                handlePaymentClick={handlePaymentClick}
+            />
         </View>
     );
 }
 
-function OrderValue() {
+function CashPaymentComponent({selectedPayment, handlePaymentClick}) {
+
+    return (
+        <TouchableOpacity
+            style={[styles.methodPayment,
+                selectedPayment === method_payments.CASH && {backgroundColor: 'rgba(5, 0, 245, 0.1)'}]}
+            onPress={() => handlePaymentClick(method_payments.CASH)}>
+            <Ionicons
+                name="stop-circle-outline"
+                size={30}
+                color='#0a74e4'
+                style={{opacity: selectedPayment === method_payments.CASH ? 1 : 0}}
+            >
+            </Ionicons>
+            <Image source={require('./images/money.png')} style={styles.img}></Image>
+            <Text style={styles.nameMethodPayment}>Thanh toán tiền mặt</Text>
+        </TouchableOpacity>
+    )
+}
+
+function ZaloPayComponent({selectedPayment, handlePaymentClick}) {
+
+    return (
+        <TouchableOpacity
+            style={[styles.methodPayment,
+                selectedPayment === method_payments.ZaloPay && {backgroundColor: 'rgba(5, 0, 245, 0.1)'}]}
+            onPress={() => handlePaymentClick(method_payments.ZaloPay)}>
+            <Ionicons
+                name="stop-circle-outline"
+                size={30}
+                color='#0a74e4'
+                style={{opacity: selectedPayment === method_payments.ZaloPay ? 1 : 0}}
+            >
+            </Ionicons>
+            <Image source={require('./images/ZaloPay.png')} style={styles.img}></Image>
+            <Text style={styles.nameMethodPayment}>Ví ZaloPay</Text>
+        </TouchableOpacity>
+    )
+}
+
+function OrderValueComponent() {
 
     return (
         <View>
@@ -230,7 +233,7 @@ function OrderValue() {
     );
 }
 
-function Footer() {
+function FooterComponent({handleClickBtOrder}) {
 
     return (
         <View style={styles.footer}>

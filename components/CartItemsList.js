@@ -1,15 +1,17 @@
 import React from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import {View, Text, FlatList, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CheckBox from 'react-native-check-box';
-import { WINDOW_HEIGHT, WINDOW_WIDTH, formatMoney } from '../utils/Utils';
-import { colors } from '../theme';
-import { useDispatch } from 'react-redux';
-import { updateCart } from '../redux/slices/CartsSlice';
+import {WINDOW_HEIGHT, WINDOW_WIDTH, formatMoney} from '../utils/Utils';
+import {colors} from '../theme';
+import {useDispatch} from 'react-redux';
+import {updateCart} from '../redux/slices/CartsSlice';
 
 const CartItemsList = (props) => {
-    const { data, toggleItemSelection, showCheckBox, showQuantity,
-        showDeleteModal } = props
+    const {
+        data, toggleItemSelection, showCheckBox, showQuantity,
+        showDeleteModal
+    } = props
     const dispatch = useDispatch();
     // hàm tăng số lượng sản phẩm
     const increaseItemQuantity = (itemId, quantity) => {
@@ -32,7 +34,7 @@ const CartItemsList = (props) => {
         }
     };
 
-    const renderItem = ({ item }) => (
+    const renderItem = ({item}) => (
         <View style={styles.cartItem}>
             <View style={styles.itemInfo}>
                 <View style={styles.itemCheckBox}>
@@ -47,8 +49,8 @@ const CartItemsList = (props) => {
 
                     }
                 </View>
-                <Image source={{ uri: 'https://reactjs.org/logo-og.png' }}
-                    style={styles.itemImage} />
+                <Image source={{uri: item.pathImg}}
+                       style={styles.itemImage}/>
                 <View style={styles.itemDetails}>
                     <Text numberOfLines={2} style={styles.itemTitle}>{item.title}</Text>
                     <View style={styles.itemDes}>
@@ -74,7 +76,8 @@ const CartItemsList = (props) => {
                                     <Ionicons name="remove-outline" size={18} color={colors.grey}></Ionicons>
                                 </TouchableOpacity>
                                 <Text style={styles.itemQuantity}>{item.quantity}</Text>
-                                <TouchableOpacity style={styles.increase} onPress={() => increaseItemQuantity(item.id, item.quantity)}>
+                                <TouchableOpacity style={styles.increase}
+                                                  onPress={() => increaseItemQuantity(item.id, item.quantity)}>
                                     <Ionicons name="add-outline" size={18} color={colors.grey}></Ionicons>
                                 </TouchableOpacity>
 

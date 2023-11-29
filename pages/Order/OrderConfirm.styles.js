@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
             marginTop: 8
         },
         methodPayment: {
-            backgroundColor: 'rgba(5, 0, 245, 0.1)',
+            // backgroundColor: 'rgba(5, 0, 245, 0.1)',
             height: 60,
             marginTop: 10,
             borderWidth: 0.8,

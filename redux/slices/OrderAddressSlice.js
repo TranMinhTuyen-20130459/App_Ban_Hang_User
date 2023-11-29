@@ -19,7 +19,7 @@ export const getInfoAddressFromAsyncStorage = async () => {
     try {
         const storedInfo = await AsyncStorage.getItem('info_address')
 
-        console.log('Stored Info Address: ' + storedInfo);
+        // console.log('Stored Info Address: ' + storedInfo);
 
         return storedInfo ? JSON.parse(storedInfo) : null;
 
@@ -34,7 +34,7 @@ const orderAddressSlice = createSlice({
 
     name: 'order_address',
 
-    initialState: orderAddress,
+    initialState: null,
 
     reducers: {
 
