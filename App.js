@@ -12,6 +12,9 @@ import {addCart} from './redux/slices/CartsSlice';
 import OrderConfirmScreen from "./pages/Order/OrderConfirmScreen";
 import MainContainer from "./navigation/MainContainer";
 import OrderAddressScreen from "./pages/Order/OrderAddressScreen";
+import OrderDetailsScreen from './pages/orderUser/DetailOrder';
+import Search from './pages/orderUser/Search';
+import ResultSearch from './pages/orderUser/ResultSearch';
 
 function App() {
     const Stack = createNativeStackNavigator()
@@ -46,7 +49,10 @@ function App() {
                     />
                     {/* cấu hình các đường dẫn qua các trang khác */}
                     <Stack.Screen name="Setting" component={SettingScreen}/>
-
+                    <Stack.Screen name="Search" component={Search} 
+                                options={{ headerShown: false }}/>
+                    <Stack.Screen name="SearchResult" component={ResultSearch} 
+                                options={{ headerShown: false }}/>
                     <Stack.Screen name="Cart" component={CartScreen}
                                   options={{
                                       title: 'Giỏ hàng',
@@ -76,7 +82,16 @@ function App() {
                                       },
                                       headerTintColor: 'white',
                                   }}/>
-                </Stack.Navigator>
+                     <Stack.Screen name="OrderDetail" component={OrderDetailsScreen}
+                                  options={{
+                                      title: 'Chi tiết đơn hàng',
+                                      headerTitleAlign: 'center',
+                                      headerStyle: {
+                                          backgroundColor: colors.blueRoot,
+                                      },
+                                      headerTintColor: 'white',
+                                  }}/>              
+                </Stack.Navigator> 
             </NavigationContainer>
         </Provider>
     );

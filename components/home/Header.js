@@ -1,35 +1,37 @@
 
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {Dimensions} from "react-native";
 import {View, Text, TouchableOpacity, TextInput, StyleSheet, Image} from "react-native";
 
 export default function Header() {
+    const navigation = useNavigation();
     return (
         <View style={styles.header}>
             <View style={styles.logoContainer}>
                 <Image
                     source={{ uri: 'https://salt.tikicdn.com/ts/upload/0e/07/78/ee828743c9afa9792cf20d75995e134e.png' }}
-                    style={styles.logo}
+                    style={styles.logo}        
                 />
                 <View style={styles.divideStyle}></View>
                 <Text style={styles.logoBrand}>Tốt & Nhanh</Text>
             </View>
             <View style={styles.headerInfo}>
-                <TouchableOpacity style={styles.searchInput}>
+                <TouchableOpacity style={styles.searchInput} onPress={() => navigation.navigate('Search')}>
                     <Image
                         source={{ uri: 'https://salt.tikicdn.com/ts/upload/33/d0/37/6fef2e788f00a16dc7d5a1dfc5d0e97a.png' }}
                         style={styles.searchIcon}
                     />
-                    <TextInput
-                        placeholder="Giao nhanh 2H & đúng khung giờ"
+                    <Text
                         style={styles.searchTextInput}
                         editable={true}
-                    />
+                    >Bạn muốn xem gì hôm nay ?</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.cart} onPress={() => { /* Handle cart press */ }}>
+                <TouchableOpacity style={styles.cart}  >
                     <Image
                         source={{ uri: 'https://salt.tikicdn.com/ts/upload/51/e2/92/8ca7e2cc5ede8c09e34d1beb50267f4f.png' }}
                         style={styles.cartIcon}
+                        
                     />
                     <Text style={styles.cartCount}>2</Text>
                 </TouchableOpacity>
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
     },
     searchTextInput: {
         borderWidth: 0,
-        height: 36,
+        paddingVertical: 8,
         margin: 0,
         marginLeft: 8,
         // outlineWidth: 0, // Tương đương với outline: 0px;
@@ -116,7 +118,8 @@ const styles = StyleSheet.create({
         padding: 0,
         fontWeight: '400', // Tương đương với font-weight: 400;
         fontSize: 14,
-        lineHeight: 1.5, // Tương đương với line-height: 150%;
+        color:'#AAAAAA'
+        
     },
     cart: {
         position: 'relative',

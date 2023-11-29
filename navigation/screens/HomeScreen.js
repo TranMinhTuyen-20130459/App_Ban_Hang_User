@@ -1,17 +1,19 @@
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import CartIcon from '../../components/CartIcon';
 import {colors} from '../../theme';
 import Header from "../../components/home/Header";
 import BannerGrid from "../../components/home/BannerGrid";
 import CheckBox from 'react-native-check-box';
 import TopSeller from "../../components/home/TopSeller";
+import { useNavigation } from '@react-navigation/native';
 
 function HomeScreen() {
     const [isChecked, setIsChecked] = useState(false)
+  
     return (
         <View style={{flex: 1}}>
-            <Header></Header>
+              <Header/>
             <ScrollView>
                 <View style= {styles.main}>
                     <View style={styles.mainFormat}>

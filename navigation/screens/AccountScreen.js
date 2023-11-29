@@ -81,7 +81,7 @@ function AccountScreen() {
 
             <View style={styles.listIconOrder}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('Setting')}
+                onPress={() => navigation.navigate('OrderDetail')}
                 style={styles.itemIconOrder}>
                 <View style={styles.containerIcon}>
                   <Ionicons name="wallet-outline" size={20} color={colors.blueRoot}></Ionicons>
@@ -90,7 +90,7 @@ function AccountScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.itemIconOrder}
-                onPress={() => navigation.navigate('Setting')}
+                
               >
                 <View style={styles.containerIcon}>
                   <Ionicons name="file-tray-stacked-outline" size={20} color={colors.blueRoot}></Ionicons>
