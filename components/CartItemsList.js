@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, Text, FlatList, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CheckBox from 'react-native-check-box';
-import {WINDOW_HEIGHT, WINDOW_WIDTH, formatMoney} from '../utils/Utils';
-import {colors} from '../theme';
-import {useDispatch} from 'react-redux';
-import {updateCart} from '../redux/slices/CartsSlice';
+import { WINDOW_HEIGHT, WINDOW_WIDTH, formatMoney } from '../utils/Utils';
+import { colors } from '../theme';
+import { useDispatch } from 'react-redux';
+import { updateCart } from '../redux/slices/CartsSlice';
 
 const CartItemsList = (props) => {
     const {
@@ -17,7 +17,7 @@ const CartItemsList = (props) => {
     const increaseItemQuantity = (itemId, quantity) => {
         // update số lượng sản phẩm ở redux
         const cartUpdate = {
-            id: itemId,
+            idv4: itemId,
             quantity: quantity + 1,
         }
         dispatch(updateCart(cartUpdate))
@@ -27,14 +27,14 @@ const CartItemsList = (props) => {
         if (quantity != 1) {
             // update số lượng sản phẩm ở redux
             const cartUpdate = {
-                id: itemId,
+                idv4: itemId,
                 quantity: quantity - 1,
             }
             dispatch(updateCart(cartUpdate))
         }
     };
 
-    const renderItem = ({item}) => (
+    const renderItem = ({ item }) => (
         <View style={styles.cartItem}>
             <View style={styles.itemInfo}>
                 <View style={styles.itemCheckBox}>
@@ -42,20 +42,24 @@ const CartItemsList = (props) => {
                         showCheckBox &&
                         (<CheckBox
                             isChecked={item.isChecked}
-                            onClick={() => toggleItemSelection(item.id)}
+                            onClick={() => toggleItemSelection(item.idv4)}
                             checkBoxColor={colors.grey}
                             checkedCheckBoxColor={colors.blueRoot}
                         />)
 
                     }
                 </View>
-                <Image source={{uri: item.pathImg}}
-                       style={styles.itemImage}/>
+                <Image source={{ uri: item.path_img }}
+                    style={styles.itemImage} />
                 <View style={styles.itemDetails}>
                     <Text numberOfLines={2} style={styles.itemTitle}>{item.title}</Text>
                     <View style={styles.itemDes}>
                         <Text style={styles.desLeft}>FAST</Text>
                         <Text style={styles.desRight}>GIAO TIẾT KIỆM</Text>
+                    </View>
+                    <View style={styles.character}>
+                        <Text style={styles.sizeName}>Size</Text>
+                        <Text style={styles.size}>{item.size}</Text>
                     </View>
                     <View style={styles.itemPrice}>
                         <Text style={styles.itemPriceLeft}>{formatMoney(item.discountPrice * item.quantity)}</Text>
@@ -68,7 +72,7 @@ const CartItemsList = (props) => {
                                     style={styles.decrease}
                                     onPress={() => {
                                         if (item.quantity > 0) {
-                                            decreaseItemQuantity(item.id, item.quantity);
+                                            decreaseItemQuantity(item.idv4, item.quantity);
                                         }
                                     }}
                                     disabled={item.quantity === 1}
@@ -77,7 +81,7 @@ const CartItemsList = (props) => {
                                 </TouchableOpacity>
                                 <Text style={styles.itemQuantity}>{item.quantity}</Text>
                                 <TouchableOpacity style={styles.increase}
-                                                  onPress={() => increaseItemQuantity(item.id, item.quantity)}>
+                                    onPress={() => increaseItemQuantity(item.idv4, item.quantity)}>
                                     <Ionicons name="add-outline" size={18} color={colors.grey}></Ionicons>
                                 </TouchableOpacity>
 
@@ -90,7 +94,7 @@ const CartItemsList = (props) => {
                     showQuantity && (
                         <TouchableOpacity
                             style={styles.itemDelete}
-                            onPress={() => showDeleteModal(item.id)}
+                            onPress={() => showDeleteModal(item.idv4)}
                         >
                             <Text style={styles.textDelete}>Xóa</Text>
                         </TouchableOpacity>
@@ -109,7 +113,7 @@ const CartItemsList = (props) => {
                 showsVerticalScrollIndicator={false}
                 data={data}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.idv4}
             />
         </View>
     );
@@ -220,6 +224,18 @@ const styles = StyleSheet.create({
     textDelete: {
         color: colors.blueRoot,
         fontSize: 14,
+    },
+    character: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "row"
+    },
+    sizeName: {
+        marginRight: 8,
+        fontSize: 13
+    },
+    size: {
+        fontSize: 13
     }
 });
 
