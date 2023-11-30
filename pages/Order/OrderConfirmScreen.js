@@ -60,7 +60,7 @@ export default function OrderConfirmScreen() {
                          //=> xóa đi sản phẩm sẽ được mua
                         dispatch(removeAllOrderProduct())
 
-                        // => xóa đi sản phẩm trong giỏ hàng
+                        // => xóa đi sản phẩm sẽ được mua trong giỏ hàng
                         order_items.map(item => dispatch(removeCart(item.idv4)))
 
                         //=> chuyển hướng đến Trang Chủ
