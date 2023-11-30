@@ -19,7 +19,6 @@ export default function OrderConfirmScreen() {
     const navigation = useNavigation()
 
     const order_address = useSelector(state => state.address_order);
-    const carts = useSelector(state => state.carts)
     const selectedPayment = useSelector(state => state.payment)
 
     const {order_items} = route.params
@@ -62,7 +61,7 @@ export default function OrderConfirmScreen() {
                 Alert.alert('Thông báo', 'Đặt hàng thành công', [{
                     text: 'OK',
                     onPress: () => {
-                        order_items.map(item => dispatch(removeCart(item.id))) // => xóa đi sản phẩm trong giỏ hàng
+                        order_items.map(item => dispatch(removeCart(item.idv4))) // => xóa đi sản phẩm trong giỏ hàng
                         navigation.navigate('Main') //=> chuyển hướng đến Trang Chủ
                     }
                 }])
@@ -189,7 +188,7 @@ function OrderItem({data}) {
     return (
         <View style={styles.orderItem}>
             <View>
-                <Image src={data.pathImg} style={styles.imgProduct}></Image>
+                <Image src={data.path_img} style={styles.imgProduct}></Image>
             </View>
             <View style={{maxHeight: 80}}>
                 <View style={styles.infoOrderItem}>
