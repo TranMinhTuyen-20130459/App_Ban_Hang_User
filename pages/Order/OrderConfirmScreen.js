@@ -14,16 +14,12 @@ import {removeCart} from "../../redux/slices/CartsSlice";
 
 export default function OrderConfirmScreen() {
 
-    const route = useRoute()
     const dispatch = useDispatch()
     const navigation = useNavigation()
 
-    const order_address = useSelector(state => state.address_order);
+    const order_address = useSelector(state => state.address_order)
+    const order_items = useSelector(state => state.cart)
     const selectedPayment = useSelector(state => state.payment)
-
-    const {order_items} = route.params
-
-    console.log('OrderConfirmScreen: ', order_items)
 
     const ship_price = 99000; // => đây là phí giao hàng mặc định
     const value_order = () => {
@@ -33,10 +29,10 @@ export default function OrderConfirmScreen() {
     const total_price = ship_price + value_order();
 
     const order_data = {
-        name_customer: order_address.name_customer,
-        phone: order_address.phone_number,
+        name_customer: order_address?.name_customer,
+        phone: order_address?.phone_number,
         email_customer: 'test@gmail.com', //=> bắt buộc phải có email
-        to_address: order_address.to_address,
+        to_address: order_address?.to_address,
         note: '',
         ship_price: ship_price,
         order_value: value_order(),
