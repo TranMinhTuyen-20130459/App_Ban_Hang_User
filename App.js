@@ -1,25 +1,24 @@
-import * as React from "react";
-import {useEffect} from "react";
-import {Provider} from "react-redux";
-import store from "./redux/store";
-import {NavigationContainer} from "@react-navigation/native";
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import SettingScreen from "./pages/SettingScreen";
-import CartScreen from "./pages/CartScreen";
-import {colors} from "./theme";
-import {getCartFromAsyncStorage} from "./utils/localStorage";
-import {addCart} from "./redux/slices/CartsSlice";
-import OrderConfirmScreen from "./pages/Order/OrderConfirmScreen";
-import MainContainer from "./navigation/MainContainer";
-import OrderAddressScreen from "./pages/Order/OrderAddressScreen";
-import {ProducDetail} from "./pages/ProductDetail";
-import {SelectSize} from "./pages/SelectSize";
-import ProductReview from "./pages/ProductReview";
-import {getMethodPaymentFromAsyncStorage, setSelectedPayment} from "./redux/slices/PaymentSlice";
-import {
-    getInfoAddressFromAsyncStorage,
-    setAddress,
-} from "./redux/slices/OrderAddressSlice";
+import React, { useEffect, useState } from 'react';
+import { View, AppState } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SettingScreen from './pages/SettingScreen';
+import CartScreen from './pages/CartScreen';
+import { colors } from './theme';
+import { getCartFromAsyncStorage, saveCartToAsyncStorage } from './utils/localStorage';
+import { addCart } from './redux/slices/CartsSlice';
+import OrderConfirmScreen from './pages/Order/OrderConfirmScreen';
+import MainContainer from './navigation/MainContainer';
+import OrderAddressScreen from './pages/Order/OrderAddressScreen';
+import { ProducDetail } from './pages/ProductDetail';
+import { SelectSize } from './pages/SelectSize';
+import ProductReview from './pages/ProductReview';
+import { getMethodPaymentFromAsyncStorage, setSelectedPayment } from './redux/slices/PaymentSlice';
+import { getInfoAddressFromAsyncStorage, setAddress } from './redux/slices/OrderAddressSlice';
+
 
 function App() {
     const Stack = createNativeStackNavigator();
@@ -29,7 +28,6 @@ function App() {
             try {
                 // Gọi hàm để lấy dữ liệu giỏ hàng từ AsyncStorage
                 const carts = await getCartFromAsyncStorage();
-
                 // Nếu có dữ liệu, dispatch action để cập nhật giỏ hàng trong Redux
                 if (carts) {
                     carts.forEach((item) => {
@@ -46,6 +44,27 @@ function App() {
                 const storedInfoPayment = await getMethodPaymentFromAsyncStorage()
                 if (storedInfoPayment) store.dispatch(setSelectedPayment(storedInfoPayment))
 
+
+                // Lắng nghe sự kiện AppState để xử lý khi ứng dụng chuyển sang trạng thái background hoặc inactive
+                const handleAppStateChange = (nextAppState) => {
+                    if (nextAppState.match(/inactive|background/)) {
+                        // Ứng dụng chuyển sang trạng thái background hoặc inactive
+
+                        // Lấy dữ liệu giỏ hàng từ Redux store
+                        const cartRedux = store.getState().carts;
+
+                        // Lưu giỏ hàng xuống AsyncStorage
+                        saveCartToAsyncStorage(cartRedux);
+                    }
+                };
+
+                // Đăng ký lắng nghe sự kiện
+                AppState.addEventListener('change', handleAppStateChange);
+
+                // Hủy đăng ký lắng nghe khi component unmount
+                return () => {
+                    AppState.removeEventListener('change', handleAppStateChange);
+                };
             } catch (error) {
                 console.error(error);
             }
@@ -60,10 +79,10 @@ function App() {
                     <Stack.Screen
                         name="Main"
                         component={MainContainer}
-                        options={{headerShown: false}}
+                        options={{ headerShown: false }}
                     />
                     {/* cấu hình các đường dẫn qua các trang khác */}
-                    <Stack.Screen name="Setting" component={SettingScreen}/>
+                    <Stack.Screen name="Setting" component={SettingScreen} />
 
                     <Stack.Screen
                         name="Cart"
