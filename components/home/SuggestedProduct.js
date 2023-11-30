@@ -1,6 +1,10 @@
 import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import React from "react";
+import {useNavigation} from "@react-navigation/native";
 
-const SuggestedProduct = () =>{
+
+const SuggestedProduct = ({data}) =>{
+    const navigation = useNavigation();
     return(
         <View style={styles.container}>
             <View style={styles.widgetHeader}>
@@ -11,92 +15,29 @@ const SuggestedProduct = () =>{
                 </View>
             </View>
             <View style={styles.listProduct}>
-                <TouchableOpacity style={styles.productItem}
-                                  onPress={() => navigation.navigate('ProductDetail')}>
-                    <View style={styles.imageProductWrap}>
-                        <Image
-                            source={{
-                                uri:
-                                    'https://salt.tikicdn.com/cache/280x280/ts/product/cd/3c/ed/428e017539fad3a65c082c0093f6ebf6.png',
-                            }}
-                            style={styles.imageProduct}
-                        />
-                    </View>
-                    <View style={styles.titleProductWrap}>
-                        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.titleProduct}>Đây là nội dung dài một chút, có thể là một đoạn văn bản hoặc bất kỳ điều gì bạn muốn hiển thị.</Text>
-                    </View>
-                    <View style={styles.priceProductWrap}>
-                        <Text style={styles.priceProduct}>61.000₫</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.productItem}>
-                    <View style={styles.imageProductWrap}>
-                        <Image
-                            source={{
-                                uri:
-                                    'https://salt.tikicdn.com/cache/280x280/ts/product/cd/3c/ed/428e017539fad3a65c082c0093f6ebf6.png',
-                            }}
-                            style={styles.imageProduct}
-                        />
-                    </View>
-                    <View style={styles.titleProductWrap}>
-                        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.titleProduct}>Đây là nội dung dài một chút, có thể là một đoạn văn bản hoặc bất kỳ điều gì bạn muốn hiển thị.</Text>
-                    </View>
-                    <View style={styles.priceProductWrap}>
-                        <Text style={styles.priceProduct}>61.000₫</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.productItem}>
-                    <View style={styles.imageProductWrap}>
-                        <Image
-                            source={{
-                                uri:
-                                    'https://salt.tikicdn.com/cache/280x280/ts/product/cd/3c/ed/428e017539fad3a65c082c0093f6ebf6.png',
-                            }}
-                            style={styles.imageProduct}
-                        />
-                    </View>
-                    <View style={styles.titleProductWrap}>
-                        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.titleProduct}>Đây là nội dung dài một chút, có thể là một đoạn văn bản hoặc bất kỳ điều gì bạn muốn hiển thị.</Text>
-                    </View>
-                    <View style={styles.priceProductWrap}>
-                        <Text style={styles.priceProduct}>61.000₫</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.productItem}>
-                    <View style={styles.imageProductWrap}>
-                        <Image
-                            source={{
-                                uri:
-                                    'https://salt.tikicdn.com/cache/280x280/ts/product/cd/3c/ed/428e017539fad3a65c082c0093f6ebf6.png',
-                            }}
-                            style={styles.imageProduct}
-                        />
-                    </View>
-                    <View style={styles.titleProductWrap}>
-                        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.titleProduct}>Đây là nội dung dài một chút, có thể là một đoạn văn bản hoặc bất kỳ điều gì bạn muốn hiển thị.</Text>
-                    </View>
-                    <View style={styles.priceProductWrap}>
-                        <Text style={styles.priceProduct}>61.000₫</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.productItem}>
-                    <View style={styles.imageProductWrap}>
-                        <Image
-                            source={{
-                                uri:
-                                    'https://salt.tikicdn.com/cache/280x280/ts/product/cd/3c/ed/428e017539fad3a65c082c0093f6ebf6.png',
-                            }}
-                            style={styles.imageProduct}
-                        />
-                    </View>
-                    <View style={styles.titleProductWrap}>
-                        <Text numberOfLines={2} ellipsizeMode="tail" style={styles.titleProduct}>Đây là nội dung dài một chút, có thể là một đoạn văn bản hoặc bất kỳ điều gì bạn muốn hiển thị.</Text>
-                    </View>
-                    <View style={styles.priceProductWrap}>
-                        <Text style={styles.priceProduct}>61.000₫</Text>
-                    </View>
-                </TouchableOpacity>
+                {data.map((item) => (
+                    <TouchableOpacity style={styles.productItem}
+                                      key = {item.id_product}
+                                      onPress={() =>
+                                          navigation.navigate("ProductDetail", {
+                                              productId: item.id_product,
+                                          })
+                                      }>
+                        <View style={styles.imageProductWrap}>
+                            <Image
+                                source={{uri: `${item.list_image[0].path_image}`}}
+                                style={styles.imageProduct}
+                            />
+                        </View>
+                        <View style={styles.titleProductWrap}>
+                            <Text numberOfLines={2} ellipsizeMode="tail"
+                                  style={styles.titleProduct}>{item.name_product}</Text>
+                        </View>
+                        <View style={styles.priceProductWrap}>
+                            <Text style={styles.priceProduct}>{item.listed_price}</Text>
+                        </View>
+                    </TouchableOpacity>
+                ))}
             </View>
         </View>
     )
