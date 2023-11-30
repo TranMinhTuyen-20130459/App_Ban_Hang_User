@@ -18,6 +18,7 @@ import { colors } from "../theme";
 import { addCart, updateCart } from "../redux/slices/CartsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useRoute } from "@react-navigation/native";
+import uuidv4 from "uuid/v4";
 
 export const ProducDetail = ({ navigation }) => {
   const fakeData = [
@@ -208,8 +209,21 @@ export const ProducDetail = ({ navigation }) => {
       alert("Thêm vào giỏ hàng thành công");
     }
   };
-  const handleByNow = () => {
-    alert("Hello");
+  const handleBuyNow = () => {
+    const newCartItem = {
+      idv4: uuidv4(),
+      id: productData.id_product,
+      title: productData.name_product,
+      price: productData.listed_price,
+      discountPrice: productData.listed_price - productData.promotional_price,
+      size: size ? size : productData.list_size[0].name_size,
+      color: color ? "Trắng" : "Xanh",
+      quantity: 1,
+      status: true,
+      path_img: productData && productData.list_image[0].path_image,
+    };
+    navigation.navigate("OrderConfirm", { order_items: [newCartItem] });
+    // alert("Hello");
   };
 
   // nếu fecth chưa hết thì hiển thị loading..
@@ -422,7 +436,7 @@ export const ProducDetail = ({ navigation }) => {
       >
         <ButtonAction
           handleAddToCart={handleAddToCart}
-          handleByNow={handleByNow}
+          handleBuyNow={handleBuyNow}
         />
       </View>
     </View>

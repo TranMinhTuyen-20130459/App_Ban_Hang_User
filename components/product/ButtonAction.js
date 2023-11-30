@@ -1,20 +1,20 @@
 import React from "react";
-import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { ButtonAdd } from "./ButtonAddCart";
 import { ButtonBuy } from "./ButtonBuyNow";
 
-export const ButtonAction = ({ handleAddToCart, handleByNow }) => {
+export const ButtonAction = ({ handleAddToCart, handleBuyNow }) => {
   const handleAdd = () => {
     handleAddToCart();
   };
   const handleBuy = () => {
-    handleByNow();
+    handleBuyNow();
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <ButtonBuy handleByNow={handleBuy} />
+        <ButtonBuy handleBuyNow={handleBuy} />
         <View style={{ flex: 0.1 }}></View>
         <ButtonAdd handleAddToCart={handleAdd} />
       </View>
