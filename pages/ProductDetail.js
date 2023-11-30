@@ -102,7 +102,7 @@ export const ProducDetail = ({ navigation }) => {
   const [productData, setProductData] = useState();
   const [quantity, setQuantity] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const [idV4, setIdV4] = useState();
   const handleViewOver = () => {
     // Show the modal
     setIsModalVisible(true);
@@ -116,8 +116,11 @@ export const ProducDetail = ({ navigation }) => {
 
   // theo dõi giỏ hàng
   useEffect(() => {
-    const existingCartItem = carts.find((item) => item.id === productId);
+    const existingCartItem = carts.find((item) => {
+      return item.id === productId && item.size === size;
+    });
     setQuantity(existingCartItem ? existingCartItem.quantity + 1 : 1);
+    setIdV4(existingCartItem && existingCartItem.idv4);
   }, [carts]);
 
   const link =
@@ -193,18 +196,19 @@ export const ProducDetail = ({ navigation }) => {
       quantity: 1,
       path_img: productData ? productData.list_image[0].path_image : "",
     };
-    if (quantity > 1) {
+    if (idV4) {
       setQuantity(quantity + 1);
       // Nếu sản phẩm đã tồn tại trong giỏ hàng, thì cập nhật
       dispatch(
         updateCart({
-          id: productId,
+          idv4: idV4,
           quantity: quantity,
         })
       );
       alert("Cập nhật giỏ hàng thành công");
     } else {
       // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thì thêm mới
+      setSize(newCartItem.size);
       dispatch(addCart(newCartItem));
       alert("Thêm vào giỏ hàng thành công");
     }
