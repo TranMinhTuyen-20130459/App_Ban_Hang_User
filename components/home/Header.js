@@ -1,5 +1,7 @@
+
 import React from "react";
 import {Dimensions, StatusBar} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import {
     View,
     Text,
@@ -12,31 +14,29 @@ import CartIcon from "../CartIcon";
 import { colors } from '../../theme';
 
 export default function Header() {
+    const navigation = useNavigation();
     return (
         <View style={styles.header}>
             <View style={styles.logoContainer}>
                 <Image
-                    source={{
-                        uri: "https://salt.tikicdn.com/ts/upload/0e/07/78/ee828743c9afa9792cf20d75995e134e.png",
-                    }}
+                    source={{ uri: 'https://salt.tikicdn.com/ts/upload/0e/07/78/ee828743c9afa9792cf20d75995e134e.png' }}
                     style={styles.logo}
                 />
                 <View style={styles.divideStyle}></View>
                 <Text style={styles.logoBrand}>Tốt & Nhanh</Text>
             </View>
             <View style={styles.headerInfo}>
-                <TouchableOpacity style={styles.searchInput}>
+                <TouchableOpacity style={styles.searchInput} onPress={() => navigation.navigate('Search')}>
                     <Image
                         source={{
                             uri: "https://salt.tikicdn.com/ts/upload/33/d0/37/6fef2e788f00a16dc7d5a1dfc5d0e97a.png",
                         }}
                         style={styles.searchIcon}
                     />
-                    <TextInput
-                        placeholder="Giao nhanh 2H & đúng khung giờ"
+                    <Text
                         style={styles.searchTextInput}
                         editable={true}
-                    />
+                    >Bạn muốn xem gì hôm nay ?</Text>
                 </TouchableOpacity>
                 <CartIcon
                     sizeIcon={26}
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     },
     searchTextInput: {
         borderWidth: 0,
-        height: 36,
+        paddingVertical: 8,
         margin: 0,
         marginLeft: 8,
         // outlineWidth: 0, // Tương đương với outline: 0px;
@@ -128,7 +128,8 @@ const styles = StyleSheet.create({
         padding: 0,
         fontWeight: "400", // Tương đương với font-weight: 400;
         fontSize: 14,
-        lineHeight: 1.5, // Tương đương với line-height: 150%;
+        color:'#AAAAAA'
+        
     },
     cart: {
         position: "relative",

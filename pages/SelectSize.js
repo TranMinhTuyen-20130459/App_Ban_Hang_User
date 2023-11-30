@@ -18,6 +18,7 @@ export const SelectSize = (prop) => {
    * vendor
    *
    */
+
   const route = useRoute();
   const { data } = route.params;
   const listNameColor = ["Trắng", "Xanh", "Vàng", "Đỏ"];
@@ -57,13 +58,14 @@ export const SelectSize = (prop) => {
       price: productData.listed_price,
       discountPrice: productData.listed_price - productData.promotional_price,
       size: size ? size : productData.list_size[0].name_size,
-      color: color ? "Trắng" : "Xanh",
+      color: color ? color : listNameColor[0],
       quantity: 1,
+      path_img: productData && productData.list_image[0].path_image,
     };
     // kiểm tra có sản phẩm này trong carts redux không
-    const existingCartItem = carts.find(
-      (item) => item.id === productData.id_product
-    );
+    const existingCartItem = carts.find((item) => {
+      return item.id === productData.id_product && item.size === size;
+    });
     // nếu có thì thông báo sản phẩm này đã có
     if (existingCartItem) {
       alert("Sản phẩm này đã có trong giỏ hàng");
