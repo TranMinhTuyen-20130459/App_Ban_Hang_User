@@ -7,7 +7,8 @@ import CheckBox from 'react-native-check-box';
 import { colors } from '../theme';
 import CartItemsList from '../components/CartItemsList';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeAllCart, removeCart } from '../redux/slices/CartsSlice';
+import { addCart, removeAllCart, removeCart } from '../redux/slices/CartsSlice';
+import { addOrderProduct } from '../redux/slices/OrderProductSlice';
 
 export default function CartScreen() {
     const navigation = useNavigation();
@@ -149,9 +150,10 @@ export default function CartScreen() {
     const handleBuy = () => {
         const cartsBuy = cartItems.filter(item => item.isChecked === true);
         if (cartsBuy.length > 0) {
-            console.log("Mua")
-            console.log(cartsBuy)
-            navigation.navigate('OrderConfirm', {order_items: cartsBuy});
+            // thêm vào checkout ở redux
+            cartsBuy.map(item => dispatch(addOrderProduct(item)))
+
+            navigation.navigate('OrderConfirm');
         }
     };
 
