@@ -92,13 +92,13 @@ export default function OrderAddressScreen() {
         name_customer: name_customer,
         phone_number: phone_number,
         to_address: {
-            address: address_detail,
-            ward_name: ward_name,
-            district_name: district_name,
-            province_name: province_name,
-            ward_id: ward_id,
-            district_id: district_id,
-            province_id: province_id,
+            address: address_detail + '',
+            ward_name: ward_name + '',
+            district_name: district_name + '',
+            province_name: province_name + '',
+            ward_id: ward_id + '',
+            district_id: district_id + '',
+            province_id: province_id + '',
         }
     }
 
