@@ -1,31 +1,83 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView,ProgressBarAndroid, TouchableOpacity, StyleSheet } from 'react-native';
 import { ProgressBar } from 'react-native-progress';
-const OrderDetailsScreen = () => {
+const OrderDetailsScreen = ({ route }) => {
+  const id = route.params?.id ;
+  const [data, setData] = useState(null);
+  const [progress, setProgress] = useState(0); 
+
+   
+  const updateProgress = (infor_order) => {
+    
+    // Move the logic for updating progress here
+    if(infor_order == 2){
+      setProgress(progress + 0.25);
+    }else if (infor_order == 2) {
+      setProgress(progress + 0.25);
+    } else if (infor_order == 3) {
+      setProgress(progress + 0.75);
+    } else if (infor_order == 4) {
+      setProgress(progress + 1);
+    }
+  };
     const navigation = useNavigation();
+    const fetchData = async () => {
+      try {
+      
+        const response = await fetch(
+          "http://tmt020202ccna-001-site1.atempurl.com/api/order/infor-order?id_order=43"
+        );
+       
+        const jsonData = await response.json();
+        
+       // Lấy dữ liệu từ cấp cao nhất
+    const inforOrder = jsonData.data.infor_order.status_order;
+    updateProgress(inforOrder);
+    console.log("ID Order:", inforOrder);
+    const orderDetails = jsonData.data.order_details;
+    const orderValue = jsonData.data.order_value;
+    const shipPrice = jsonData.data.ship_price;
+    const totalPrice = jsonData.data.total_price;
+
+        // set data bằng dữ liệu lấy được
+        setData(jsonData.data || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } 
+    };
+    useEffect(() => {
+      fetchData()
+      
+    } ,[]);
+    const numberWithCommas = (number) => {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+    if (!data) {
+      return <Text>Loading...</Text>;
+    }
   return (
     <View style={styles.container}>
+      <ScrollView>
       <View style={styles.card}>
       
-        <Text style={styles.cardHeader}>My Orders / Tracking</Text>
+        <Text style={styles.cardHeader}>Đơn hàng của bạn / Theo dõi</Text>
         <View style={styles.cardBody}>
-          <Text style={styles.orderId}>Order ID: OD45345345435</Text>
+          <Text style={styles.orderId}>Order ID: {data.infor_order.id_order}</Text>
           <View style={styles.card}>
             <View style={styles.cardBodyRow}>
               <Text style={styles.col}>
-                <Text style={styles.strong}>Estimated Delivery time:</Text>{"\n"}29 nov 2019
+                <Text style={styles.strong}>Estimated Delivery time: {data.infor_order.time_order}</Text>
               </Text>
               <Text style={styles.col}>
-                <Text style={styles.strong}>Shipping BY:</Text>{"\n"}BLUEDART, |{" "}
-           
-                +1598675986
+                <Text style={styles.strong}>Địa chỉ: </Text>NLU
+              </Text>
+            
+              <Text style={styles.col}>
+                <Text style={styles.strong}>Phone: </Text>03594059
               </Text>
               <Text style={styles.col}>
-                <Text style={styles.strong}>Status:</Text>{"\n"}Picked by the courier
-              </Text>
-              <Text style={styles.col}>
-                <Text style={styles.strong}>Tracking #:</Text>{"\n"}BD045903594059
+                <Text style={styles.strong}>Status:  {data.infor_order.name_status_order}</Text>
               </Text>
             </View>
           </View> 
@@ -58,7 +110,7 @@ const OrderDetailsScreen = () => {
           color="#2196F3"
           styleAttr="Horizontal"
           indeterminate={false}
-          progress={0.5}
+          progress={progress}
         />
       </View>
             
@@ -66,6 +118,22 @@ const OrderDetailsScreen = () => {
            <View style={styles.hr} />
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View style={styles.productList}>
+            {data.order_details.map((item) => (
+                    <TouchableOpacity onPress={() => console.log("Product Pressed")}>
+                    <View style={styles.productItem}>
+                      <Image
+                        source={{ uri: item.list_image_product[0].path_image}}
+                        style={styles.productImage}
+                      />
+                      <Text style={styles.productTitle}>
+                        {item.name_product} {"\n"} X  {item.quantity}    Size : {item.name_size}
+                      </Text>
+                      <Text style={styles.textMuted}> {numberWithCommas(item.price)} đ</Text>
+                    </View>
+                  </TouchableOpacity>    
+                       
+                    ))}
+            
               <TouchableOpacity onPress={() => console.log("Product Pressed")}>
                 <View style={styles.productItem}>
                   <Image
@@ -117,7 +185,7 @@ const OrderDetailsScreen = () => {
         
         </View>
       </View>
-      
+      </ScrollView>
     </View>
     
   );
@@ -166,15 +234,14 @@ const styles = StyleSheet.create({
    
   },
   cardBodyRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 15,
+    
+    height: 200,
+    marginBottom: 5,
    
   },
   col: {
     flex: 1,
-    marginRight: 10,
+    
    
   },
   strong: {
