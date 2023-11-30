@@ -1,16 +1,15 @@
-import {styles} from "./OrderConfirm.styles";
-import {View, Text, TouchableOpacity, Image, ScrollView} from "react-native";
+import { styles } from "./OrderConfirm.styles";
+import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useState} from "react";
-import {colors} from "../../theme";
-import {formatMoney, WINDOW_WIDTH} from "../../utils/Utils";
-import {useNavigation} from "@react-navigation/native";
-import {useDispatch, useSelector} from "react-redux";
-import {method_payments} from "../../redux/slices/PaymentSlice";
-import {setSelectedPayment} from "../../redux/slices/PaymentSlice";
+import React, { useState } from "react";
+import { colors } from "../../theme";
+import { formatMoney, WINDOW_WIDTH } from "../../utils/Utils";
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { method_payments } from "../../redux/slices/PaymentSlice";
+import { setSelectedPayment } from "../../redux/slices/PaymentSlice";
 
 export default function OrderConfirmScreen() {
-
     const handleClickBtOrder = () => {
 
     }
@@ -81,8 +80,8 @@ function AddressInfoComponent() {
                 paddingHorizontal: 10,
             }
         }>
-            <Text style={{fontSize: 16}}>Bạn hãy chọn địa chỉ giao hàng</Text>
-            <View style={{flex: 5}}/>
+            <Text style={{ fontSize: 16 }}>Bạn hãy chọn địa chỉ giao hàng</Text>
+            <View style={{ flex: 5 }} />
             <Ionicons name="chevron-forward" size={25} color={colors.grey}></Ionicons>
         </View>
     )
@@ -94,7 +93,7 @@ function AddressInfoComponent() {
                     style={styles.header}
                     onPress={() => navigation.navigate('OrderAddress')}>
 
-                    {orderAddress ? <InformationComponent/> : <NotificationComponent/>}
+                    {orderAddress ? <InformationComponent /> : <NotificationComponent />}
 
                 </TouchableOpacity>
             </View>
@@ -118,20 +117,20 @@ function OrderItemsComponent() {
     );
 }
 
-function OrderItem({data}) {
+function OrderItem({ data }) {
     return (
         <View style={styles.orderItem}>
             <View>
                 <Image src={data.pathImg} style={styles.imgProduct}></Image>
             </View>
-            <View style={{maxHeight: 80}}>
+            <View style={{ maxHeight: 80 }}>
                 <View style={styles.infoOrderItem}>
-                    <Text style={{minWidth: 150}}>{data.title}</Text>
+                    <Text style={{ minWidth: 150 }}>{data.title}</Text>
                     <Text>x {data.quantity}</Text>
                 </View>
                 <View style={styles.infoOrderItem}>
-                    <Text style={{minWidth: 150}}>Size: {data.size}</Text>
-                    <Text style={{maxWidth: 80}}>{formatMoney(data.price)}</Text>
+                    <Text style={{ minWidth: 150 }}>Size: {data.size}</Text>
+                    <Text style={{ maxWidth: 80 }}>{formatMoney(data.price)}</Text>
                 </View>
             </View>
         </View>
@@ -149,7 +148,7 @@ function PaymentsComponent() {
 
     return (
         <View style={styles.payments}>
-            <Text style={{fontSize: 16}}>Phương thức thanh toán</Text>
+            <Text style={{ fontSize: 16 }}>Phương thức thanh toán</Text>
 
             <CashPaymentComponent
                 selectedPayment={selectedPayment}
@@ -164,18 +163,18 @@ function PaymentsComponent() {
     );
 }
 
-function CashPaymentComponent({selectedPayment, handlePaymentClick}) {
+function CashPaymentComponent({ selectedPayment, handlePaymentClick }) {
 
     return (
         <TouchableOpacity
             style={[styles.methodPayment,
-                selectedPayment === method_payments.CASH && {backgroundColor: 'rgba(5, 0, 245, 0.1)'}]}
+            selectedPayment === method_payments.CASH && { backgroundColor: 'rgba(5, 0, 245, 0.1)' }]}
             onPress={() => handlePaymentClick(method_payments.CASH)}>
             <Ionicons
                 name="stop-circle-outline"
                 size={30}
                 color='#0a74e4'
-                style={{opacity: selectedPayment === method_payments.CASH ? 1 : 0}}
+                style={{ opacity: selectedPayment === method_payments.CASH ? 1 : 0 }}
             >
             </Ionicons>
             <Image source={require('./images/money.png')} style={styles.img}></Image>
@@ -184,18 +183,18 @@ function CashPaymentComponent({selectedPayment, handlePaymentClick}) {
     )
 }
 
-function ZaloPayComponent({selectedPayment, handlePaymentClick}) {
+function ZaloPayComponent({ selectedPayment, handlePaymentClick }) {
 
     return (
         <TouchableOpacity
             style={[styles.methodPayment,
-                selectedPayment === method_payments.ZaloPay && {backgroundColor: 'rgba(5, 0, 245, 0.1)'}]}
+            selectedPayment === method_payments.ZaloPay && { backgroundColor: 'rgba(5, 0, 245, 0.1)' }]}
             onPress={() => handlePaymentClick(method_payments.ZaloPay)}>
             <Ionicons
                 name="stop-circle-outline"
                 size={30}
                 color='#0a74e4'
-                style={{opacity: selectedPayment === method_payments.ZaloPay ? 1 : 0}}
+                style={{ opacity: selectedPayment === method_payments.ZaloPay ? 1 : 0 }}
             >
             </Ionicons>
             <Image source={require('./images/ZaloPay.png')} style={styles.img}></Image>
@@ -211,38 +210,38 @@ function OrderValueComponent() {
             <View style={styles.orderValue}>
                 <View>
                     <View style={styles.infoOrderValue}>
-                        <Text style={{fontSize: 15}}>Tạm tính</Text>
-                        <Text style={{fontSize: 15}}>9.700.000 đ</Text>
+                        <Text style={{ fontSize: 15 }}>Tạm tính</Text>
+                        <Text style={{ fontSize: 15 }}>9.700.000 đ</Text>
                     </View>
                     <View style={styles.infoOrderValue}>
-                        <Text style={{fontSize: 15}}>Phí vận chuyển</Text>
-                        <Text style={{fontSize: 15}}>100.000 đ</Text>
+                        <Text style={{ fontSize: 15 }}>Phí vận chuyển</Text>
+                        <Text style={{ fontSize: 15 }}>100.000 đ</Text>
                     </View>
                     <View style={styles.separatorHorizontal}></View>
                     <View style={styles.infoOrderValue}>
-                        <Text style={{fontWeight: 'bold', fontSize: 16}}>Tổng tiền</Text>
-                        <Text style={{fontWeight: 'bold', fontSize: 16}}>9.800.000 đ</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Tổng tiền</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>9.800.000 đ</Text>
                     </View>
                 </View>
             </View>
             <View style={styles.footerOrderValue}>
                 <Text>Bằng việc tiến hành đặt mua, bạn đồng ý với</Text>
-                <Text style={{color: colors.blueRoot}}>Điều Kiện Giao Dịch Chung</Text>
+                <Text style={{ color: colors.blueRoot }}>Điều Kiện Giao Dịch Chung</Text>
             </View>
         </View>
     );
 }
 
-function FooterComponent({handleClickBtOrder}) {
+function FooterComponent({ handleClickBtOrder }) {
 
     return (
         <View style={styles.footer}>
             <View>
-                <Text style={{fontSize: 17, marginBottom: 10}}>Tổng tiền</Text>
-                <Text style={{fontSize: 18, color: 'red', fontWeight: 'bold'}}>9.800.000 đ</Text>
+                <Text style={{ fontSize: 17, marginBottom: 10 }}>Tổng tiền</Text>
+                <Text style={{ fontSize: 18, color: 'red', fontWeight: 'bold' }}>9.800.000 đ</Text>
             </View>
             <TouchableOpacity style={styles.btOrder}>
-                <Text style={{fontSize: 18, color: 'white', padding: 5}}>Đặt Hàng</Text>
+                <Text style={{ fontSize: 18, color: 'white', padding: 5 }}>Đặt Hàng</Text>
             </TouchableOpacity>
         </View>
     );
