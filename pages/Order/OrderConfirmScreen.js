@@ -4,22 +4,27 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useState} from "react";
 import {colors} from "../../theme";
 import {formatMoney, WINDOW_WIDTH} from "../../utils/Utils";
-import {useNavigation} from "@react-navigation/native";
+import {useNavigation, useRoute} from "@react-navigation/native";
 import {useDispatch, useSelector} from "react-redux";
 import {method_payments} from "../../redux/slices/PaymentSlice";
 import {setSelectedPayment} from "../../redux/slices/PaymentSlice";
 import {createOrder} from "./util/CallApi";
 import {API_POST_PATHS} from "../../services/PathApi";
-import {removeAllCart} from "../../redux/slices/CartsSlice";
+import {removeCart} from "../../redux/slices/CartsSlice";
 
 export default function OrderConfirmScreen() {
 
+    const route = useRoute()
     const dispatch = useDispatch()
     const navigation = useNavigation()
 
     const order_address = useSelector(state => state.address_order);
-    const order_items = useSelector(state => state.carts)
+    const carts = useSelector(state => state.carts)
     const selectedPayment = useSelector(state => state.payment)
+
+    const {order_items} = route.params
+
+    console.log('OrderConfirmScreen: ', order_items)
 
     const ship_price = 99000; // => đây là phí giao hàng mặc định
     const value_order = () => {
@@ -57,7 +62,7 @@ export default function OrderConfirmScreen() {
                 Alert.alert('Thông báo', 'Đặt hàng thành công', [{
                     text: 'OK',
                     onPress: () => {
-                        dispatch(removeAllCart()) // => xóa đi sản phẩm trong giỏ hàng
+                        order_items.map(item => dispatch(removeCart(item.id))) // => xóa đi sản phẩm trong giỏ hàng
                         navigation.navigate('Main') //=> chuyển hướng đến Trang Chủ
                     }
                 }])
