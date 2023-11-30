@@ -8,49 +8,14 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import CartIcon from "../../components/CartIcon";
-import {colors} from "../../theme";
 import Header from "../../components/home/Header";
 import BannerGrid from "../../components/home/BannerGrid";
-import CheckBox from "react-native-check-box";
-import HotProduct from "../../components/home/HotProduct";
-import NewProduct from "../../components/home/NewProduct";
-import PromotionProduct from "../../components/home/PromotionProduct";
+import ElementProduct from "../../components/home/ElementProduct";
 import SuggestedProduct from "../../components/home/SuggestedProduct";
-import {useNavigation} from "@react-navigation/native";
+import {useFetchDataSuggested} from "../../utils/LoadData";
 
 function HomeScreen() {
-    const [data, setData] = useState([]);
-    const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const fetchData = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch("http://tmt020202ccna-001-site1.atempurl.com/api/product-shoes/ds-giay-moi?page=" +
-                `${page}` +
-                "&pageSize=8");
-            const newData = await response.json();
-            setData((prevData) => [...prevData, ...newData.data]);
-            setPage((prevPage) => prevPage + 1);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-    const handleScroll = ({nativeEvent}) => {
-        const {layoutMeasurement, contentOffset, contentSize} = nativeEvent;
-        const isCloseToBottom =
-            layoutMeasurement.height + contentOffset.y >= contentSize.height - 5;
-
-        if (isCloseToBottom && !loading) {
-            fetchData();
-        }
-    };
-    useEffect(() => {
-        fetchData();
-    }, []); // Fetch data when component mounts
-    const navigation = useNavigation();
+    const { data, handleScroll } = useFetchDataSuggested();
     return (
         <View style={{flex: 1}}>
             <Header></Header>
@@ -59,44 +24,10 @@ function HomeScreen() {
                 <View style={styles.main}>
                     <View style={styles.mainFormat}>
                         <BannerGrid></BannerGrid>
-                        <HotProduct></HotProduct>
-                        <NewProduct></NewProduct>
-                        <PromotionProduct></PromotionProduct>
-                        {/*<SuggestedProduct></SuggestedProduct>*/}
-                        <View style={styles.container}>
-                            <View style={styles.widgetHeader}>
-                                <View style={styles.widgetHeaderTitle}>
-                                    <View style={styles.titleContainer}>
-                                        <Text style={styles.titleText}>Gợi ý hôm nay</Text>
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.listProduct}>
-                                {data.map((item) => (
-                                    <TouchableOpacity style={styles.productItem}
-                                                      key = {item.id_product}
-                                                      onPress={() =>
-                                                          navigation.navigate("ProductDetail", {
-                                                              productId: item.id_product,
-                                                          })
-                                                      }>
-                                        <View style={styles.imageProductWrap}>
-                                            <Image
-                                                source={{uri: `${item.list_image[0].path_image}`}}
-                                                style={styles.imageProduct}
-                                            />
-                                        </View>
-                                        <View style={styles.titleProductWrap}>
-                                            <Text numberOfLines={2} ellipsizeMode="tail"
-                                                  style={styles.titleProduct}>{item.name_product}</Text>
-                                        </View>
-                                        <View style={styles.priceProductWrap}>
-                                            <Text style={styles.priceProduct}>{item.listed_price}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        </View>
+                        <ElementProduct title={"Sản phẩm bán chạy"} type={"ds-giay-hot"}></ElementProduct>
+                        <ElementProduct title={"Sản phẩm mói"} type={"ds-giay-moi"}></ElementProduct>
+                        <ElementProduct title={"Sản phẩm khuyến mãi"} type={"ds-giay-khuyen_mai"}></ElementProduct>
+                        <SuggestedProduct data={data}></SuggestedProduct>
                     </View>
                 </View>
             </ScrollView>
@@ -104,8 +35,6 @@ function HomeScreen() {
     );
 }
 
-const {width} = Dimensions.get('window');
-const {height} = Dimensions.get('window');
 const styles = StyleSheet.create({
     main: {
         position: "sticky",
@@ -118,86 +47,6 @@ const styles = StyleSheet.create({
         gap: 8,
         backgroundColor: "#F5F5FA",
     },
-    container: {
-        paddingVertical: 12, // tương đương với padding-block trong CSS
-        paddingHorizontal: 0, // Nếu cần padding theo chiều ngang
-        flexDirection: 'column', // flex-direction: column trong CSS
-        backgroundColor: 'rgb(255, 255, 255)', // background: rgb(255, 255, 255) trong CSS
-        gap: 12,
-    },
-    //----------------------------------------------------------------------------------------
-    widgetHeader: {
-        paddingLeft: 16,
-    },
-    titleContainer: {
-        flexDirection: 'row',
-        gap: 8,
-        alignItems: 'center',
-    },
-    titleText: {
-        fontWeight: '600',
-        fontSize: 16,
-        lineHeight: 24, // Điều chỉnh giữa dòng dựa trên percentual của fontSize
-        color: '#27272a', // Màu tương ứng với rgb(39, 39, 42)
-    },
-    //-------------------------------------------------------------------
-    listProduct: {
-        display: "flex",
-        flexWrap: "wrap",
-        flexDirection: 'row',
-        paddingHorizontal: 16,
-        gap: 16,
-    },
-    productItem: {
-        display: "flex",
-        // justifyContent: "center",
-        width: (width - 32 - 16) * 0.5,
-        height: (height) * 0.4,
-        gap: 8,
-        backgroundColor: 'rgb(255, 255, 255)', // background: rgb(255, 255, 255);
-        borderWidth: 1, // border: 1px solid rgb(235, 235, 240);
-        borderColor: 'rgb(235, 235, 240)', // border: 1px solid rgb(235, 235, 240);
-        borderRadius: 8, // border-radius: 8px;
-    },
-    imageProductWrap: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        height: "70%",
-    },
-    imageProduct: {
-        width: "100%",
-        height: "100%",
-        opacity: 1
-    },
-    titleProductWrap: {
-        display: 'flex', // -webkit-box;
-        paddingHorizontal: 8,
-        width: "100%"
-    },
-    titleProduct: {
-        flexDirection: 'column', // -webkit-box-orient: vertical;
-        overflow: 'hidden', // overflow: hidden;
-        fontSize: 12, // font-size: 12px;
-        lineHeight: 18, // line-height: 150% (12 * 1.5 = 18);
-        color: 'rgb(39, 39, 42)', // color: rgb(39, 39, 42);
-        margin: 0, // margin: 0px;
-    },
-    priceProductWrap: {
-        paddingHorizontal: 8,
-        paddingBottom: 8
-    },
-    priceProduct: {
-        margin: 0, // margin: 0px;
-        display: 'flex', // display: flex;
-        textAlign: 'left', // text-align: left;
-        fontSize: 16, // font-size: 16px;
-        lineHeight: 24, // line-height: 150%; (tính theo fontSize * 1.5)
-        fontWeight: '500', // font-weight: 500;
-        color: 'rgb(39, 39, 42)', // color: rgb(39, 39, 42);
-    },
-
 });
 
 export default HomeScreen;

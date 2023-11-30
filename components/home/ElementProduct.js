@@ -1,43 +1,9 @@
 import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
-export default function PromotionProduct() {
-    const [data, setData] = useState([]);
-    const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
-
-    const fetchData = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch(
-                "http://tmt020202ccna-001-site1.atempurl.com/api/product-shoes/ds-giay-khuyen_mai?page=" +
-                `${page}` +
-                "&pageSize=3"
-            );
-            const newData = await response.json();
-            setData((prevData) => [...prevData, ...newData.data]);
-            setPage((prevPage) => prevPage + 1);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, []); // Fetch data when component mounts
-
-    const handleScroll = ({ nativeEvent }) => {
-        const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
-        const isCloseToBottom =
-            layoutMeasurement.width + contentOffset.x >= contentSize.width - 20;
-
-        if (isCloseToBottom && !loading) {
-            fetchData();
-        }
-    };
-
+import {useFetchData} from "../../utils/LoadData";
+export default function ElementProduct({title, type}) {
+    const { data, handleScroll } = useFetchData(type);
     const navigation = useNavigation();
     const [activeButton, setActiveButton] = useState(1);
     const buttons = [
@@ -55,7 +21,7 @@ export default function PromotionProduct() {
             <View style={styles.widgetHeader}>
                 <View style={styles.widgetHeaderTitle}>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.titleText}>Sản phẩm khuyến mãi</Text>
+                        <Text style={styles.titleText}>{title}</Text>
                     </View>
                 </View>
             </View>
