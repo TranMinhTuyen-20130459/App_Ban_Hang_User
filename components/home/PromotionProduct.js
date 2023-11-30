@@ -55,7 +55,7 @@ export default function PromotionProduct() {
             <View style={styles.widgetHeader}>
                 <View style={styles.widgetHeaderTitle}>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.titleText}>Sản phẩm mới</Text>
+                        <Text style={styles.titleText}>Sản phẩm khuyến mãi</Text>
                     </View>
                 </View>
             </View>

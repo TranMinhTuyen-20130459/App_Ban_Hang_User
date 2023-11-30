@@ -15,8 +15,8 @@ export default function HotProduct() {
                 "&pageSize=3"
             );
             const newData = await response.json();
-            setData((prevData) => [...prevData, ...newData.data]);
             setPage((prevPage) => prevPage + 1);
+            setData((prevData) => [...prevData, ...newData.data]);
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
@@ -55,7 +55,7 @@ export default function HotProduct() {
             <View style={styles.widgetHeader}>
                 <View style={styles.widgetHeaderTitle}>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.titleText}>Sản phẩm mới</Text>
+                        <Text style={styles.titleText}>Sản phẩm bán chạy</Text>
                     </View>
                 </View>
             </View>
