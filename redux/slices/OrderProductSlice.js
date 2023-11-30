@@ -14,6 +14,9 @@ const orderProductSlice = createSlice({
             const color = action.payload.color;
             const quantity = action.payload.quantity;
             const path_img = action.payload.path_img;
+
+            // xóa sản phẩm có idv4
+            const updatedState = state.filter(item => item.idv4 !== idv4);
             const newCartItem = {
                 idv4: idv4,
                 id: id,
@@ -26,9 +29,10 @@ const orderProductSlice = createSlice({
                 path_img: path_img
             };
 
-            state.push(newCartItem);
+            updatedState.push(newCartItem);
+            return updatedState;
         },
-        // xóa sản phẩm có những thuộc tính id, size, color
+
         removeOrderProduct: (state, action) => {
             const idv4 = action.payload
             return state.filter((item) => item.idv4 !== idv4);
