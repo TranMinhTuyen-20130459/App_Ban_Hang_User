@@ -8,18 +8,18 @@ import {
     ActivityIndicator,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import {useEffect, useState} from "react";
-import {HeaderProductDetail} from "../components/product/HeaderProductDetail";
-import {ProductImage} from "../components/product/ProductImage";
-import {ItemEvaluate} from "../components/product/evaluation/ItemEvaluate";
-import {ButtonAction} from "../components/product/ButtonAction";
-import {Policy} from "../components/product/Policy";
-import {colors} from "../theme";
-import {addCart, updateCart} from "../redux/slices/CartsSlice";
-import {useDispatch, useSelector} from "react-redux";
-import {useRoute} from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import { HeaderProductDetail } from "../components/product/HeaderProductDetail";
+import { ProductImage } from "../components/product/ProductImage";
+import { ItemEvaluate } from "../components/product/evaluation/ItemEvaluate";
+import { ButtonAction } from "../components/product/ButtonAction";
+import { Policy } from "../components/product/Policy";
+import { colors } from "../theme";
+import { addCart, updateCart } from "../redux/slices/CartsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useRoute } from "@react-navigation/native";
 
-export const ProducDetail = ({navigation}) => {
+export const ProducDetail = ({ navigation }) => {
     const fakeData = [
         {
             quantity_star: 5,
@@ -107,7 +107,7 @@ export const ProducDetail = ({navigation}) => {
         setIsModalVisible(true);
     };
     const route = useRoute();
-    const {productId} = route.params;
+    const { productId } = route.params;
 
     // redux
     const dispatch = useDispatch();
@@ -158,8 +158,8 @@ export const ProducDetail = ({navigation}) => {
         extrapolate: "clamp",
     });
     const handleScroll = Animated.event(
-        [{nativeEvent: {contentOffset: {y: scrollY}}}],
-        {useNativeDriver: false} // Make sure to set useNativeDriver to false
+        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+        { useNativeDriver: false } // Make sure to set useNativeDriver to false
     );
     // fetch data product
     useEffect(() => {
@@ -236,29 +236,29 @@ export const ProducDetail = ({navigation}) => {
             <Animated.View
                 style={[
                     styles.fixedHeaderProductDetail,
-                    {backgroundColor: headerBackgroundColor},
+                    { backgroundColor: headerBackgroundColor },
                 ]}
             >
-                <HeaderProductDetail navigation={navigation}/>
+                <HeaderProductDetail navigation={navigation} />
             </Animated.View>
             <ScrollView
                 onScroll={handleScroll}
                 scrollEventThrottle={16}
-                contentContainerStyle={{paddingBottom: 70}} // Để có không gian cuối ScrollView để hiển thị ButtonAction
+                contentContainerStyle={{ paddingBottom: 70 }} // Để có không gian cuối ScrollView để hiển thị ButtonAction
             >
                 {productData ? (
                     <>
                         <View>
-                            <ProductImage list={productData.list_image}/>
+                            <ProductImage list={productData.list_image} />
                             <View style={styles.margin10}>
                                 <View>
                                     <View>
-                                        <Text style={{fontSize: 30}}>
+                                        <Text style={{ fontSize: 30 }}>
                                             {productData.name_product}
                                         </Text>
                                         <Text>
                                             <View style={styles.starContainer}>
-                                                {Array.from({length: 5}, (v, i) => (
+                                                {Array.from({ length: 5 }, (v, i) => (
                                                     <Ionicons
                                                         key={i}
                                                         name={
@@ -282,7 +282,7 @@ export const ProducDetail = ({navigation}) => {
                                                 alignItems: "center",
                                             }}
                                         >
-                                            <Text style={{fontSize: 22, fontWeight: "bold"}}>
+                                            <Text style={{ fontSize: 22, fontWeight: "bold" }}>
                                                 {formatCurrency(productData.listed_price)}
                                             </Text>
                                             <Text
@@ -312,7 +312,7 @@ export const ProducDetail = ({navigation}) => {
                                                 </Text>
                                             </View>
                                             <Text
-                                                style={{color: colors.blueRoot, fontWeight: "bold"}}
+                                                style={{ color: colors.blueRoot, fontWeight: "bold" }}
                                             >
                                                 Chọn
                                             </Text>
@@ -321,12 +321,12 @@ export const ProducDetail = ({navigation}) => {
                                 </View>
                             </View>
                         </View>
-                        <View style={{marginVertical: 8, backgroundColor: "white"}}>
-                            <Policy/>
+                        <View style={{ marginVertical: 8, backgroundColor: "white" }}>
+                            <Policy />
                         </View>
 
                         <View style={styles.margin10}>
-                            <Text style={{fontSize: 20, fontWeight: "bold"}}>
+                            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
                                 Thông tin sản phẩm
                             </Text>
                             <Text>
@@ -341,20 +341,20 @@ export const ProducDetail = ({navigation}) => {
                         </View>
 
                         <View style={styles.margin10}>
-                            <Text style={{fontSize: 20}}>ĐÁNH GIÁ KHÁCH HÀNG</Text>
+                            <Text style={{ fontSize: 20 }}>ĐÁNH GIÁ KHÁCH HÀNG</Text>
                             <View
                                 style={{
                                     flexDirection: "row",
                                     alignItems: "center",
                                 }}
                             >
-                                <Text style={{fontSize: 30, alignContent: "center"}}>
+                                <Text style={{ fontSize: 30, alignContent: "center" }}>
                                     {productData.star_review}
                                 </Text>
 
-                                <Text style={{fontSize: 20, marginTop: 2}}>
+                                <Text style={{ fontSize: 20, marginTop: 2 }}>
                                     <View style={styles.starContainer}>
-                                        {Array.from({length: 5}, (v, i) => (
+                                        {Array.from({ length: 5 }, (v, i) => (
                                             <Ionicons
                                                 key={i}
                                                 name={
@@ -365,7 +365,7 @@ export const ProducDetail = ({navigation}) => {
                                             />
                                         ))}
                                     </View>
-                                    <Text style={{color: colors.grayLight}}>
+                                    <Text style={{ color: colors.grayLight }}>
                                         {" "}
                                         {quantity_rating} Đánh giá
                                     </Text>
@@ -385,7 +385,7 @@ export const ProducDetail = ({navigation}) => {
                             <View>
                                 {fakeData
                                     ? fakeData.slice(0, visibleComments).map((e, i) => {
-                                        return <ItemEvaluate key={i} data={e}/>;
+                                        return <ItemEvaluate key={i} data={e} />;
                                     })
                                     : "Không có bình luận nào"}
 
