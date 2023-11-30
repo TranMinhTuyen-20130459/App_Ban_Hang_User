@@ -100,7 +100,12 @@ export const ProducDetail = ({ navigation }) => {
   const [color, setColor] = useState();
   const [productData, setProductData] = useState();
   const [quantity, setQuantity] = useState(1);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const handleViewOver = () => {
+    // Show the modal
+    setIsModalVisible(true);
+  };
   const route = useRoute();
   const { productId } = route.params;
 
