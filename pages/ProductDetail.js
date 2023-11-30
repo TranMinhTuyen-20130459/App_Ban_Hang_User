@@ -19,6 +19,7 @@ import { addCart, updateCart } from "../redux/slices/CartsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useRoute } from "@react-navigation/native";
 import uuidv4 from "uuid/v4";
+import { addOrderProduct } from "../redux/slices/OrderProductSlice";
 
 export const ProducDetail = ({ navigation }) => {
   const fakeData = [
@@ -101,18 +102,15 @@ export const ProducDetail = ({ navigation }) => {
   const [color, setColor] = useState();
   const [productData, setProductData] = useState();
   const [quantity, setQuantity] = useState(1);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [idV4, setIdV4] = useState();
-  const handleViewOver = () => {
-    // Show the modal
-    setIsModalVisible(true);
-  };
+
   const route = useRoute();
   const { productId } = route.params;
 
   // redux
   const dispatch = useDispatch();
   const carts = useSelector((state) => state.carts);
+  const orders = useSelector((state) => state.orderProducts)
 
   // theo dõi giỏ hàng
   useEffect(() => {
@@ -226,8 +224,19 @@ export const ProducDetail = ({ navigation }) => {
       status: true,
       path_img: productData && productData.list_image[0].path_image,
     };
-    navigation.navigate("OrderConfirm", { order_items: [newCartItem] });
-    // alert("Hello");
+    const existingOrderItem = orders.find((item) => {
+      return item.id === newCartItem.id && item.size === newCartItem.size;
+    });
+
+    if (existingOrderItem) {
+      navigation.navigate("OrderConfirm");
+    } else {
+      dispatch(addOrderProduct(newCartItem));
+      navigation.navigate("OrderConfirm", { order_items: [newCartItem] });
+
+    }
+
+
   };
 
   // nếu fecth chưa hết thì hiển thị loading..
@@ -403,8 +412,8 @@ export const ProducDetail = ({ navigation }) => {
               <View>
                 {fakeData
                   ? fakeData.slice(0, visibleComments).map((e, i) => {
-                      return <ItemEvaluate key={i} data={e} />;
-                    })
+                    return <ItemEvaluate key={i} data={e} />;
+                  })
                   : "Không có bình luận nào"}
 
                 {fakeData.length > 3 && (

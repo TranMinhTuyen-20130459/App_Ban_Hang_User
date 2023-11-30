@@ -72,7 +72,7 @@ export const SelectSize = (prop) => {
     } else {
       // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thì thêm mới
       dispatch(addCart(newCartItem));
-      alert("Thêm vào giỏ hàng thành công " + size);
+      alert("Thêm vào giỏ hàng thành công");
     }
   };
 
@@ -124,38 +124,40 @@ export const SelectSize = (prop) => {
           }}
         >
           <View>
-            <Text>Màu: </Text>
-            <View style={styles.flexWrap}>
-              {productData.list_image
-                ? productData.list_image.map((image) => {
-                    return (
-                      <ItemColorClothes
-                        key={image.id_image}
-                        color={image.name}
-                        link={image.path_image}
-                        selected={color === image.name}
-                        onPress={() => handleColorPress(image.name)}
-                      />
-                    );
-                  })
-                : "không có ảnh"}
-            </View>
+            {productData.list_image
+              ? productData.list_image.map((image) => {
+                return (<>
+                  <Text>Màu: </Text>
+                  <View style={styles.flexWrap}>
+                    <ItemColorClothes
+                      key={image.id_image}
+                      color={image.name}
+                      link={image.path_image}
+                      selected={color === image.name}
+                      onPress={() => handleColorPress(image.name)}
+                    />
+
+                  </View>
+                </>
+                );
+              })
+              : "không có ảnh"}
             <View>
-              <Text>Size: </Text>
-              <View style={styles.flexWrap}>
-                {productData.list_size
-                  ? productData.list_size.map((s, i) => {
-                      return (
-                        <ItemSize
-                          key={i}
-                          name={s.name_size}
-                          selected={size === s.name_size}
-                          onPress={() => handleSizePress(s.name_size)}
-                        />
-                      );
-                    })
-                  : ""}
-              </View>
+              {productData.list_size
+                ? productData.list_size.map((s, i) => {
+                  return (<>
+                    <Text>Size: </Text>
+                    <View style={styles.flexWrap}>
+                      <ItemSize
+                        key={i}
+                        name={s.name_size}
+                        selected={size === s.name_size}
+                        onPress={() => handleSizePress(s.name_size)}
+                      />
+                    </View>
+                  </>);
+                })
+                : ""}
             </View>
           </View>
         </View>
