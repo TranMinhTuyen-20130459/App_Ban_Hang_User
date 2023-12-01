@@ -23,6 +23,7 @@ import {
 import OrderDetailsScreen from './pages/orderUser/DetailOrder';
 import Search from "./components/Search";
 import ResultSearch from "./components/ResultSearch";
+import HistorySell from "./pages/orderUser/history";
 function App() {
     const Stack = createNativeStackNavigator();
 
@@ -68,6 +69,15 @@ function App() {
                     <Stack.Screen name="Setting" component={SettingScreen}/>
                   
                     <Stack.Screen name="OrderDetail" component={OrderDetailsScreen}
+                                  options={{
+                                      title: 'Chi tiết đơn hàng',
+                                      headerTitleAlign: 'center',
+                                      headerStyle: {
+                                          backgroundColor: colors.blueRoot,
+                                      },
+                                      headerTintColor: 'white',
+                                  }}/>
+                                   <Stack.Screen name="HistorySell" component={HistorySell}
                                   options={{
                                       title: 'Chi tiết đơn hàng',
                                       headerTitleAlign: 'center',

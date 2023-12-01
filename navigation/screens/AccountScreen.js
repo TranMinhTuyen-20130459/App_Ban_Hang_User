@@ -108,7 +108,7 @@ function AccountScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.itemIconOrder}
-                onPress={() => navigation.navigate('Setting')}
+                onPress={() => navigation.navigate('HistorySell')}
               >
                 <View style={styles.containerIcon}>
                   <Ionicons name="checkbox-outline" size={20} color={colors.blueRoot}></Ionicons>
