@@ -79,7 +79,7 @@ function App() {
                                   }}/>
                                    <Stack.Screen name="HistorySell" component={HistorySell}
                                   options={{
-                                      title: 'Chi tiết đơn hàng',
+                                      title: 'Lịch sử mua hàng ',
                                       headerTitleAlign: 'center',
                                       headerStyle: {
                                           backgroundColor: colors.blueRoot,
