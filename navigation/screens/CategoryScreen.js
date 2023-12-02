@@ -8,6 +8,8 @@ import {useNavigation} from "@react-navigation/native";
 import {API_GET_PATHS} from '../../services/PathApi';
 import {formatMoney} from '../../utils/Utils';
 import VoteScreen from '../../components/VoteScreen';
+import { colors } from '../../theme';
+
 const handleProductPress = () => {
   // Gọi màn hình đánh giá khi sản phẩm được nhấn
   navigation.navigate('VoteScreen');
@@ -116,7 +118,11 @@ const CategoryScreen = () => {
           />
         </View>
         <TouchableOpacity>
-          <CartIcon size={24} />
+          <CartIcon sizeIcon={26}
+                    colorIcon={colors.blueRoot}
+                    activeBGColor={true}
+                    bGQuantity={colors.bgButtonRed}
+                    colorQuantity="#fff" />
         </TouchableOpacity>
       </View>
       <View style={styles.body}>
