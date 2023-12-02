@@ -2,20 +2,19 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const StarRating = ({ rating, onStarPress }) => {
+const StarRating = ({ rating}) => {
   const stars = [1, 2, 3, 4, 5]; // Số lượng sao
 
   return (
     <View style={styles.starRatingContainer}>
-      {stars.map((star) => (
+      {stars.map((value,index) => (
         <TouchableOpacity
-          key={star}
-          onPress={() => onStarPress(star)}
+          key={index}
         >
           <Icon
-            name={star <= rating ? 'star' : 'star-o'}
+            name={value <= rating ? 'star' : 'star-o'}
             size={18}
-            color={star <= rating ? '#f1c40f' : '#ccc'}
+            color={ value<= rating ? '#f1c40f' : '#ccc'}
           />
         </TouchableOpacity>
       ))}
@@ -23,17 +22,10 @@ const StarRating = ({ rating, onStarPress }) => {
   );
 };
 
-const VoteScreen = () => {
-  const [rating, setRating] = useState(0);
-
-  const handleStarPress = (star) => {
-    setRating(star);
-    // Thực hiện các hành động khác khi người dùng nhấn vào một sao
-  };
-
+const VoteScreen = ({starDefault}) => {
   return (
     <View style={styles.container}>
-      <StarRating rating={rating} onStarPress={handleStarPress} />
+      <StarRating rating={starDefault} />
     </View>
   );
 };
@@ -48,7 +40,7 @@ const styles = StyleSheet.create({
   starRatingContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    // marginBottom: 20,
+    marginBottom: 20,
   },
  
 });

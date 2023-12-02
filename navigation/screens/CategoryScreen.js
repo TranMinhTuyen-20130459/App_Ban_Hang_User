@@ -6,7 +6,7 @@ import CartIcon from '../../components/CartIcon';
 import { categorySelector, selectCategory } from '../../redux/slices/CategorySlice';
 import {useNavigation} from "@react-navigation/native";
 import {API_GET_PATHS} from '../../services/PathApi';
-
+import {formatMoney} from '../../utils/Utils';
 import VoteScreen from '../../components/VoteScreen';
 const handleProductPress = () => {
   // Gọi màn hình đánh giá khi sản phẩm được nhấn
@@ -28,7 +28,6 @@ const CategoryScreen = () => {
     const getProducts = async (apiEndpoint) => {
       setLoading(true);
       try {
-        // console.log(apiEndpoint)
         const response = await fetch(`${apiEndpoint}page=${currentPage}&pageSize=15`);      
         const responseData = await response.json();
 
@@ -100,11 +99,10 @@ const CategoryScreen = () => {
         <Image style={styles.imageProduct} source={{ uri: `${item.list_image[0].path_image}` }} />
       )}
       <Text style={styles.productTabText}>{item.name_product.substring(0, 13)}..</Text>
-      <VoteScreen></VoteScreen>
-      <Text style={styles.productTabText}>Giá: {item.listed_price}</Text>
+      <VoteScreen starDefault={item.star_review} ></VoteScreen>
+      <Text style={styles.productTabText}>Giá: {formatMoney(item.listed_price)}</Text>
     </TouchableOpacity>
   );
-
   return (
     <View style={styles.categoryMain}>
       <View style={styles.header}>
