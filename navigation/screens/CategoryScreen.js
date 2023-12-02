@@ -4,12 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import CartIcon from '../../components/CartIcon';
 import { categorySelector, selectCategory } from '../../redux/slices/CategorySlice';
+import {useNavigation} from "@react-navigation/native";
+import {API_GET_PATHS} from '../../services/PathApi';
+
 import VoteScreen from '../../components/VoteScreen';
 const handleProductPress = () => {
   // Gọi màn hình đánh giá khi sản phẩm được nhấn
   navigation.navigate('VoteScreen');
 };
 const CategoryScreen = () => {
+  const navigation = useNavigation();
+
   const dispatch = useDispatch();
   const { categories, selectedCategory } = useSelector(categorySelector);
 
@@ -23,9 +28,8 @@ const CategoryScreen = () => {
     const getProducts = async (apiEndpoint) => {
       setLoading(true);
       try {
-        const response = await fetch(
-          `http://tmt020202ccna-001-site1.atempurl.com/api/${apiEndpoint}?page=${currentPage}&pageSize=15`
-        );
+        // console.log(apiEndpoint)
+        const response = await fetch(`${apiEndpoint}page=${currentPage}&pageSize=15`);      
         const responseData = await response.json();
 
         setLeftData((prevData) => [...prevData, ...responseData.data]);
@@ -39,22 +43,22 @@ const CategoryScreen = () => {
     const fetchData = () => {
       switch (selectedCategory) {
         case 'Giày Jordan Nữ':
-          getProducts('product-shoes/ds-giay-jordan-nu');
+          getProducts(API_GET_PATHS.lay_ds_giay_jordan_nu);
           break;
         case 'Giày Jordan Nam':
-          getProducts('product-shoes/ds-giay-jordan-nam');
+          getProducts(API_GET_PATHS.lay_ds_giay_jordan_nam);
           break;
         case 'Giày Adidas Nữ':
-          getProducts('product-shoes/ds-giay-adidas-nu');
+          getProducts(API_GET_PATHS.lay_ds_giay_adidas_nu);
           break;
         case 'Giày Adidas Nam':
-          getProducts('product-shoes/ds-giay-adidas-nam');
+          getProducts(API_GET_PATHS.lay_ds_giay_adidas_nam);
           break;
         case 'Giày Nike Nữ':
-          getProducts('product-shoes/ds-giay-nike-nu');
+          getProducts(API_GET_PATHS.lay_ds_giay_nike_nu);
           break;
         case 'Giày Nike Nam':
-          getProducts('product-shoes/ds-giay-nike-nam');
+          getProducts(API_GET_PATHS.lay_ds_giay_nike_nam);
           break;
         default:
           // Handle unmatched category
@@ -78,7 +82,14 @@ const CategoryScreen = () => {
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      onPress={() => handleCategoryPress(item.name_product)}
+      onPress={() => {
+        handleCategoryPress(item.name_product);
+        navigation.navigate("ProductDetail", {
+          productId: item.id_product,
+        });
+      }}
+
+
       style={[
         styles.productTab,
         styles.categoryItem,
@@ -266,7 +277,7 @@ const styles = StyleSheet.create({
   },
   buttonPressed: {
     backgroundColor: 'white', // Change this to the color you want when pressed
-    width:80,
+    width: 80,
   },
   productTab: {
     marginLeft: 5,
