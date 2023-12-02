@@ -93,7 +93,7 @@ export default function OrderAddressScreen() {
     // Cập nhật địa chỉ giao hàng mới
     dispatch(setAddress(orderAddress));
 
-    navigation.navigate("OrderConfirm");
+    navigation.goBack();
   };
 
   const orderAddress = {

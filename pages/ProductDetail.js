@@ -19,7 +19,7 @@ import { addCart, updateCart } from "../redux/slices/CartsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useRoute } from "@react-navigation/native";
 import uuidv4 from "uuid/v4";
-import { addOrderProduct } from "../redux/slices/OrderProductSlice";
+import {addOrderProduct, removeAllOrderProduct} from "../redux/slices/OrderProductSlice";
 
 export const ProducDetail = ({ navigation }) => {
   const fakeData = [
@@ -174,6 +174,9 @@ export const ProducDetail = ({ navigation }) => {
         }
 
         const data = await response.json();
+
+        console.log(data)
+
         setProductData(data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -217,7 +220,7 @@ export const ProducDetail = ({ navigation }) => {
       id: productData.id_product,
       title: productData.name_product,
       price: productData.listed_price,
-      discountPrice: productData.listed_price - productData.promotional_price,
+      discountPrice: productData.promotional_price,
       size: size ? size : productData.list_size[0].name_size,
       color: color ? "Trắng" : "Xanh",
       quantity: 1,
@@ -231,6 +234,7 @@ export const ProducDetail = ({ navigation }) => {
     if (existingOrderItem) {
       navigation.navigate("OrderConfirm");
     } else {
+      dispatch(removeAllOrderProduct())
       dispatch(addOrderProduct(newCartItem));
       navigation.navigate("OrderConfirm", { order_items: [newCartItem] });
 
