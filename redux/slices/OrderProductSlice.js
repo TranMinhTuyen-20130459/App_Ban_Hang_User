@@ -1,10 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 const orderProductSlice = createSlice({
     name: "orderProducts",
     initialState: [],
     reducers: {
         addOrderProduct: (state, action) => {
+
             const idv4 = action.payload.idv4;
             const id = action.payload.id;
             const title = action.payload.title;
@@ -15,8 +16,6 @@ const orderProductSlice = createSlice({
             const quantity = action.payload.quantity;
             const path_img = action.payload.path_img;
 
-            // xóa sản phẩm có idv4
-            const updatedState = state.filter(item => item.idv4 !== idv4);
             const newCartItem = {
                 idv4: idv4,
                 id: id,
@@ -29,8 +28,7 @@ const orderProductSlice = createSlice({
                 path_img: path_img
             };
 
-            updatedState.push(newCartItem);
-            return updatedState;
+             state.push(newCartItem)
         },
 
         removeOrderProduct: (state, action) => {
@@ -43,5 +41,5 @@ const orderProductSlice = createSlice({
     },
 });
 
-export const { addOrderProduct, removeOrderProduct, removeAllOrderProduct } = orderProductSlice.actions;
+export const {addOrderProduct, removeOrderProduct, removeAllOrderProduct} = orderProductSlice.actions;
 export default orderProductSlice.reducer;
