@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native'
 import {colors} from "../../theme";
+import {WINDOW_WIDTH} from "../../utils/Utils";
 
 export const styles = StyleSheet.create({
         container: {
@@ -12,39 +13,44 @@ export const styles = StyleSheet.create({
         header: {
             backgroundColor: 'white',
             flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 20
+            padding: 10
         },
         textNameAndPhoneCustomer: {
             flexDirection: 'row',
             marginBottom: 5,
-            alignItems: 'center'
+            justifyContent: 'flex-start',
+            width: 0.85 * WINDOW_WIDTH
         },
         textName: {
-            marginRight: 15,
-            fontSize: 16
+            fontSize: 16,
+            flexWrap: 'wrap',
+            width: 0.4 * WINDOW_WIDTH
         },
         separatorVertical: {
             height: '80%',
             width: 1,
             backgroundColor: 'gray',
+            marginHorizontal: 0.04 * WINDOW_WIDTH
         },
         textPhone: {
-            marginLeft: 15,
-            fontSize: 16
+            fontSize: 16,
+            flexWrap: 'wrap',
+            width: 0.4 * WINDOW_WIDTH
         },
         textInfo: {
             marginLeft: 5,
-            marginRight: 5
+            marginRight: 15,
+            flexDirection: 'row',
         },
         textAddress: {
-            marginLeft: 10,
             fontSize: 15,
-            color: 'gray'
+            color: 'gray',
+            flexWrap: 'wrap',
+            marginLeft: 5,
+            width: 0.85 * WINDOW_WIDTH
         },
         iconLocation: {
-            marginRight: 15
+            marginRight: 5
         },
         payments: {
             backgroundColor: 'white',
@@ -52,7 +58,7 @@ export const styles = StyleSheet.create({
             marginTop: 8
         },
         methodPayment: {
-            backgroundColor: 'rgba(5, 0, 245, 0.1)',
+            // backgroundColor: 'rgba(5, 0, 245, 0.1)',
             height: 60,
             marginTop: 10,
             borderWidth: 0.8,
@@ -78,7 +84,7 @@ export const styles = StyleSheet.create({
         },
         btOrder: {
             backgroundColor: colors.bgButtonRed,
-            borderWidth: 0.8,
+            borderWidth: 0.5,
             borderRadius: 5,
             paddingVertical: 5,
             paddingHorizontal: 10,
@@ -137,6 +143,10 @@ export const styles = StyleSheet.create({
             flexDirection: 'row',
             justifyContent: 'space-between',
             padding: 8
+        },
+        addressDetail: {
+            display: 'flex',
+            flexDirection: 'column',
         }
     }
 )

@@ -1,32 +1,43 @@
-import React, {useState} from 'react';
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import CartIcon from '../../components/CartIcon';
-import {colors} from '../../theme';
+import React, {useEffect, useState} from "react";
+import {
+    Dimensions,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import Header from "../../components/home/Header";
 import BannerGrid from "../../components/home/BannerGrid";
-import CheckBox from 'react-native-check-box';
-import TopSeller from "../../components/home/TopSeller";
+import ElementProduct from "../../components/home/ElementProduct";
+import SuggestedProduct from "../../components/home/SuggestedProduct";
+import {useFetchDataSuggested} from "../../utils/LoadData";
 
 function HomeScreen() {
-    const [isChecked, setIsChecked] = useState(false)
+    const { data, handleScroll } = useFetchDataSuggested();
     return (
         <View style={{flex: 1}}>
             <Header></Header>
-            <ScrollView>
-                <View style= {styles.main}>
+            <ScrollView onScroll={handleScroll}
+                        scrollEventThrottle={16}>
+                <View style={styles.main}>
                     <View style={styles.mainFormat}>
                         <BannerGrid></BannerGrid>
-                        <TopSeller></TopSeller>
+                        <ElementProduct title={"Sản phẩm bán chạy"} type={"ds-giay-hot"}></ElementProduct>
+                        <ElementProduct title={"Sản phẩm mói"} type={"ds-giay-moi"}></ElementProduct>
+                        <ElementProduct title={"Sản phẩm khuyến mãi"} type={"ds-giay-khuyen_mai"}></ElementProduct>
+                        <SuggestedProduct data={data}></SuggestedProduct>
                     </View>
                 </View>
             </ScrollView>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
-    main:{
-        position: 'sticky',
+    main: {
+        position: "sticky",
         top: 0,
         zIndex: 10,
     },
@@ -35,6 +46,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         gap: 8,
         backgroundColor: "#F5F5FA",
-    }
-})
-export default HomeScreen
+    },
+});
+
+export default HomeScreen;
