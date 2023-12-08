@@ -1,33 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const HistorySell = () => {
   const [purchaseHistory, setPurchaseHistory] = useState([]);
+  const [filteredHistory, setFilteredHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Lấy dữ liệu từ API
+  // Lấy dữ liệu từ API khi mở ứng dụng
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          'http://tmt020202ccna-001-site1.atempurl.com/api/history/lich-su-mua-hang?phoneNumber=0123456789&page=1&pageSize=9'
-        );
-        const jsonData = await response.json();
-        if (jsonData.succeeded) {
-          setPurchaseHistory(jsonData.data);
-        } else {
-          console.error('Lỗi khi lấy lịch sử mua hàng:', jsonData.message);
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Lỗi khi lấy dữ liệu:', error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
+    fetchData(); // Fetch data with default phone number
   }, []);
+
+  // Tìm kiếm khi số điện thoại thay đổi
+  useEffect(() => {
+   fetchData(searchQuery);
+  }, [searchQuery]);
+
+  // Hàm lấy dữ liệu từ API dựa trên số điện thoại
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `http://tmt020202ccna-001-site1.atempurl.com/api/history/lich-su-mua-hang?phoneNumber=${searchQuery}&page=1&pageSize=9`
+      );
+      const jsonData = await response.json();
+      if (jsonData.succeeded) {
+        setPurchaseHistory(jsonData.data);
+        setFilteredHistory(jsonData.data); // Set filtered data initially with all orders
+      } else {
+        console.error('Lỗi khi lấy lịch sử mua hàng:', jsonData.message);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Lỗi khi lấy dữ liệu:', error);
+      setIsLoading(false);
+    }
+  };
+
+  // Hàm tìm kiếm đơn hàng bằng số điện thoại
+  const searchOrdersByPhoneNumber = (phoneNumber) => {
+    const filteredData = purchaseHistory.filter(item =>
+      item.phoneNumber.includes(phoneNumber)
+    );
+    setFilteredHistory(filteredData);
+  };
 
   const renderPurchaseItem = ({ item }) => (
     <TouchableOpacity
@@ -49,22 +66,27 @@ const HistorySell = () => {
         <TouchableOpacity style={styles.detailButton}>
           <Text style={styles.buttonText}>Xem chi tiết</Text>
         </TouchableOpacity>
-        
       </View>
     </TouchableOpacity>
   );
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.headerContainer}>
-        {/* Xóa chữ và icon trong phần này */}
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Nhập số điện thoại để tìm kiếm đơn hàng của bạn ..."
+          value={searchQuery}
+          onChangeText={text => setSearchQuery(text)}
+        />
+        <Icon name="search" size={20} color="#333" />
       </View>
 
       {isLoading ? (
         <Text>Đang tải...</Text>
       ) : (
         <FlatList
-          data={purchaseHistory}
+          data={filteredHistory}
           keyExtractor={(item) => item.id_order.toString()}
           renderItem={renderPurchaseItem}
         />
@@ -72,6 +94,7 @@ const HistorySell = () => {
     </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -87,7 +110,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    justifyContent: 'center', // Thay đổi từ 'space-between' thành 'center'
+    justifyContent: 'center',
     marginBottom: 20,
     position: 'relative',
   },
@@ -101,6 +124,7 @@ const styles = StyleSheet.create({
     borderColor: '#000',
   },
   productTitle: {
+    margin: 10,
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
@@ -171,8 +195,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   purchaseInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 5,
     padding: 15, // Đặt padding ở đây nếu bạn muốn có khoảng trắng xung quanh nội dung bên trong
   },
@@ -188,6 +210,21 @@ const styles = StyleSheet.create({
   },
   purchaseValue: {
     fontWeight: 'bold',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    paddingHorizontal: 10,
   },
 });
 
