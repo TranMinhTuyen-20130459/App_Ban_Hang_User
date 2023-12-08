@@ -1,18 +1,21 @@
-import {View, Text, TouchableOpacity, StatusBar, StyleSheet, Modal} from 'react-native'
-import React, {useEffect, useState} from 'react'
-import {useIsFocused, useNavigation} from '@react-navigation/native'
+import { View, Text, TouchableOpacity, StatusBar, StyleSheet, Modal } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {WINDOW_WIDTH, formatMoney} from '../utils/Utils';
+import { WINDOW_WIDTH, formatMoney } from '../utils/Utils';
 import CheckBox from 'react-native-check-box';
-import {colors} from '../theme';
+import { colors } from '../theme';
 import CartItemsList from '../components/CartItemsList';
-import {useDispatch, useSelector} from 'react-redux';
-import {removeAllCart, removeCart} from '../redux/slices/CartsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addCart, removeAllCart, removeCart } from '../redux/slices/CartsSlice';
+import {addOrderProduct, removeAllOrderProduct} from '../redux/slices/OrderProductSlice';
 
 export default function CartScreen() {
     const navigation = useNavigation();
     const isFocused = useIsFocused();
     const dispatch = useDispatch();
+    // Sử dụng useSelector để lấy trạng thái của thông tin địa chỉ giao hàng
+    const orderAddress = useSelector(state => state.address_order);
     useEffect(() => {
         if (isFocused) {
             StatusBar.setBarStyle('light-content');
@@ -23,7 +26,6 @@ export default function CartScreen() {
 
     // Đọc carts từ Redux store
     const carts = useSelector((state) => state.carts);
-
     // danh sách sản phẩm trong giỏ hàng
     const [cartItems, setCartItems] = useState(carts);
     // theo dõi carts trong redux nếu nó thay đổi sẽ set lại cartItems
@@ -52,9 +54,9 @@ export default function CartScreen() {
         setTotalSelectedQuantity(calculateTotalQuantity());
     }, [cartItems]);
 
-    const toggleItemSelection = (itemId) => {
+    const toggleItemSelection = (idv4) => {
         const updatedCartItems = cartItems.map((item) => {
-            if (item.id === itemId) {
+            if (item.idv4 === idv4) {
                 return {
                     ...item,
                     isChecked: !item.isChecked,
@@ -113,6 +115,7 @@ export default function CartScreen() {
             dispatch(removeAllCart())
         }
         if (idDelete) {
+            console.log(idDelete)
             // gọi xuống redux để xóa product
             dispatch(removeCart(idDelete))
         }
@@ -147,8 +150,12 @@ export default function CartScreen() {
     const handleBuy = () => {
         const cartsBuy = cartItems.filter(item => item.isChecked === true);
         if (cartsBuy.length > 0) {
-            console.log("Mua")
-            console.log(cartsBuy)
+
+            dispatch(removeAllOrderProduct())
+
+            // thêm vào checkout ở redux
+            cartsBuy.map(item => dispatch(addOrderProduct(item)))
+
             navigation.navigate('OrderConfirm');
         }
     };
@@ -157,23 +164,31 @@ export default function CartScreen() {
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('Setting')}
+                    onPress={() => navigation.navigate('OrderAddress')}
                     style={styles.containerAddress}
                 >
                     <Ionicons name="location" size={18} color='#0a74e4'></Ionicons>
-                    <Text numberOfLines={1} style={styles.textAddress}>Xã Quảng Ngạn, Huyện Quảng Điền, Thừa Thiên
-                        Huế</Text>
+                    {
+                        orderAddress ?
+                            (<Text numberOfLines={1} style={styles.textAddress}>
+                                {orderAddress.to_address.address}, {orderAddress.to_address.ward_name}
+                                , {orderAddress.to_address.district_name}, {orderAddress.to_address.province_name}
+                            </Text>)
+                            :
+                            (<Text numberOfLines={1} style={styles.textAddress}>Bạn hãy chọn địa chỉ giao hàng</Text>)
+                    }
+
                     <Ionicons name="chevron-forward" size={18} color={colors.grey}></Ionicons>
                 </TouchableOpacity>
                 <View style={styles.checkAll}>
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={{ flexDirection: 'row' }}>
                         <CheckBox
                             isChecked={checkAll}
                             onClick={() => toggleCheckAll()}
                             checkBoxColor={colors.grey}
                             checkedCheckBoxColor={colors.blueRoot}
                         ></CheckBox>
-                        <Text style={{marginLeft: 12}}>{`Tất cả (${cartItems.length} sản phẩm)`}</Text>
+                        <Text style={{ marginLeft: 12 }}>{`Tất cả (${cartItems.length} sản phẩm)`}</Text>
                     </View>
 
                     <TouchableOpacity
@@ -196,18 +211,18 @@ export default function CartScreen() {
                 showDeleteModal={showDeleteModal}
             />
             <View style={styles.footer}>
-                <View style={{flexDirection: 'column', padding: 16}}>
-                    <Text style={{fontSize: 14}}>Tổng cộng</Text>
-                    <Text style={{fontSize: 22, color: colors.redPrice, fontWeight: 600, marginTop: 4}}>
+                <View style={{ flexDirection: 'column', padding: 16 }}>
+                    <Text style={{ fontSize: 14 }}>Tổng cộng</Text>
+                    <Text style={{ fontSize: 22, color: colors.redPrice, fontWeight: 600, marginTop: 4 }}>
                         {
                             !totalPrice ? (
-                                    <Text style={{fontSize: 14, color: colors.redPrice, fontWeight: 400}}>Vui lòng chọn sản
-                                        phẩm</Text>)
+                                <Text style={{ fontSize: 14, color: colors.redPrice, fontWeight: 400 }}>Vui lòng chọn sản
+                                    phẩm</Text>)
                                 : formatMoney(totalPrice)
                         }
                     </Text>
                 </View>
-                <View style={{padding: 16}}>
+                <View style={{ padding: 16 }}>
                     <TouchableOpacity
                         onPress={handleBuy}
                         style={{
@@ -217,7 +232,7 @@ export default function CartScreen() {
                             borderRadius: 4
                         }}
                     >
-                        <Text style={{color: "#fff", fontSize: 18}}>Mua hàng ({totalSelectedQuantity})</Text>
+                        <Text style={{ color: "#fff", fontSize: 18 }}>Mua hàng ({totalSelectedQuantity})</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -343,7 +358,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         height: 80,
-        width: '100%',
+        flex: 1,
+        width: "100%",
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'

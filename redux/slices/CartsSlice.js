@@ -1,9 +1,5 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {
-    clearCart,
-    removeFromCart,
-    updateCartItemQuantity,
-} from "../../utils/localStorage";
+import { createSlice } from "@reduxjs/toolkit";
+import uuidv4 from 'uuid/v4';
 
 const cartSlice = createSlice({
     name: "carts",
@@ -17,8 +13,9 @@ const cartSlice = createSlice({
             const size = action.payload.size;
             const color = action.payload.color;
             const quantity = action.payload.quantity;
-            const pathImg = action.payload.path_img;
+            const path_img = action.payload.path_img;
             const newCartItem = {
+                idv4: uuidv4(),
                 id: id,
                 title: title,
                 price: price,
@@ -26,38 +23,33 @@ const cartSlice = createSlice({
                 size: size,
                 color: color,
                 quantity: quantity,
-                pathImg: pathImg,
+                path_img: path_img,
                 isChecked: false,
             };
 
             state.push(newCartItem);
         },
+        // xóa sản phẩm có những thuộc tính id, size, color
         removeCart: (state, action) => {
-            const id = action.payload;
-            // gọi xuống storage xóa sản phẩm
-            removeFromCart(id);
-            return state.filter((item) => item.id !== id);
+            const idv4 = action.payload
+            return state.filter((item) => item.idv4 !== idv4);
         },
         updateCart: (state, action) => {
-            const {id, quantity} = action.payload;
+            const { idv4, quantity } = action.payload;
             const updatedState = state.map((item) => {
-                if (item.id === id) {
-                    return {...item, quantity: quantity};
+                if (item.idv4 === idv4) {
+                    return { ...item, quantity: quantity };
                 }
                 return item;
             });
-            // Gọi hàm cập nhật số lượng sản phẩm trong giỏ hàng và lưu vào AsyncStorage
-            updateCartItemQuantity(id, quantity);
             return updatedState;
         },
         removeAllCart: () => {
-            // gọi xuống storage xóa hết sản phẩm
-            clearCart();
             return [];
         },
     },
 });
 
-export const {addCart, addAll, removeCart, updateCart, removeAllCart} =
+export const { addCart, addAll, removeCart, updateCart, removeAllCart } =
     cartSlice.actions;
 export default cartSlice.reducer;

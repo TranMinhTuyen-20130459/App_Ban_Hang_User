@@ -1,7 +1,7 @@
 
-const BASE_URL = 'http://tmt020202ccna-001-site1.atempurl.com'
+export const BASE_URL = 'http://tmt020202ccna-001-site1.atempurl.com'
 
-const API_GET_PATHS = {
+export const API_GET_PATHS = {
     lay_ds_giay_moi: `${BASE_URL}/api/product-shoes/ds-giay-moi?`,
     lay_ds_giay_hot: `${BASE_URL}/api/product-shoes/ds-giay-hot?`,
     lay_ds_giay_khuyen_mai: `${BASE_URL}/api/product-shoes/ds-giay-khuyen_mai?`,
@@ -22,6 +22,7 @@ const API_GET_PATHS = {
     lich_su_mua_hang: `${BASE_URL}/api/history/lich-su-mua-hang?`
 }
 
-const API_POST_PATHS = {
+
+export const API_POST_PATHS = {
     tao_don_hang: `${BASE_URL}/api/order/create-order`
 }
