@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   ActivityIndicator,
+ 
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useEffect, useState } from "react";
@@ -20,7 +21,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRoute } from "@react-navigation/native";
 import uuidv4 from "uuid/v4";
 import {addOrderProduct, removeAllOrderProduct} from "../redux/slices/OrderProductSlice";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { addHistory } from "../redux/slices/HistoryView";
 export const ProducDetail = ({ navigation }) => {
   const fakeData = [
     {
@@ -103,7 +105,8 @@ export const ProducDetail = ({ navigation }) => {
   const [productData, setProductData] = useState();
   const [quantity, setQuantity] = useState(1);
   const [idV4, setIdV4] = useState();
-
+  const [idV40, setIdV40] = useState();
+  const [viewedProducts, setViewedProducts] = useState([]);
   const route = useRoute();
   const { productId } = route.params;
 
@@ -111,7 +114,7 @@ export const ProducDetail = ({ navigation }) => {
   const dispatch = useDispatch();
   const carts = useSelector((state) => state.carts);
   const orders = useSelector((state) => state.orderProducts)
-
+  const history = useSelector((state) => state.historys)
   // theo dõi giỏ hàng
   useEffect(() => {
     const existingCartItem = carts.find((item) => {
@@ -121,6 +124,9 @@ export const ProducDetail = ({ navigation }) => {
     setIdV4(existingCartItem && existingCartItem.idv4);
   }, [carts]);
 
+    
+   
+ 
   const link =
     "http://tmt020202ccna-001-site1.atempurl.com/api/products/infor-product?id=" +
     productId;
@@ -163,6 +169,20 @@ export const ProducDetail = ({ navigation }) => {
     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
     { useNativeDriver: false } // Make sure to set useNativeDriver to false
   );
+// Lấy dữ liệu từ AsyncStorage khi component được mount
+  const getDataFromStorage = async () => {
+    try {
+      // Lấy dữ liệu từ AsyncStorage
+   
+      console.log( "H" +storedProducts)
+      // Nếu có dữ liệu, cập nhật state
+      if (storedProducts !== null) {
+        setViewedProducts(JSON.parse(storedProducts));
+      }
+    } catch (error) {
+      console.error('Error reading data from AsyncStorage:', error);
+    }
+  };
   // fetch data product
   useEffect(() => {
     const fetchData = async () => {
@@ -176,16 +196,38 @@ export const ProducDetail = ({ navigation }) => {
         const data = await response.json();
 
         console.log(data)
-
+       
         setProductData(data.data);
+        addToHistoryView(data.data)
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
+   
   }, []);
-
+  const addToHistoryView = (productData) => {
+    const existingHistoryItem = history.find((item) => {
+      return item.id === productId ;
+    })
+    const newCartItem = {
+      id: productData.id_product,
+      title: productData.name_product,
+      price: productData.listed_price,
+      discountPrice: productData.promotional_price,
+      size: size === undefined ? productData.list_size[0].name_size : size,
+      color: color ? "Trắng" : "Xanh",
+      quantity: 1,
+      path_img: productData ? productData.list_image[0].path_image : "",
+    };
+    if (!existingHistoryItem) {
+     
+      // Nếu sản phẩm đã tồn tại trong giỏ hàng, thì cập nhật
+      dispatch(addHistory(newCartItem));
+      alert("Thêm vào sản phẩm đã xem thành công");
+    } 
+  };
   const handleAddToCart = () => {
     const newCartItem = {
       id: productData.id_product,
