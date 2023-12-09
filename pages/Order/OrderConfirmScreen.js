@@ -11,17 +11,26 @@ import {createOrder} from "./util/CallApi";
 import {API_POST_PATHS} from "../../services/PathApi";
 import {removeCart} from "../../redux/slices/CartsSlice";
 import {removeAllOrderProduct} from "../../redux/slices/OrderProductSlice";
+import {isValidOrder} from "./util/CheckValid";
 
 export default function OrderConfirmScreen() {
 
     const dispatch = useDispatch()
     const navigation = useNavigation()
 
+    // danh sách các sản phẩm có trong đơn hàng
     const order_items = useSelector(state => state.orderProducts)
+
+    // thông tin địa chỉ giao hàng
     const order_address = useSelector(state => state.address_order)
+
+    // phương thức thanh toán
     const selectedPayment = useSelector(state => state.payment)
 
-    const ship_price = 99000; // => đây là phí giao hàng mặc định
+    // đây là phí giao hàng mặc định
+    const ship_price = 99000;
+
+    // trị giá của đơn hàng
     const value_order = () => {
         return order_items.reduce((total, item) => total + (item.price * item.quantity), 0)
     }
@@ -47,6 +56,11 @@ export default function OrderConfirmScreen() {
 
     const handleClickBtOrder = async () => {
 
+        //TH: Đơn hàng không hợp lệ
+        if (!isValidOrder(order_data)) {
+            return Alert.alert('Thông báo', 'Bạn cần nhập đầy đủ thông tin giao hàng')
+        }
+
         //TH: Thanh toán bằng tiền mặt
         if (selectedPayment.toString() === method_payments.CASH) {
 
@@ -57,7 +71,7 @@ export default function OrderConfirmScreen() {
                 Alert.alert('Thông báo', 'Đặt hàng thành công', [{
                     text: 'OK',
                     onPress: () => {
-                         //=> xóa đi sản phẩm sẽ được mua
+                        //=> xóa đi sản phẩm sẽ được mua
                         dispatch(removeAllOrderProduct())
 
                         // => xóa đi sản phẩm sẽ được mua trong giỏ hàng
@@ -170,7 +184,6 @@ function AddressInfoComponent(props) {
     );
 }
 
-
 function OrderItemsComponent(props) {
 
     const {orderItems} = props
@@ -194,7 +207,7 @@ function OrderItem({data}) {
             </View>
             <View style={{maxHeight: 80}}>
                 <View style={styles.infoOrderItem}>
-                    <Text style={{minWidth: 150}}>{data.title}</Text>
+                    <Text numberOfLines={1} style={{maxWidth: 0.55 * WINDOW_WIDTH}}>{data.title}</Text>
                     <Text>x {data.quantity}</Text>
                 </View>
                 <View style={styles.infoOrderItem}>

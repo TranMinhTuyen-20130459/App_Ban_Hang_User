@@ -12,7 +12,6 @@ const store = configureStore({
         historys: HistoryView,
         address_order: addressReducer, //=> địa chỉ giao hàng
         category: CategoryReducer,
-        address_order: addressReducer,
         payment: paymentReducer,
         orderProducts: orderProductReducer
     }
