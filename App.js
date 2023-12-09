@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import {useEffect} from "react";
 import {Provider} from "react-redux";
@@ -29,57 +28,57 @@ import HistoryViewProduct from "./pages/HistoryViewProduct";
 import {AppState} from "react-native";
 
 function App() {
-  const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Gọi hàm để lấy dữ liệu giỏ hàng từ AsyncStorage
-        const carts = await getCartFromAsyncStorage();
-        // Nếu có dữ liệu, dispatch action để cập nhật giỏ hàng trong Redux
-        if (carts) {
-          carts.forEach((item) => {
-            store.dispatch(addCart(item));
-          });
-        }
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Gọi hàm để lấy dữ liệu giỏ hàng từ AsyncStorage
+                const carts = await getCartFromAsyncStorage();
+                // Nếu có dữ liệu, dispatch action để cập nhật giỏ hàng trong Redux
+                if (carts) {
+                    carts.forEach((item) => {
+                        store.dispatch(addCart(item));
+                    });
+                }
 
-        // Gọi hàm để lấy dữ liệu địa chỉ từ AsyncStorage
-        const storedInfoAddress = await getInfoAddressFromAsyncStorage();
+                // Gọi hàm để lấy dữ liệu địa chỉ từ AsyncStorage
+                const storedInfoAddress = await getInfoAddressFromAsyncStorage();
 
-        // Nếu có dữ liệu địa chỉ, dispatch action để cập nhật Redux store
-        if (storedInfoAddress) store.dispatch(setAddress(storedInfoAddress));
+                // Nếu có dữ liệu địa chỉ, dispatch action để cập nhật Redux store
+                if (storedInfoAddress) store.dispatch(setAddress(storedInfoAddress));
 
-        const storedInfoPayment = await getMethodPaymentFromAsyncStorage()
-        if (storedInfoPayment) store.dispatch(setSelectedPayment(storedInfoPayment))
+                const storedInfoPayment = await getMethodPaymentFromAsyncStorage()
+                if (storedInfoPayment) store.dispatch(setSelectedPayment(storedInfoPayment))
 
 
-        // Lắng nghe sự kiện AppState để xử lý khi ứng dụng chuyển sang trạng thái background hoặc inactive
-        const handleAppStateChange = (nextAppState) => {
-          if (nextAppState.match(/inactive|background/)) {
-            // Ứng dụng chuyển sang trạng thái background hoặc inactive
+                // Lắng nghe sự kiện AppState để xử lý khi ứng dụng chuyển sang trạng thái background hoặc inactive
+                const handleAppStateChange = (nextAppState) => {
+                    if (nextAppState.match(/inactive|background/)) {
+                        // Ứng dụng chuyển sang trạng thái background hoặc inactive
 
-            // Lấy dữ liệu giỏ hàng từ Redux store
-            const cartRedux = store.getState().carts;
+                        // Lấy dữ liệu giỏ hàng từ Redux store
+                        const cartRedux = store.getState().carts;
 
-            // Lưu giỏ hàng xuống AsyncStorage
-            saveCartToAsyncStorage(cartRedux);
-          }
+                        // Lưu giỏ hàng xuống AsyncStorage
+                        saveCartToAsyncStorage(cartRedux);
+                    }
+                };
+
+                // Đăng ký lắng nghe sự kiện
+                AppState.addEventListener('change', handleAppStateChange);
+
+                // Hủy đăng ký lắng nghe khi component unmount
+                return () => {
+                    AppState.removeEventListener('change', handleAppStateChange);
+                };
+            } catch (error) {
+                console.error(error);
+            }
         };
 
-        // Đăng ký lắng nghe sự kiện
-        AppState.addEventListener('change', handleAppStateChange);
-
-        // Hủy đăng ký lắng nghe khi component unmount
-        return () => {
-          AppState.removeEventListener('change', handleAppStateChange);
-        };
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
+        fetchData();
+    }, []);
     return (
         <Provider store={store}>
             <NavigationContainer>
@@ -91,7 +90,7 @@ function App() {
                     />
                     {/* cấu hình các đường dẫn qua các trang khác */}
                     <Stack.Screen name="Setting" component={SettingScreen}/>
-                  
+
                     <Stack.Screen name="OrderDetail" component={OrderDetailsScreen}
                                   options={{
                                       title: 'Chi tiết đơn hàng',
@@ -101,7 +100,8 @@ function App() {
                                       },
                                       headerTintColor: 'white',
                                   }}/>
-                     <Stack.Screen name="HistoryViewProduct" component={HistoryViewProduct}
+
+                    <Stack.Screen name="HistoryViewProduct" component={HistoryViewProduct}
                                   options={{
                                       title: 'Sản phẩm đã xem',
                                       headerTitleAlign: 'center',
@@ -110,7 +110,8 @@ function App() {
                                       },
                                       headerTintColor: 'white',
                                   }}/>
-                                   <Stack.Screen name="HistorySell" component={HistorySell}
+
+                    <Stack.Screen name="HistorySell" component={HistorySell}
                                   options={{
                                       title: 'Lịch sử mua hàng ',
                                       headerTitleAlign: 'center',
@@ -119,6 +120,7 @@ function App() {
                                       },
                                       headerTintColor: 'white',
                                   }}/>
+
                     <Stack.Screen name="Cart" component={CartScreen}
                                   options={{
                                       title: 'Giỏ hàng',
@@ -128,15 +130,7 @@ function App() {
                                       },
                                       headerTintColor: 'white',
                                   }}/>
-                    <Stack.Screen name="OrderAddress" component={OrderAddressScreen}
-                                  options={{
-                                      title: 'Địa chỉ giao hàng',
-                                      headerTitleAlign: 'center',
-                                      headerStyle: {
-                                          backgroundColor: colors.blueRoot,
-                                      },
-                                      headerTintColor: 'white',
-                                  }}/>
+
                     <Stack.Screen
                         name="ProductDetail"
                         component={ProducDetail}
@@ -147,18 +141,19 @@ function App() {
                             },
                         }}
                     />
-                     <Stack.Screen
+
+                    <Stack.Screen
                         name="Search"
                         component={Search}
                         options={{
-                            headerShown: false,                          
+                            headerShown: false,
                         }}
                     />
-                     <Stack.Screen
+                    <Stack.Screen
                         name="SearchResult"
                         component={ResultSearch}
                         options={{
-                            headerShown: false,                          
+                            headerShown: false,
                         }}
                     />
                     <Stack.Screen
@@ -178,6 +173,32 @@ function App() {
                         component={ProductReview}
                         options={{
                             title: "Đánh giá sản phẩm",
+                            headerTitleAlign: "center",
+                            headerStyle: {
+                                backgroundColor: colors.blueRoot,
+                            },
+                            headerTintColor: "white",
+                        }}
+                    />
+
+                    <Stack.Screen
+                        name="OrderConfirm"
+                        component={OrderConfirmScreen}
+                        options={{
+                            title: "Xác Nhận Đơn Hàng",
+                            headerTitleAlign: "center",
+                            headerStyle: {
+                                backgroundColor: colors.blueRoot,
+                            },
+                            headerTintColor: "white",
+                        }}
+                    />
+
+                    <Stack.Screen
+                        name="OrderAddress"
+                        component={OrderAddressScreen}
+                        options={{
+                            title: "Địa chỉ giao hàng",
                             headerTitleAlign: "center",
                             headerStyle: {
                                 backgroundColor: colors.blueRoot,
