@@ -57,7 +57,7 @@ export default function ElementProduct({title, type}) {
                 scrollEventThrottle={16}
             >
                 <View style={styles.listProduct}>
-                    {data.map((item) => (
+                    {data && data.map((item) => (
                         <TouchableOpacity
                             style={styles.productItem}
                             key={item.id_product}

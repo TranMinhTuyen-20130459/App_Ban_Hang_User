@@ -8,7 +8,7 @@ import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import SettingScreen from "./pages/SettingScreen";
 import CartScreen from "./pages/CartScreen";
 import {colors} from "./theme";
-import {getCartFromAsyncStorage} from "./utils/localStorage";
+import {getCartFromAsyncStorage, saveCartToAsyncStorage} from "./utils/localStorage";
 import {addCart} from "./redux/slices/CartsSlice";
 import OrderConfirmScreen from "./pages/Order/OrderConfirmScreen";
 import MainContainer from "./navigation/MainContainer";
@@ -26,6 +26,7 @@ import Search from "./components/Search";
 import ResultSearch from "./components/ResultSearch";
 import HistorySell from "./pages/orderUser/history";
 import HistoryViewProduct from "./pages/HistoryViewProduct";
+import {AppState} from "react-native";
 
 function App() {
   const Stack = createNativeStackNavigator();
