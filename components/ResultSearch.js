@@ -53,9 +53,9 @@ const ResultSearch = ({ route }) => {
 
     const navigation = useNavigation();
   return (
+    <ScrollView>
     <View style={styles.container}>
       <Header></Header>
-      <ScrollView>
         <View style={styles.fillter}>
         <TouchableOpacity style={styles.button}onPress={handleButtonPress}>
             <Text style={styles.buttonText}>Phổ biến</Text>
@@ -108,10 +108,12 @@ const ResultSearch = ({ route }) => {
                         </TouchableOpacity>
                     ))}
                 </View>
-            </ScrollView>
+
+           
+
 
     </View>
-          
+    </ScrollView>      
     
   );
 };

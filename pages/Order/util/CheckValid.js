@@ -9,6 +9,11 @@ export const isValidPhoneNumber = (phoneNumber) => {
     return phoneRegex.test(cleanedPhoneNumber);
 }
 
+export const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
 // Trả về giá trị Lỗi khi user nhập vào Họ Tên không hợp lệ
 export const returnValueErrorOfNameCustomer = (name_customer) => {
 
@@ -48,4 +53,42 @@ export const returnValueErrorWard = (ward_id) => {
     if (ward_id === null || ward_id.length === 0) return 'Chọn Phường/Xã'
     return null;
 }
+
+// Kiểm tra sự hợp lệ của thông tin trong đơn hàng
+export const isValidOrder = (orderData) => {
+    const isString = (value) => typeof value === 'string';
+    const isNumber = (value) => typeof value === 'number';
+    const isObject = (value) => typeof value === 'object';
+
+    const isValidListOrderDetail = (listOrderDetail) => Array.isArray(listOrderDetail) && listOrderDetail.length > 0;
+
+    const {
+        name_customer,
+        phone,
+        email_customer,
+        to_address,
+        ship_price,
+        order_value,
+        list_order_detail,
+    } = orderData;
+
+    if (
+        !isString(name_customer) ||
+        !isString(phone) ||
+        !isString(email_customer) ||
+        !isObject(to_address) ||
+        !isNumber(ship_price) ||
+        !isNumber(order_value) ||
+        !isValidEmail(email_customer) ||
+        !isValidListOrderDetail(list_order_detail)
+    ) {
+        // console.error("Dữ liệu đơn hàng không hợp lệ. Vui lòng kiểm tra lại.");
+        return false;
+    }
+
+    // Dữ liệu hợp lệ
+    // console.log("Đơn hàng hợp lệ:", orderData);
+    return true;
+};
+
 

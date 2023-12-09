@@ -43,3 +43,21 @@ export const addToCart = async (product) => {
         console.error("Lỗi khi thêm sản phẩm vào giỏ hàng:", error);
     }
 };
+export const saveHistoryViewToAsyncStorage = async (data) => {
+    try {
+        const jsonHistoryData = JSON.stringify(data);
+        await AsyncStorage.setItem("historyViewProduct", jsonHistoryData);
+    
+    } catch (error) {
+        console.error("Lỗi khi lưu giỏ hàng:", error);
+    }
+};
+export const getHistoryFromAsyncStorage = async () => {
+    try {
+        const jsonHistoryData = await AsyncStorage.getItem("historyViewProduct");
+        return jsonHistoryData != null ? JSON.parse(jsonHistoryData) : null;
+    } catch (error) {
+        console.error("Lỗi khi đọc giỏ hàng:", error);
+        return null;
+    }
+};

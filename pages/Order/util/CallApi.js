@@ -14,7 +14,8 @@ export async function fetchDataMethodGET(apiUrl) {
         return data;
 
     } catch (error) {
-        console.error("Error fetching data:", error);
+
+        // console.error("Error fetching data:", error);
         return null;
     }
 }
@@ -40,7 +41,8 @@ export async function createOrder(apiUrl, order_data) {
 
         return await response.json()
     } catch (e) {
-        console.error(e)
+
+        // console.error(e)
         return null;
     }
 }
