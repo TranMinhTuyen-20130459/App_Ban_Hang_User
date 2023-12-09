@@ -7,7 +7,9 @@ import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import SettingScreen from "./pages/SettingScreen";
 import CartScreen from "./pages/CartScreen";
 import {colors} from "./theme";
+
 import {getCartFromAsyncStorage, getHistoryFromAsyncStorage, saveCartToAsyncStorage, saveHistoryViewToAsyncStorage} from "./utils/localStorage";
+
 import {addCart} from "./redux/slices/CartsSlice";
 import OrderConfirmScreen from "./pages/Order/OrderConfirmScreen";
 import MainContainer from "./navigation/MainContainer";
@@ -26,6 +28,7 @@ import ResultSearch from "./components/ResultSearch";
 import HistorySell from "./pages/orderUser/history";
 import HistoryViewProduct from "./pages/HistoryViewProduct";
 import {AppState} from "react-native";
+
 import { addHistory } from "./redux/slices/HistoryView";
 
 function App() {
@@ -39,6 +42,7 @@ function App() {
                 const carts = await getCartFromAsyncStorage();
                  // Gọi hàm để lấy dữ liệu sản phẩm đã xem từ AsyncStorage
                 const history = await getHistoryFromAsyncStorage();
+
 
                 // Nếu có dữ liệu, dispatch action để cập nhật giỏ hàng trong Redux
                 if (carts) {
@@ -58,6 +62,7 @@ function App() {
                 // Nếu có dữ liệu địa chỉ, dispatch action để cập nhật Redux store
                 if (storedInfoAddress) store.dispatch(setAddress(storedInfoAddress));
 
+
                 const storedInfoPayment = await getMethodPaymentFromAsyncStorage()
                 if (storedInfoPayment) store.dispatch(setSelectedPayment(storedInfoPayment))
 
@@ -76,6 +81,7 @@ function App() {
                         // Lưu giỏ hàng xuống AsyncStorage
                       
                         saveHistoryViewToAsyncStorage(historyRedux)
+
                     }
                 };
 
@@ -104,12 +110,6 @@ function App() {
                     />
                     {/* cấu hình các đường dẫn qua các trang khác */}
                     <Stack.Screen name="Setting" component={SettingScreen}/>
-
-                    
-
-                  
-
-                    
                     <Stack.Screen name="Cart" component={CartScreen}
                                   options={{
                                       title: 'Giỏ hàng',
@@ -131,7 +131,9 @@ function App() {
                         }}
                     />
 
+
                    
+
                     <Stack.Screen
                         name="SelectSize"
                         component={SelectSize}
@@ -223,6 +225,7 @@ function App() {
                                       },
                                       headerTintColor: 'white',
                                   }}/>
+
 
                 </Stack.Navigator>
             </NavigationContainer>
