@@ -15,7 +15,7 @@ const SuggestedProduct = ({data}) =>{
                 </View>
             </View>
             <View style={styles.listProduct}>
-                {data.map((item) => (
+                {data && data.map((item) => (
                     <TouchableOpacity style={styles.productItem}
                                       key = {item.id_product}
                                       onPress={() =>

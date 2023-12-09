@@ -71,7 +71,7 @@ function AccountScreen() {
           </View>
           <View style={styles.containerMySevice}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Setting')}
+              onPress={() => navigation.navigate('HistoryViewProduct')}
             >
               <View style={styles.containerTitle}>
                 <Text style={{ fontSize: 16 }}>Đơn hàng của tôi</Text>
@@ -108,7 +108,7 @@ function AccountScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.itemIconOrder}
-                onPress={() => navigation.navigate('Setting')}
+                onPress={() => navigation.navigate('HistorySell')}
               >
                 <View style={styles.containerIcon}>
                   <Ionicons name="checkbox-outline" size={20} color={colors.blueRoot}></Ionicons>
