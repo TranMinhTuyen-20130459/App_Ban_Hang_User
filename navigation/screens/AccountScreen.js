@@ -71,7 +71,7 @@ function AccountScreen() {
           </View>
           <View style={styles.containerMySevice}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('HistoryViewProduct')}
+             onPress={() => navigation.navigate('HistorySell')}
             >
               <View style={styles.containerTitle}>
                 <Text style={{ fontSize: 16 }}>Đơn hàng của tôi</Text>
@@ -81,7 +81,7 @@ function AccountScreen() {
 
             <View style={styles.listIconOrder}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('OrderDetail')}
+               
                 style={styles.itemIconOrder}>
                 <View style={styles.containerIcon}>
                   <Ionicons name="wallet-outline" size={20} color={colors.blueRoot}></Ionicons>
@@ -99,7 +99,7 @@ function AccountScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.itemIconOrder}
-                onPress={() => navigation.navigate('ViewedProduct')}
+               
               >
                 <View style={styles.containerIcon}>
                   <Ionicons name="car-outline" size={20} color={colors.blueRoot}></Ionicons>
@@ -108,7 +108,8 @@ function AccountScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.itemIconOrder}
-                onPress={() => navigation.navigate('HistorySell')}
+
+              
               >
                 <View style={styles.containerIcon}>
                   <Ionicons name="checkbox-outline" size={20} color={colors.blueRoot}></Ionicons>
@@ -157,7 +158,7 @@ function AccountScreen() {
 
             <View style={styles.listIconOrder}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('Setting')}
+                 onPress={() => navigation.navigate('HistoryViewProduct')}
                 style={styles.itemIconOrder}>
                 <View style={styles.containerIconSeen}>
                   <Ionicons name="eye" size={20} color={colors.green}></Ionicons>

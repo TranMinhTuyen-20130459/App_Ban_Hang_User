@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, Text, Image, TextInput, ScrollView, ProgressBarAndroid, TouchableOpacity, StyleSheet, Dimensions, FlatList } from 'react-native';
-import Autocomplete from 'react-native-autocomplete-input';
 
 const Search = () => {
     const navigation = useNavigation();

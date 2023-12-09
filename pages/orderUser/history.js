@@ -1,3 +1,6 @@
+
+import { useNavigation } from '@react-navigation/native';
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -7,6 +10,8 @@ const HistorySell = () => {
   const [filteredHistory, setFilteredHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const navigation = useNavigation();
 
   // Lấy dữ liệu từ API khi mở ứng dụng
   useEffect(() => {
@@ -29,11 +34,13 @@ const HistorySell = () => {
         setPurchaseHistory(jsonData.data);
         setFilteredHistory(jsonData.data); // Set filtered data initially with all orders
       } else {
-        console.error('Lỗi khi lấy lịch sử mua hàng:', jsonData.message);
+
+       
       }
       setIsLoading(false);
     } catch (error) {
-      console.error('Lỗi khi lấy dữ liệu:', error);
+      
+
       setIsLoading(false);
     }
   };
@@ -48,7 +55,6 @@ const HistorySell = () => {
 
   const renderPurchaseItem = ({ item }) => (
     <TouchableOpacity
-      onPress={() => console.log('Đã nhấn vào mục')}
       style={styles.purchaseItem}
     >
       <View style={styles.productDetails}>
@@ -63,15 +69,30 @@ const HistorySell = () => {
         </View>
       </View>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.detailButton}>
+
+        <TouchableOpacity style={styles.detailButton} onPress={() =>
+      navigation.navigate("OrderDetail", {
+      orderId: item.id_order,
+      phone : searchQuery,
+      })}>
           <Text style={styles.buttonText}>Xem chi tiết</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.rateButton}>
+    <Text style={styles.buttonText}>Đánh giá</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity style={styles.buyAgainButton}>
+    <Text style={styles.buttonText}>Mua lại</Text>
+  </TouchableOpacity>
+
+
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <ScrollView style={styles.container}>
+
+    <View>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -91,7 +112,10 @@ const HistorySell = () => {
           renderItem={renderPurchaseItem}
         />
       )}
-    </ScrollView>
+
+      
+      </View>
+
   );
 };
 
@@ -226,6 +250,17 @@ const styles = StyleSheet.create({
     height: 40,
     paddingHorizontal: 10,
   },
+
+  detailButton: {
+    backgroundColor: 'transparent',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    marginRight: 5,
+    borderWidth: 1,
+    borderColor: '#3498db',
+  },
+
 });
 
 

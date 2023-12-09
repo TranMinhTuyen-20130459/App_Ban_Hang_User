@@ -225,7 +225,6 @@ export const ProducDetail = ({ navigation }) => {
      
       // Nếu sản phẩm đã tồn tại trong giỏ hàng, thì cập nhật
       dispatch(addHistory(newCartItem));
-      alert("Thêm vào sản phẩm đã xem thành công");
     } 
   };
   const handleAddToCart = () => {
@@ -281,8 +280,6 @@ export const ProducDetail = ({ navigation }) => {
       navigation.navigate("OrderConfirm", { order_items: [newCartItem] });
 
     }
-
-
   };
 
   // nếu fecth chưa hết thì hiển thị loading..

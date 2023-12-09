@@ -13,7 +13,8 @@ const store = configureStore({
         address_order: addressReducer, //=> địa chỉ giao hàng
         category: CategoryReducer,
         payment: paymentReducer,
-        orderProducts: orderProductReducer
+        orderProducts: orderProductReducer,
+        historys: HistoryView,
     }
 })
 

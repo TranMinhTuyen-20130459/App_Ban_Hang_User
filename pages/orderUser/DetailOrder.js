@@ -2,12 +2,16 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView,ProgressBarAndroid, TouchableOpacity, StyleSheet } from 'react-native';
 import { ProgressBar } from 'react-native-progress';
+import { API_GET_PATHS } from '../../services/PathApi';
+
 const OrderDetailsScreen = ({ route }) => {
   const id = route.params?.id ;
   const [data, setData] = useState(null);
   const [progress, setProgress] = useState(0); 
 
-   
+  const { orderId } = route.params;
+  const { phone } = route.params;
+
   const updateProgress = (infor_order) => {
     
     // Move the logic for updating progress here
@@ -26,7 +30,9 @@ const OrderDetailsScreen = ({ route }) => {
       try {
       
         const response = await fetch(
-          "http://tmt020202ccna-001-site1.atempurl.com/api/order/infor-order?id_order=43"
+
+         `${API_GET_PATHS.chi_tiet_don_hang}id_order=${orderId}`
+
         );
        
         const jsonData = await response.json();
@@ -74,7 +80,10 @@ const OrderDetailsScreen = ({ route }) => {
               </Text>
             
               <Text style={styles.col}>
-                <Text style={styles.strong}>Phone: </Text>03594059
+
+                <Text style={styles.strong}>Phone: </Text>{phone}
+
+           
               </Text>
               <Text style={styles.col}>
                 <Text style={styles.strong}>Status:  {data.infor_order.name_status_order}</Text>
@@ -133,45 +142,6 @@ const OrderDetailsScreen = ({ route }) => {
                   </TouchableOpacity>    
                        
                     ))}
-            
-              <TouchableOpacity onPress={() => console.log("Product Pressed")}>
-                <View style={styles.productItem}>
-                  <Image
-                    source={{ uri: "https://i.imgur.com/iDwDQ4o.png" }}
-                    style={styles.productImage}
-                  />
-                  <Text style={styles.productTitle}>
-                    Dell Laptop with 500GB HDD {"\n"} 8GB RAM
-                  </Text>
-                  <Text style={styles.textMuted}>$950</Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => console.log("Product Pressed")}>
-                <View style={styles.productItem}>
-                  <Image
-                    source={{ uri: "https://i.imgur.com/tVBy5Q0.png" }}
-                    style={styles.productImage}
-                  />
-                  <Text style={styles.productTitle}>
-                    HP Laptop with 500GB HDD {"\n"} 8GB RAM
-                  </Text>
-                  <Text style={styles.textMuted}>$850</Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => console.log("Product Pressed")}>
-                <View style={styles.productItem}>
-                  <Image
-                    source={{ uri: "https://i.imgur.com/Bd56jKH.png" }}
-                    style={styles.productImage}
-                  />
-                  <Text style={styles.productTitle}>
-                    ACER Laptop with 500GB HDD {"\n"} 8GB RAM
-                  </Text>
-                  <Text style={styles.textMuted}>$650</Text>
-                </View>
-              </TouchableOpacity>
             </View>
           </ScrollView>  
            <View style={styles.hr} />
