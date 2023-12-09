@@ -8,7 +8,7 @@ import { colors } from '../theme';
 import CartItemsList from '../components/CartItemsList';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCart, removeAllCart, removeCart } from '../redux/slices/CartsSlice';
-import { addOrderProduct } from '../redux/slices/OrderProductSlice';
+import {addOrderProduct, removeAllOrderProduct} from '../redux/slices/OrderProductSlice';
 
 export default function CartScreen() {
     const navigation = useNavigation();
@@ -150,6 +150,9 @@ export default function CartScreen() {
     const handleBuy = () => {
         const cartsBuy = cartItems.filter(item => item.isChecked === true);
         if (cartsBuy.length > 0) {
+
+            dispatch(removeAllOrderProduct())
+
             // thêm vào checkout ở redux
             cartsBuy.map(item => dispatch(addOrderProduct(item)))
 
